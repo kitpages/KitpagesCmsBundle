@@ -21,7 +21,9 @@ PHP Developper
    :maxdepth: 1
    :numbered:
 
-   php_developper/installation
+   php_developper/index
+
+.. include:: map.rst.inc
 
 Sysadmin
 ------------
@@ -33,15 +35,19 @@ Sysadmin
    sysadmin/installation
 
 
-Tutorial
---------
+Frontend (and template) developper
+----------------------------------
 
 .. toctree::
    :maxdepth: 1
    :numbered:
 
-   tutorial/creating_your_first_admin_class/introduction
-   tutorial/creating_your_first_admin_class/defining_entities
-   tutorial/creating_your_first_admin_class/defining_routing
-   tutorial/creating_your_first_admin_class/defining_crud_controller
-   tutorial/creating_your_first_admin_class/defining_admin_class
+   frontend_developper/introduction
+
+User Guide
+----------
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+
+   userguide/introduction

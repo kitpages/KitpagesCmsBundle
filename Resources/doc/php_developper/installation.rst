@@ -1,0 +1,5 @@
+KitpagesCmsBundle Installation
+==============================
+
+Routes
+------
