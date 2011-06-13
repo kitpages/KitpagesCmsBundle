@@ -1,0 +1,3 @@
+homepage:
+    pattern:  /block
+    defaults: { _controller: KitpagesCmsBundle:Block:view }
