@@ -1,0 +1,6 @@
+services:
+    kitpages.cms.admin.block:
+        class: Kitpages\CmsBundle\Admin\BlockAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: kitpages_cms, label: block }
+        arguments: [null, Kitpages\CmsBundle\Entity\Block, KitpagesCmsBundle:BlockAdmin]
