@@ -25,7 +25,11 @@
         
         <field name="creationDate" column="creation_date" type="datetime" />
         <field name="modificationDate" column="modification_date" type="datetime" />
-
+        
+        <lifecycle-callbacks>
+          <lifecycle-callback type="prePersist" method="prePersist"/>
+          <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
     </entity>
 
 </doctrine-mapping>

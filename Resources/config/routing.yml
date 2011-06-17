@@ -1,3 +1,15 @@
 kitpages_cms:
     pattern:  /block
     defaults: { _controller: KitpagesCmsBundle:Block:view }
+
+kitpages_cms_block_create:
+    pattern:  /block/create
+    defaults: { _controller: KitpagesCmsBundle:Block:create }
+    
+kitpages_cms_block_edit:
+    pattern:  /block/edit
+    defaults: { _controller: KitpagesCmsBundle:Block:edit }
+
+kitpages_cms_block_create_success:
+    pattern:  /block/create-success
+    defaults: { _controller: KitpagesCmsBundle:Block:createSuccess }

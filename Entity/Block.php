@@ -297,4 +297,21 @@ class Block
     {
         return $this->template;
     }
+
+    /**
+     */
+    public function prePersist()
+    {
+        if (!$this->getId()) {
+            $this->setCreationDate(new \DateTime());
+        }
+        $this->setModificationDate(new \DateTime());
+    }
+
+    /**
+     */
+    public function preUpdate()
+    {
+        // Add your code here
+    }
 }
