@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('kitpages_cms');
 
         $this->addBlockSection($rootNode);
+        $this->addPageSection($rootNode);
         $this->addOtherSection($rootNode);
 
         return $treeBuilder;
@@ -106,6 +107,35 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * Parses the kitpages_cms.block config section
+     * Example for yaml driver:
+     * kitpages_cms:
+     *     block:
+     *         template:
+     *             template_list: {standard: \Kitpages\CmsBundle\Form\TemplateStandardType}
+     *
+     * @param ArrayNodeDefinition $node
+     * @return void
+     */
+    private function addPageSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('page')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+            
+                        ->scalarNode('default_layout')
+                            ->defaultValue('::base.html.twig')
+                            ->cannotBeEmpty()
+                        ->end()
+            
+                    ->end()
+                ->end()
+            ->end();
+    }
+    
+    /**
      * Parses the kitpages_cms others sections
      * Example for yaml driver:
      * kitpages_cms:
@@ -119,9 +149,6 @@ class Configuration implements ConfigurationInterface
         $node
             ->children()
                 ->scalarNode('target_parameter')
-                    ->defaultValue(null)
-                ->end()
-                ->scalarNode('default_layout')
                     ->defaultValue(null)
                 ->end()
             ->end();

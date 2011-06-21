@@ -1,5 +1,7 @@
-<h1>Edit block</h1>
+{% extends 'KitpagesCmsBundle:page:layout.html.twig' %}
 
+{% block body %}
+<h1>Edit block</h1>
 
 <form action="{{ path('kitpages_cms_block_edit', { 'id': id } ) }}" method="post" {{ form_enctype(form) }}>
 
@@ -14,3 +16,4 @@
     {{ form_rest(form) }}
     <input type="submit" />
 </form>
+{% endblock body %}

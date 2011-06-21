@@ -1,8 +1,11 @@
-Create block
+{% extends 'KitpagesCmsBundle:page:layout.html.twig' %}
 
+{% block body %}
+<h1>Create block</h1>
 
 <form action="{{ path('kitpages_cms_block_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     <input type="submit" />
 </form>
+{% endblock body %}
