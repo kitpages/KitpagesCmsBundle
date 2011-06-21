@@ -1,8 +1,16 @@
-Edit block
+<h1>Edit block</h1>
 
 
-<form action="{{ path('kitpages_cms_block_edit') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
+<form action="{{ path('kitpages_cms_block_edit', { 'id': id } ) }}" method="post" {{ form_enctype(form) }}>
+    
+    {{ form_errors(form) }}
+    
+    {{ form_row(form.label) }}
+    {{ form_row(form.template) }}
+    {{ form_row(form.isActive) }}
+    
+    {% block editData %}{% endblock %}
 
+    {# {{ form_rest(form) }} #}
     <input type="submit" />
 </form>

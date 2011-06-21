@@ -26,47 +26,22 @@ class BlockController extends Controller
     public function createAction()
     {
         $block = new Block();
-        
-        $form = $this->createForm(new BlockType(), $block);
-        
-        $request = $this->get('request');
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
 
-            if ($form->isValid()) {
-                $block->setBlockType('edito');
-                $block->setIsActive(true);
-                $block->setIsPublished(true);
-                $block->setRealModificationDate(new \DateTime());
-                $em = $this->get('doctrine')->getEntityManager();
-                $em->persist($block);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('kitpages_cms_block_create_success'));
-            }
+        // build template list
+        $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
+        $selectTemplateList = array();
+        foreach ($templateList as $key => $template) {
+            $selectTemplateList[$key] = $template['name'];
         }
-        return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
 
-    public function editAction()
-    {
-        $id = 1;
-        $em = $this->getDoctrine()->getEntityManager();
-        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
-        $block->setData(array(
-            "title" => '',
-            'body' => ''
-        ));
-        
+        // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add('label', 'text');
-        $builder->add('template', 'text');
-
-        $builder->add('data', 'collection', array(
-           'type' => new \Kitpages\CmsBundle\Form\BlockContentType(),
+        $builder->add('template', 'choice',array(
+            'choices' => $selectTemplateList,
+            'required' => true
         ));
+        // get form
         $form = $builder->getForm();
         
         $request = $this->get('request');
@@ -82,15 +57,66 @@ class BlockController extends Controller
                 $em->persist($block);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('kitpages_cms_block_create_success'));
+                return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
             }
         }
-        return $this->render('KitpagesCmsBundle:Block:edit.html.twig', array(
+        return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
             'form' => $form->createView()
         ));
     }
-    public function createSuccessAction()
+
+    public function editAction($id)
     {
-        return $this->render('KitpagesCmsBundle:Block:create-success.html.twig');
+        $em = $this->getDoctrine()->getEntityManager();
+        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
+        if (!$block->getData()) {
+            $block->setData(array('root'=>null));
+        }
+        // build template list
+        $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
+        $selectTemplateList = array();
+        foreach ($templateList as $key => $template) {
+            $selectTemplateList[$key] = $template['name'];
+        }
+        $twigTemplate = $templateList[$block->getTemplate()]['twig'];
+        
+        // build basic form
+        $builder = $this->createFormBuilder($block);
+        $builder->add('label', 'text');
+        $builder->add('template', 'choice',array(
+            'choices' => $selectTemplateList,
+            'required' => true
+        ));
+        $builder->add('isActive', 'checkbox');
+
+        // build custom form
+        $className = $templateList[$block->getTemplate()]['class'];
+        $builder->add('data', 'collection', array(
+           'type' => new $className(),
+        ));
+        
+        // get form
+        $form = $builder->getForm();
+        
+        // persist form if needed
+        $request = $this->get('request');
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $block->setRealModificationDate(new \DateTime());
+                $em = $this->get('doctrine')->getEntityManager();
+                $em->persist($block);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('kitpages_cms_block_create_success'));
+            }
+        }
+        $view = $form->createView();
+        //echo '<pre>'.print_r($view, true).'</pre>';
+        return $this->render($twigTemplate, array(
+            'form' => $form->createView(),
+            'id' => $block->getId()
+        ));
     }
 }

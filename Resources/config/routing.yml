@@ -7,9 +7,7 @@ kitpages_cms_block_create:
     defaults: { _controller: KitpagesCmsBundle:Block:create }
     
 kitpages_cms_block_edit:
-    pattern:  /block/edit
+    pattern:  /block/edit/{id}
     defaults: { _controller: KitpagesCmsBundle:Block:edit }
-
-kitpages_cms_block_create_success:
-    pattern:  /block/create-success
-    defaults: { _controller: KitpagesCmsBundle:Block:createSuccess }
+    requirements:
+        id: \d+
