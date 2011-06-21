@@ -48,6 +48,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('block')
                     ->addDefaultsIfNotSet()
                     ->children()
+            
                         ->arrayNode('template')
                             ->addDefaultsIfNotSet()
                             ->children()
@@ -75,6 +76,30 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+            
+                        ->arrayNode('renderer')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode('standard')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->arrayNode('default')
+                                            ->addDefaultsIfNotSet()
+                                            ->children()
+                                                ->scalarNode('type')
+                                                    ->defaultValue('twig')
+                                                    ->cannotBeEmpty()
+                                                ->end()
+                                                ->scalarNode('twig')
+                                                    ->defaultValue('KitpagesCmsBundle:Block:block-render-standard-default.html.twig')
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+            
                     ->end()
                 ->end()
             ->end();
@@ -94,6 +119,9 @@ class Configuration implements ConfigurationInterface
         $node
             ->children()
                 ->scalarNode('target_parameter')
+                    ->defaultValue(null)
+                ->end()
+                ->scalarNode('default_layout')
                     ->defaultValue(null)
                 ->end()
             ->end();
