@@ -2,7 +2,7 @@
 
 
 <form action="{{ path('kitpages_cms_block_edit', { 'id': id } ) }}" method="post" {{ form_enctype(form) }}>
-    
+
     {{ form_errors(form) }}
     
     {{ form_row(form.label) }}
@@ -11,6 +11,6 @@
     
     {% block editData %}{% endblock %}
 
-    {# {{ form_rest(form) }} #}
+    {{ form_rest(form) }}
     <input type="submit" />
 </form>
