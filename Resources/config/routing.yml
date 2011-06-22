@@ -11,3 +11,9 @@ kitpages_cms_block_edit:
     defaults: { _controller: KitpagesCmsBundle:Block:edit }
     requirements:
         id: \d+
+        
+kitpages_cms_block_publish:
+    pattern:  /block/publish/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:publish }
+    requirements:
+        id: \d+
