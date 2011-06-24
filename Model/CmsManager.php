@@ -8,7 +8,11 @@ use Symfony\Component\EventDispatcher\Event;
 
 class CmsManager
 {
+    const CONTEXT_PROD = 0;
+    const CONTEXT_PREVIEW = 1;
+    const CONTEXT_EDIT = 2;    
     private $_layout = null;
+    private $_context = null;
     private $_targetParameter = null;
     public function __construct($defaultLayout, $targetParam)
     {
@@ -21,6 +25,15 @@ class CmsManager
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             //echo "gloubi=".$this->getLayout();
         }
+    }
+
+    public function getContext()
+    {
+        return $this->_layout;
+    }
+    public function setContext($layout)
+    {
+        $this->_layout = $layout;
     }
     
     public function getLayout()

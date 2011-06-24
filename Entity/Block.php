@@ -312,6 +312,6 @@ class Block
      */
     public function preUpdate()
     {
-        // Add your code here
+        $this->setModificationDate(new \DateTime());
     }
 }
