@@ -5,7 +5,11 @@ kitpages_cms:
 kitpages_cms_block_create:
     pattern:  /block/create
     defaults: { _controller: KitpagesCmsBundle:Block:create }
-    
+
+kitpages_cms_block_edit_success:
+    pattern:  /block/edit-success
+    defaults: { _controller: KitpagesCmsBundle:Block:editSuccess }
+
 kitpages_cms_block_edit:
     pattern:  /block/edit/{id}
     defaults: { _controller: KitpagesCmsBundle:Block:edit }

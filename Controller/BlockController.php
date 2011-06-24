@@ -12,6 +12,7 @@
 namespace Kitpages\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Form\BlockType;
@@ -109,7 +110,7 @@ class BlockController extends Controller
                 $em->persist($block);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('kitpages_cms_block_create_success'));
+                return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
             }
         }
         $view = $form->createView();
@@ -118,5 +119,23 @@ class BlockController extends Controller
             'form' => $form->createView(),
             'id' => $block->getId()
         ));
+    }
+    
+    public function widgetAction() {
+        // récupérer le label ou l'id du block
+        
+        // si context = prod, $html pris dans le la table de publication
+        
+        // si context = preview ou edit : $html généré par le renderer
+        
+        // si context = edit, ajouter le code html des menus d'édition autour du bloc
+        
+        $resultingHtml = "my block";
+        return new Response($resultingHtml);
+    }
+    
+    public function editSuccessAction()
+    {
+        return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }
 }
