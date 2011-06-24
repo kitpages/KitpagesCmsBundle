@@ -16,9 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Form\BlockType;
-
+use Kitpages\CmsBundle\Model\BlockManager;
 class BlockController extends Controller
 {
+    
+   
     public function viewAction()
     {
         return $this->render('KitpagesCmsBundle:Block:view.html.twig');
@@ -121,6 +123,7 @@ class BlockController extends Controller
         ));
     }
     
+
     public function widgetAction() {
         // récupérer le label ou l'id du block
         
@@ -138,4 +141,18 @@ class BlockController extends Controller
     {
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }
+    
+    public function publishAction($id)
+    {
+        //        $listener = $this->container->get('listenerpublish');
+        //        $dispatcher = $this->container->get('dispatcher');
+        //$dispatcher->addListener('block.publish', array($listener, 'onPublish'));        
+        $em = $this->getDoctrine()->getEntityManager();
+        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
+        $blockManager = $this->get('kitpages.cms.manager.block');
+        $blockManager->publish($block);
+        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+    }
+    
+
 }
