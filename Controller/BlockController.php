@@ -124,7 +124,7 @@ class BlockController extends Controller
     }
     
 
-    public function widgetAction() {
+    public function widgetAction($label) {
         // récupérer le label ou l'id du block
         
         // si context = prod, $html pris dans le la table de publication
@@ -133,7 +133,7 @@ class BlockController extends Controller
         
         // si context = edit, ajouter le code html des menus d'édition autour du bloc
         
-        $resultingHtml = "my block";
+        $resultingHtml = "my block".$label;
         return new Response($resultingHtml);
     }
     
@@ -142,13 +142,8 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }
     
-    public function publishAction($id)
+    public function publishAction(Block $block)
     {
-        //        $listener = $this->container->get('listenerpublish');
-        //        $dispatcher = $this->container->get('dispatcher');
-        //$dispatcher->addListener('block.publish', array($listener, 'onPublish'));        
-        $em = $this->getDoctrine()->getEntityManager();
-        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
         $blockManager = $this->get('kitpages.cms.manager.block');
         $blockManager->publish($block);
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');

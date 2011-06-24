@@ -11,7 +11,7 @@ class BlockManager
         $this->dispatcher = $dispatcher;
     }      
     
-    public function publish($block)
+    public function publish(Block $block)
     {
         $event = new FilterPublishEvent($block);
         $this->dispatcher->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
