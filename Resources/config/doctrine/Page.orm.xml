@@ -4,13 +4,25 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\Zone" table="cms_page">
+    <entity name="Kitpages\CmsBundle\Entity\Page" table="cms_zone">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
+        
+        <field name="pageType" column="block_type" type="string" length="100" />
+        <field name="layout" column="layout" type="string" length="250" />
+        
+        <field name="isActive" column="is_active" type="boolean"/>
+        <field name="isPublished" column="is_published" type="boolean"/>
+        
+        <field name="data" column="data" type="array" nullable="true" />
+        
+        <field name="realModificationDate" column="real_modification_date" type="datetime" />
+        <field name="publicationDate" column="publication_date" type="datetime" nullable="true"/>
+        <field name="unpublicationDate" column="unpublication_date" type="datetime" nullable="true"/>
 
         <field name="creationDate" column="creation_date" type="datetime" />
         <field name="modificationDate" column="modification_date" type="datetime" />
@@ -20,22 +32,20 @@
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
         
-
-        <many-to-many field="blockList" target-entity="Kitpages\CmsBundle\Entity\Block">
+        <many-to-many field="zoneList" target-entity="Kitpages\CmsBundle\Entity\Zone">
             <cascade>
                 <cascade-all/>
             </cascade>
-            <join-table name="cms_zone_block">
+            <join-table name="cms_page_zone">
                 <join-columns>
-                    <join-column name="zone_id" referenced-column-name="id" nullable="false" unique="false" on-delete="CASCADE" on-update="CASCADE" />
+                    <join-column name="page_id" referenced-column-name="id" nullable="false" unique="false" on-delete="CASCADE" on-update="CASCADE" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="block_id" referenced-column-name="id" nullable="false" unique="false" on-delete="CASCADE" on-update="CASCADE" />
+                    <join-column name="zone_id" referenced-column-name="id" nullable="false" unique="false" on-delete="CASCADE" on-update="CASCADE" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
-
-        
+                
     </entity>
 
 </doctrine-mapping>

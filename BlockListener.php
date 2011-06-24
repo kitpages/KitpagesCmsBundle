@@ -20,7 +20,6 @@ class BlockListener
     
     public function onPublish(Event $event)
     {
-        echo "in listener";
         $block = $event->getBlock();
         $block->setIsPublished(true);
         $block->setRealModificationDate(new \DateTime());
