@@ -11,7 +11,7 @@
             <argument type="service" id="event_dispatcher"/>
         </service>
         <service id="kitpages.cms.listener.publish" class="Kitpages\CmsBundle\BlockListener">
-            <tag name="kernel.listener" event="block.publish" method="onPublish" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.publish" method="onPublish" />
             <argument type="service" id="doctrine"/>
         </service>
     </services>

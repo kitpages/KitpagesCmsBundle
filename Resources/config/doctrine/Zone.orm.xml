@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Kitpages\CmsBundle\Entity\Zone" table="cms_zone">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="label" column="label" type="string" length="250"/>
+        
+        <field name="isActive" column="is_active" type="boolean"/>
+        <field name="isPublished" column="is_published" type="boolean"/>
+
+        <field name="publicationDate" column="publication_date" type="datetime" nullable="true"/>
+        <field name="unpublicationDate" column="unpublication_date" type="datetime" nullable="true"/>
+        
+        <field name="creationDate" column="creation_date" type="datetime" />
+        <field name="modificationDate" column="modification_date" type="datetime" />
+        
+        <lifecycle-callbacks>
+          <lifecycle-callback type="prePersist" method="prePersist"/>
+          <lifecycle-callback type="preUpdate" method="preUpdate"/>
+        </lifecycle-callbacks>
+    </entity>
+
+</doctrine-mapping>

@@ -20,8 +20,10 @@ class BlockListener
     
     public function onPublish(Event $event)
     {
+        echo "in listener";
         $block = $event->getBlock();
-        $block->setIsPublished(1);
+        $block->setIsPublished(true);
+        $block->setRealModificationDate(new \DateTime());
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($block);
         $em->flush();

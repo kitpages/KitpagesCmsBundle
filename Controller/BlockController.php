@@ -1,9 +1,7 @@
 <?php
 
 /*
- * This file is part of the Symfony framework.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
+
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -17,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Model\BlockManager;
+
 class BlockController extends Controller
 {
     
@@ -142,13 +141,13 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }
     
-    public function publishAction($id)
+    public function publishAction(Block $block)
     {
         //        $listener = $this->container->get('listenerpublish');
         //        $dispatcher = $this->container->get('dispatcher');
         //$dispatcher->addListener('block.publish', array($listener, 'onPublish'));        
-        $em = $this->getDoctrine()->getEntityManager();
-        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
+//        $em = $this->getDoctrine()->getEntityManager();
+//        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
         $blockManager = $this->get('kitpages.cms.manager.block');
         $blockManager->publish($block);
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
