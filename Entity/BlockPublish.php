@@ -8,6 +8,12 @@ use Kitpages\CmsBundle\Entity\Block;
  */
 class BlockPublish
 {
+    
+    /**
+     * @var integer $blockId
+     */
+    private $blockId;
+    
     /**
      * @var string $slug
      */
@@ -40,12 +46,32 @@ class BlockPublish
         $this->setBlockType($block->getBlockType());
         $this->setBlock($block);
     }
- 
+
     /**
      * @var Kitpages\CmsBundle\Entity\Block
      */
     private $block;
 
+
+    /**
+     * Set blockId
+     *
+     * @param integer $blockId
+     */
+    public function setBlockId($blockId)
+    {
+        $this->blockId = $blockId;
+    }
+
+    /**
+     * Get blockId
+     *
+     * @return integer $blockId
+     */
+    public function getBlockId()
+    {
+        return $this->blockId;
+    }
 
     /**
      * Set slug

@@ -73,15 +73,12 @@ class ZoneController extends Controller
 //                $resultingHtml = $this->renderView($dataRenderer['default']['twig'], array('data' => $block->getData()));
 //            }          
         } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PROD) {
-//            $test=$em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('id' => 1));
-            //$test->getBlockId();
             foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZoneId($zone->getId()) as $blockPublish){
-                echo var_dump($blockPublish);
-//                $data = $blockPublish->getData();
-//
-//                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-//                    $resultingHtml = $data['html'];
-//                }
+                $data = $blockPublish->getData();
+
+                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                    $resultingHtml = $data['html'];
+                }
             }            
 
         }

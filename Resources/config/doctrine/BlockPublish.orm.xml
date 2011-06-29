@@ -11,6 +11,8 @@
             <generator strategy="AUTO" />
         </id>
 
+        <field name="blockId" column="block_id" type="integer" />
+
         <field name="slug" column="slug" type="string" length="250"/>
         <field name="blockType" column="block_type" type="string" length="100" />
         
