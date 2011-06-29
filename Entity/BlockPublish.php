@@ -4,7 +4,7 @@ namespace Kitpages\CmsBundle\Entity;
 
 use Kitpages\CmsBundle\Entity\Block;
 /**
- * Kitpages\CmsBundle\Entity\Block
+ * Kitpages\CmsBundle\Entity\BlockPublish
  */
 class BlockPublish
 {
@@ -28,30 +28,43 @@ class BlockPublish
      */
     private $createdAt;
 
+    
     /**
      * @var integer $id
      */
     private $id;
 
 
+    public function initByBlock(Block $block) {
+        $this->setSlug($block->getSlug());
+        $this->setBlockType($block->getBlockType());
+        $this->setBlock($block);
+    }
+ 
     /**
-     * Set label
-     *
-     * @param string $label
+     * @var Kitpages\CmsBundle\Entity\Block
      */
-    public function setLabel($label)
+    private $block;
+
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     */
+    public function setSlug($slug)
     {
-        $this->label = $label;
+        $this->slug = $slug;
     }
 
     /**
-     * Get label
+     * Get slug
      *
-     * @return string $label
+     * @return string $slug
      */
-    public function getLabel()
+    public function getSlug()
     {
-        return $this->label;
+        return $this->slug;
     }
 
     /**
@@ -95,71 +108,6 @@ class BlockPublish
     }
 
     /**
-     * Set creationDate
-     *
-     * @param datetime $creationDate
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
-    }
-
-    /**
-     * Get creationDate
-     *
-     * @return datetime $creationDate
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    /**
-     * @ORM\prePersist
-     */
-    public function prePersist()
-    {
-        // Add your code here
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        // Add your code here
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string $slug
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
      * Set createdAt
      *
      * @param datetime $createdAt
@@ -178,42 +126,16 @@ class BlockPublish
     {
         return $this->createdAt;
     }
-    
-    public function initByBlock(Block $block) {
-        $this->setSlug($block->getSlug());
-        $this->setBlockType($block->getBlockType());
-        $this->setBlock($block);
-    }
-    /**
-     * @var Kitpages\CmsBundle\Entity\Block
-     */
-    private $block_id;
-
 
     /**
-     * Set block_id
+     * Get id
      *
-     * @param Kitpages\CmsBundle\Entity\Block $blockId
+     * @return integer $id
      */
-    public function setBlockId(\Kitpages\CmsBundle\Entity\Block $blockId)
+    public function getId()
     {
-        $this->block_id = $blockId;
+        return $this->id;
     }
-
-    /**
-     * Get block_id
-     *
-     * @return Kitpages\CmsBundle\Entity\Block $blockId
-     */
-    public function getBlockId()
-    {
-        return $this->block_id;
-    }
-    /**
-     * @var Kitpages\CmsBundle\Entity\Block
-     */
-    private $block;
-
 
     /**
      * Set block
@@ -233,5 +155,20 @@ class BlockPublish
     public function getBlock()
     {
         return $this->block;
+    }
+    /**
+     * @ORM\prePersist
+     */
+    public function prePersist()
+    {
+        // Add your code here
+    }
+
+    /**
+     * @ORM\preUpdate
+     */
+    public function preUpdate()
+    {
+        // Add your code here
     }
 }

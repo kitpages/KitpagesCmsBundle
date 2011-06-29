@@ -4,8 +4,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-
-    <entity name="Kitpages\CmsBundle\Entity\Block" table="cms_block">
+    <entity name="Kitpages\CmsBundle\Entity\Block" repository-class="Kitpages\CmsBundle\Repository\BlockRepository" table="cms_block">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
@@ -39,6 +38,9 @@
         </field>        
         
         <one-to-many field="listBlockPublish" target-entity="Kitpages\CmsBundle\Entity\BlockPublish" mapped-by="block" >
+        </one-to-many>
+
+        <one-to-many field="listZoneBlock" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
         </one-to-many>
         
     </entity>

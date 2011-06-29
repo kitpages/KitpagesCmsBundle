@@ -335,4 +335,54 @@ class Block
     {
         return $this->listBlockPublish;
     }
+    /**
+     * @var Kitpages\CmsBundle\Entity\ZoneBlock
+     */
+    private $listZone;
+
+
+    /**
+     * Add listZone
+     *
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $listZone
+     */
+    public function addListZone(\Kitpages\CmsBundle\Entity\ZoneBlock $listZone)
+    {
+        $this->listZone[] = $listZone;
+    }
+
+    /**
+     * Get listZone
+     *
+     * @return Doctrine\Common\Collections\Collection $listZone
+     */
+    public function getListZone()
+    {
+        return $this->listZone;
+    }
+    /**
+     * @var Kitpages\CmsBundle\Entity\ZoneBlock
+     */
+    private $listZoneBlock;
+
+
+    /**
+     * Add listZoneBlock
+     *
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock
+     */
+    public function addListZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock)
+    {
+        $this->listZoneBlock[] = $listZoneBlock;
+    }
+
+    /**
+     * Get listZoneBlock
+     *
+     * @return Doctrine\Common\Collections\Collection $listZoneBlock
+     */
+    public function getListZoneBlock()
+    {
+        return $this->listZoneBlock;
+    }
 }

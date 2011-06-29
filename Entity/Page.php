@@ -343,4 +343,154 @@ class Page
     {
         // Add your code here
     }
+    /**
+     * @var Kitpages\CmsBundle\Entity\PageZone
+     */
+    private $listZone;
+
+
+    /**
+     * Add listZone
+     *
+     * @param Kitpages\CmsBundle\Entity\PageZone $listZone
+     */
+    public function addListZone(\Kitpages\CmsBundle\Entity\PageZone $listZone)
+    {
+        $this->listZone[] = $listZone;
+    }
+
+    /**
+     * Get listZone
+     *
+     * @return Doctrine\Common\Collections\Collection $listZone
+     */
+    public function getListZone()
+    {
+        return $this->listZone;
+    }
+    /**
+     * @var datetime $realUpdatedAt
+     */
+    private $realUpdatedAt;
+
+    /**
+     * @var datetime $publishedAt
+     */
+    private $publishedAt;
+
+    /**
+     * @var datetime $unpublishedAt
+     */
+    private $unpublishedAt;
+
+    /**
+     * @var datetime $createdAt
+     */
+    private $createdAt;
+
+    /**
+     * @var datetime $updatedAt
+     */
+    private $updatedAt;
+
+
+    /**
+     * Set realUpdatedAt
+     *
+     * @param datetime $realUpdatedAt
+     */
+    public function setRealUpdatedAt($realUpdatedAt)
+    {
+        $this->realUpdatedAt = $realUpdatedAt;
+    }
+
+    /**
+     * Get realUpdatedAt
+     *
+     * @return datetime $realUpdatedAt
+     */
+    public function getRealUpdatedAt()
+    {
+        return $this->realUpdatedAt;
+    }
+
+    /**
+     * Set publishedAt
+     *
+     * @param datetime $publishedAt
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+    }
+
+    /**
+     * Get publishedAt
+     *
+     * @return datetime $publishedAt
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * Set unpublishedAt
+     *
+     * @param datetime $unpublishedAt
+     */
+    public function setUnpublishedAt($unpublishedAt)
+    {
+        $this->unpublishedAt = $unpublishedAt;
+    }
+
+    /**
+     * Get unpublishedAt
+     *
+     * @return datetime $unpublishedAt
+     */
+    public function getUnpublishedAt()
+    {
+        return $this->unpublishedAt;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return datetime $createdAt
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param datetime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return datetime $updatedAt
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 }

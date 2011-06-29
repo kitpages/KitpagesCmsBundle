@@ -33,3 +33,17 @@ kitpages_cms_admin_view_mode_change:
     defaults: { _controller: KitpagesCmsBundle:Admin:viewModeChange }
     requirements:
         id: \d+
+
+kitpages_cms_page_create:
+    pattern:  /page/create
+    defaults: { _controller: KitpagesCmsBundle:Page:create }        
+        
+kitpages_cms_page_view:
+    pattern:  /page/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:view }
+    requirements:
+        id: \d+
+        
+kitpages_cms_zone_create:
+    pattern:  /zone/create
+    defaults: { _controller: KitpagesCmsBundle:Zone:create }            
