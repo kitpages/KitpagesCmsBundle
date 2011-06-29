@@ -181,8 +181,7 @@ class BlockPublish
     
     public function initByBlock(Block $block) {
         $this->setSlug($block->getSlug());
-        $this->setBlockType($block->getBlockType());
-        $this->setBlock($block);
+        $this->setBlockType($block->getBlockType());        
     }
     /**
      * @var Kitpages\CmsBundle\Entity\Block
@@ -208,30 +207,5 @@ class BlockPublish
     public function getBlockId()
     {
         return $this->block_id;
-    }
-    /**
-     * @var Kitpages\CmsBundle\Entity\Block
-     */
-    private $block;
-
-
-    /**
-     * Set block
-     *
-     * @param Kitpages\CmsBundle\Entity\Block $block
-     */
-    public function setBlock(\Kitpages\CmsBundle\Entity\Block $block)
-    {
-        $this->block = $block;
-    }
-
-    /**
-     * Get block
-     *
-     * @return Kitpages\CmsBundle\Entity\Block $block
-     */
-    public function getBlock()
-    {
-        return $this->block;
     }
 }

@@ -21,3 +21,15 @@ kitpages_cms_block_publish:
     defaults: { _controller: KitpagesCmsBundle:Block:publish }
     requirements:
         id: \d+
+        
+kitpages_cms_block_unpublish:
+    pattern:  /block/unpublish/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:unpublish }
+    requirements:
+        id: \d+
+        
+kitpages_cms_admin_view_mode_change:
+    pattern:  /admin/viewModeChange/{viewMode}
+    defaults: { _controller: KitpagesCmsBundle:Admin:viewModeChange }
+    requirements:
+        id: \d+

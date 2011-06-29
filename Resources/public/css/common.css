@@ -1,0 +1,36 @@
+/*
+ * Toolbar
+ */
+.admin-toolbar {
+    margin: 5px;
+    background-color: #999999;
+}
+.admin-toolbar .admin-toolbar-button {
+    float: left;
+}
+
+.admin-toolbar .admin-toolbar-contextSwitch {
+    float: right;
+}
+.admin-toolbar .admin-toolbar-contextSwitch li {
+    display:-moz-inline-box;display:inline-block;
+}
+
+.admin-toolbar .admin-toolbar-contextSwitch li a {
+    display: block;
+    padding: 5px;
+    border: 1px solid #000000;
+}
+
+.admin-toolbar .admin-toolbar-contextSwitch li.selected a {
+    background-color: #FFFFFF;
+}
+
+.admin-toolbar .admin-toolbar-mainToolbar {
+    display: inline-block;
+}
+
+.admin-toolbar-module {
+    display: inline-block;
+}
+

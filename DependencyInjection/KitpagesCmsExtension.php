@@ -36,6 +36,9 @@ class KitpagesCmsExtension extends Extension
         $this->remapParametersNamespaces($config['block'], $container, array(
             'template'  => 'kitpages_cms.block.template.%s'
         ));
+        $this->remapParametersNamespaces($config['block'], $container, array(
+            'renderer'  => 'kitpages_cms.block.renderer.%s'
+        ));
         $this->remapParametersNamespaces($config, $container, array(
             'page'  => 'kitpages_cms.page.%s'
         ));

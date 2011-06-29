@@ -5,22 +5,33 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="kitpages_cms.cms.blockManager">Kitpages\CmsBundle\Model\BlockManager</parameter>
         <parameter key="kitpages_cms.cms.cmsManager">Kitpages\CmsBundle\Model\CmsManager</parameter>
+        <parameter key="kitpages_cms.page.default_layout">base.html.twig</parameter>
         <parameter key="kitpages_cms.cms.target_parameter">cms_target</parameter>
     </parameters>
 
     <services>
-        <service id="kitpages.cms.manager.block" class="Kitpages\CmsBundle\Model\BlockManager">
-            <argument type="service" id="event_dispatcher"/>
-        </service>
-        <service id="kitpages.cms.listener.publish" class="Kitpages\CmsBundle\BlockListener">
+        <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.block.publish" method="onPublish" />
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="templating"/>           
         </service>
         <service id="kitpages.cms.model.cmsManager" class="%kitpages_cms.cms.cmsManager%">
-            <tag name="kernel.listener" event="core.controller" method="onCoreController" />
+            <tag name="kernel.event_listener" event="core.controller" method="onCoreController" />
+            <tag name="doctrine.event_listener" event="prePersist" /> 
+            <tag name="doctrine.event_listener" event="postPersist" /> 
+            <tag name="doctrine.event_listener" event="preUpdate" />
+            <tag name="doctrine.event_listener" event="onFlush" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="session"/>
             <argument>%kitpages_cms.page.default_layout%</argument>
             <argument>%kitpages_cms.cms.target_parameter%</argument>
-        </service>
+        </service><!--
+        <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
+            <tag name="doctrine.event_listener" event="prePersist" method="onPrePersist" />
+        </service>-->
     </services>
+  
 </container>
