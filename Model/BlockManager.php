@@ -1,9 +1,12 @@
 <?php
 namespace Kitpages\CmsBundle\Model;
+
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Event\FilterPublishEvent;
+use Kitpages\CmsBundle\Event\FilterUnpublishEvent;
 use Kitpages\CmsBundle\KitpagesCmsStoreEvents;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -45,10 +48,18 @@ class BlockManager
         $event = new FilterPublishEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
     }
+    public function unpublish(Block $block)
+    {
+        $event = new FilterUnpublishEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockUnpublish, $event);
+    }    
     public function onPublish(Event $event)
     {
         $em = $this->getDoctrine()->getEntityManager();        
         $block = $event->getBlock();
+        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
+            $em->remove($blockPublish);
+        }
         $listRenderer = $event->getListRenderer();        
         if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
             foreach($listRenderer as $renderer) {
@@ -64,4 +75,20 @@ class BlockManager
         $em->persist($block);
         $em->flush();
     }  
+    
+    public function onUnpublish(Event $event)
+    {
+   
+        $em = $this->getDoctrine()->getEntityManager();        
+        $block = $event->getBlock();
+        
+        $block->setIsPublished(false);
+        $em->persist($block);
+        
+        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
+            $em->remove($blockPublish);
+        }
+        $em->flush();
+    }
+    
 }

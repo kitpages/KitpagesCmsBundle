@@ -22,11 +22,8 @@ class AdminController extends Controller
 
         $cmsManager = $this->get('kitpages.cms.model.cmsManager');
         $cmsManager->setViewMode($viewMode);
-//        $dataRender = array(
-//            'context' => $cmsManager->getContext()
-//        );
         $request = Request::createFromGlobals();
-        return new RedirectResponse($request->query->get('target'));
+        return new RedirectResponse($request->query->get('kitpages_target'));
     }    
     
 }

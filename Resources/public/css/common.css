@@ -1,3 +1,52 @@
+@CHARSET "UTF-8";
+
+/*
+ * FONT SIZE HANDICAP COMPATIBLE
+ */
+html {
+    font-size: 100%;  /* IE hack */
+}
+
+body {
+    font-size: 76% !important;
+}
+
+table, th, td,  input, select { font-size: 100%; } /* IE hack */
+
+h1 { font-size: 2.0em; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.5em; }
+h4 { font-size: 1.3em; }
+h5 { font-size: 1.1em; }
+h6 { font-size: 1.0em; }
+p, td { font-size: 1.1em; }
+ol, ul, li { font-size: 1.0em; margin: 0px; }
+.notes { font-size: 1.0em; }
+
+/*
+ * HTML5
+ */
+
+header, footer, section, aside, nav, article, figure, figcaption, hgroup, time {
+    display: block;
+}
+/*
+ * Layout général
+ */
+html {
+}
+body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+
+.hidden {
+    display:none !important;
+}
 /*
  * Toolbar
  */
@@ -34,3 +83,93 @@
     display: inline-block;
 }
 
+/*
+ * ZONE EDITION
+ */
+ 
+ .zoneEdit {
+    border: 1px dotted red; 
+    background-color:#BFDBFF;
+}
+ 
+/*
+ * BLOCK EDITION
+ */
+ 
+.zoneBlockEdit .actions li a , .blockEdit .actions li a { 
+    display: block ; 
+    background: #900; 
+    color: #fff ; 
+    font: 1em "Trebuchet MS",Arial,sans-serif ; 
+    line-height: 1em ; 
+    padding: 4px 0 ; 
+    text-align: center ; 
+    }     
+.zoneBlockEdit .actions li a:hover, .blockEdit .actions li a:hover { 
+    background: #033; 
+    }
+.zoneBlockEdit .actions a, .blockEdit .actions a{
+    display: block ; 
+    color: #000 ; 
+    font: 1em "Trebuchet MS",Arial,sans-serif ; 
+    line-height: 1em ; 
+    padding: 4px 0 ; 
+    text-align: center ; 
+}
+.zoneBlockEdit .actions, .blockEdit .actions {
+                list-style: none;
+                position:relative;
+                width:100%;
+                height:15px;
+                border:1px solid;
+                background-color:#BFDBFF;
+               } 
+.zoneBlockEdit .actions ul, .blockEdit .actions ul {
+                position: absolute;
+                top: 15px;
+                left: 0;
+                display:none;
+                width:100%;
+                z-index:5;
+               } 
+.zoneBlockEdit .actions:hover ul, .blockEdit .actions:hover ul {
+    display:block;
+}
+
+/***********************/
+/* CMS */
+/***********************/
+.cms-zone-edit .cms-block {
+    border-left: 1px solid #D3DAED;
+    border-right: 1px solid #D3DAED;
+    border-bottom: 1px solid #D3DAED;
+}
+.kitpages-builder-toolbar {
+    background-color: #E3EAFD;
+    margin: 2px;
+    padding: 2px;
+}
+.kitpages-builder-toolbar ul {
+    display:inline-block;
+}
+.kitpages-builder-toolbar ul.kitpages-builder-toolbar-main li {
+    display:inline-block;
+}
+.kitpages-builder-toolbar ul li a {
+    display: block;
+    padding: 2px;
+    margin-left: 5px;
+    background-color: #D3DAED;
+}
+
+.kitpages-builder-toolbar ul li a:hover {
+    background-color: #800000;
+}
+.kitpages-builder-toolbar div {
+    display: inline-block;
+    position: relative;
+}
+.kitpages-builder-toolbar div ul {
+    position: absolute;
+    background-color: #D3DAED;
+}

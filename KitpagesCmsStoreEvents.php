@@ -13,4 +13,5 @@ final class KitpagesCmsStoreEvents
      * @var string
      */
     const onBlockPublish = 'kitpages.cms.block.publish';
+    const onBlockUnpublish = 'kitpages.cms.block.unpublish';
 }

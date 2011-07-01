@@ -13,12 +13,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Kitpages\CmsBundle\Entity\Page;
+use Kitpages\CmsBundle\Entity\PageZone;
 
 class PageController extends Controller
 {
  
     public function viewAction(Page $page)
     {
+        return $this->render($page->getLayout());        
+    }
+
+    public function testTreeAction(Page $page)
+    {
+              $em = $this->get('doctrine')->getEntityManager();
+        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find(1);
+        $test = new PageZone();
+        $test->setPage($page);
+        $test->setZone($zone);  
+        $test->setPosition(0);
+        $em->persist($test);
+        $em->flush();        
+        $repo = $em->getRepository('KitpagesCmsBundle:PageZone');
+        // move it up by one position
+        $repo->moveUp($test, 1);
         return $this->render($page->getLayout());        
     }
     

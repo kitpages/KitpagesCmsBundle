@@ -14,7 +14,10 @@ class BlockPublishRepository extends EntityRepository
                          ->getResult();
 
         foreach($query as $blockId) {
-              $listBlock[] = $this->findOneByBlockId($blockId['block_id']);
+            $blockPublish = $this->findOneByBlockId($blockId['block_id']);
+            if (!is_null($blockPublish)) {
+              $listBlock[] = $blockPublish;
+            }
         }
         return $listBlock;
     }

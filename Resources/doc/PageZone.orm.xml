@@ -5,16 +5,19 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\PageZone" repositoryClass="Kitpages\CmsBundle\Repository\ZoneBlockRepository" table="cms_page_zone">
+    <entity name="Kitpages\CmsBundle\Entity\PageZone" table="cms_page_zone">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
-        </id>
+        </id>      
         <field  name="page_id" column="page_id" type="integer"  nullable="false" />
         <field  name="zone_id" column="zone_id" type="integer"  nullable="false" />
 
         <field name="position" column="position" type="integer" />
-  
+        <field name="level" column="level" type="integer">
+            <gedmo:tree-level/>
+        </field>        
+      
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
@@ -31,6 +34,7 @@
                 <join-column name="page_id" referenced-column-name="id"/>
             </join-columns>
         </many-to-one>        
+        <gedmo:tree type="nested"/>        
     </entity>
 
 </doctrine-mapping>

@@ -15,6 +15,24 @@ kitpages_cms_block_edit:
     defaults: { _controller: KitpagesCmsBundle:Block:edit }
     requirements:
         id: \d+
+
+kitpages_cms_zoneblock_delete:
+    pattern:  /block/zoneBlockDelete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:zoneBlockDelete }
+    requirements:
+        id: \d+
+ 
+kitpages_cms_zoneblock_moveup:
+    pattern:  /block/moveup/{zone}/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:moveUp }
+    requirements:
+        id: \d+
+
+kitpages_cms_zoneblock_movedown:
+    pattern:  /block/movedown/{zone}/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:moveDown }
+    requirements:
+        id: \d+
         
 kitpages_cms_block_publish:
     pattern:  /block/publish/{id}
@@ -43,7 +61,19 @@ kitpages_cms_page_view:
     defaults: { _controller: KitpagesCmsBundle:Page:view }
     requirements:
         id: \d+
+ 
+kitpages_cms_page_publish:
+    pattern:  /page/publish/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:publish }
+    requirements:
+        id: \d+
         
 kitpages_cms_zone_create:
     pattern:  /zone/create
-    defaults: { _controller: KitpagesCmsBundle:Zone:create }            
+    defaults: { _controller: KitpagesCmsBundle:Zone:create }         
+    
+kitpages_cms_zone_publish:
+    pattern:  /zone/publish/{id}
+    defaults: { _controller: KitpagesCmsBundle:Zone:publish }    
+    requirements:
+        id: \d+

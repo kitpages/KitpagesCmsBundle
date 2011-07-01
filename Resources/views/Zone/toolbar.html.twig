@@ -1,0 +1,12 @@
+<div class="kitpages-builder-toolbar">
+    <div class="zoneBlockEdit">
+    <div class="blockEdit">
+        <div class="actions" >ZONE {{title}}
+            {% for action, url in listAction %}
+               <a href='{{url}}' >{{action}}</a>
+            {% endfor %}
+        </div>
+    </div><br /> 
+    {% autoescape false %}{{ htmlBlock }}{% endautoescape %}
+</div>
+

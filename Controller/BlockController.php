@@ -11,8 +11,11 @@ namespace Kitpages\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\HiddenField;
 
 use Kitpages\CmsBundle\Entity\Block;
+use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Model\BlockManager;
 use Kitpages\CmsBundle\Model\CmsManager;
@@ -29,17 +32,22 @@ class BlockController extends Controller
     public function createAction()
     {
         $block = new Block();
+        $request = Request::createFromGlobals();
 
-        // build template list
         $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
         $selectTemplateList = array();
         foreach ($templateList as $key => $template) {
             $selectTemplateList[$key] = $template['name'];
         }
 
+        
         // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add('slug', 'text');
+        $builder->add('zone_id','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('zone_id')
+        ));         
         $builder->add('template', 'choice',array(
             'choices' => $selectTemplateList,
             'required' => true
@@ -58,8 +66,11 @@ class BlockController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $em->persist($block);
                 $em->flush();
-
-                return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
+                $zone_id = $this->get('request')->query->get('zone_id');
+                if (!empty($zone_id) && is_int($zone_id)) {
+                    $zoneBlock = new ZoneBlock();
+                }
+                //return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
             }
         }
         return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
@@ -120,7 +131,26 @@ class BlockController extends Controller
             'id' => $block->getId()
         ));
     }
-    
+
+    public function toolbar(Block $block) {  
+        $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
+            'kitpages_cms_block_edit', 
+            array('id' => $block->getId())
+        );
+        $dataRenderer['listAction']['unpublish'] = $this->get('router')->generate(
+            'kitpages_cms_block_unpublish', 
+            array('id' => $block->getId())
+        );
+        $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
+            'kitpages_cms_zoneblock_delete', 
+            array('id' => $block->getId())
+        );
+        
+        $resultingHtml = $this->renderView(
+            'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
+        );  
+        return $resultingHtml;
+    } 
 
     public function widgetAction($label) {
         // récupérer le label ou l'id du block
@@ -133,7 +163,12 @@ class BlockController extends Controller
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                $resultingHtml = $this->renderView($dataRenderer['default']['twig'], array('data' => $block->getData()));
+                $resultingHtml = 
+                    $this->toolbar($block).
+                    $this->renderView(
+                            $dataRenderer['default']['twig'],
+                            array('data' => $block->getData())
+                    );
             }
         } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PREVIEW) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
@@ -166,13 +201,12 @@ class BlockController extends Controller
         $blockManager->publish($block, $dataRenderer);
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
-    //pas de sens uniquement pour les tests
+
     public function unpublishAction(Block $block)
     {
-        $block->setIsPublished(false);
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($block);
-        $em->flush();
+        $blockManager = $this->get('kitpages.cms.manager.block');
+        $blockManager->unpublish($block);
+
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 

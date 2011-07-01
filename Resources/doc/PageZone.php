@@ -15,7 +15,11 @@ class PageZone
      */
     private $id;
     
-   
+    /**
+     * @var integer $level
+     */
+    private $level;
+    
     /**
      * @var integer $page_id
      */
@@ -42,7 +46,6 @@ class PageZone
      * @var Kitpages\CmsBundle\Entity\Page
      */
     private $page;
-
 
 
     /**
@@ -103,6 +106,26 @@ class PageZone
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer 
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     /**
