@@ -1,88 +1,97 @@
-@CHARSET "UTF-8";
 
-/*
- * FONT SIZE HANDICAP COMPATIBLE
- */
-html {
-    font-size: 100%;  /* IE hack */
-}
-
-body {
-    font-size: 76% !important;
-}
-
-table, th, td,  input, select { font-size: 100%; } /* IE hack */
-
-h1 { font-size: 2.0em; }
-h2 { font-size: 1.8em; }
-h3 { font-size: 1.5em; }
-h4 { font-size: 1.3em; }
-h5 { font-size: 1.1em; }
-h6 { font-size: 1.0em; }
-p, td { font-size: 1.1em; }
-ol, ul, li { font-size: 1.0em; margin: 0px; }
-.notes { font-size: 1.0em; }
-
-/*
- * HTML5
- */
-
-header, footer, section, aside, nav, article, figure, figcaption, hgroup, time {
-    display: block;
-}
-/*
- * Layout général
- */
-html {
-}
-body {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: left;
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-}
-
-
-.hidden {
-    display:none !important;
-}
 /*
  * Toolbar
  */
-.admin-toolbar {
-    margin: 5px;
-    background-color: #999999;
+.kit-cms {
 }
-.admin-toolbar .admin-toolbar-button {
-    float: left;
+.kit-cms a {
+    text-decoration: none;     
+}
+.kit-cms ul {
+    margin: 0px;
+    padding: 0px;
+}
+.kit-cms-toolbar {
+    display: table;
+    width: 100%;
 }
 
-.admin-toolbar .admin-toolbar-contextSwitch {
-    float: right;
-}
-.admin-toolbar .admin-toolbar-contextSwitch li {
-    display:-moz-inline-box;display:inline-block;
+.kit-cms-toolbar-main {
+    display: table-row;
+    height: 42px;
+    background-image: url('common/bg-toolbar.jpg');
+    background-repeat: repeat-x;
+    width: 100%;
 }
 
-.admin-toolbar .admin-toolbar-contextSwitch li a {
+.kit-cms-toolbar-main > ul {
+    display: table-cell;
+    width: 100%;
+    vertical-align: middle;
+}
+.kit-cms-toolbar-main > ul > li {
+    display: inline-block;
+}
+.kit-cms-toolbar-main > ul > li > a {
     display: block;
-    padding: 5px;
-    border: 1px solid #000000;
+    width: 100px;
+    margin: 0px 10px;
+    padding: 3px 0px;
+    background-color: #F0F0F0;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(128,128,128,0.7);
+    text-align: center;
+    color: #000;
 }
 
-.admin-toolbar .admin-toolbar-contextSwitch li.selected a {
-    background-color: #FFFFFF;
+.kit-cms-toolbar-main > ul > li > a:hover {
+    background-color: #BB092D;
+    color: #FFF;
+}
+.kit-cms-toolbar-main > ul > li.kit-cms-selected > a {
+    background-color: #BB092D;
+    color: #FFF;
 }
 
-.admin-toolbar .admin-toolbar-mainToolbar {
+.kit-cms-toolbar-main ul.kit-cms-tooblar-main-contextSwitch {
+    text-align: right;
+}
+
+/*
+ * zone or block menu
+ */
+.kit-cms .kit-cms-menu {
+    height: 30px;
+    background-color: #E3E3E3;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid #E3E3E3;
+    padding-left: 20px;
+}
+.kit-cms-menu > li {
     display: inline-block;
+    position: relative;
+    top: 4px;
+}
+.kit-cms-menu > li > a {
+    display: block;
+    margin: 0px 5px;
+    padding: 1px 10px;
+    background-color: #FFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    text-align: center;
+    color: #000;
+}
+.kit-cms-menu > li > a:hover {
+    background-color: #BB092D;
+    color: #FFF;
 }
 
-.admin-toolbar-module {
-    display: inline-block;
+.kit-cms-block-container {
+    border: 1px solid #E3E3E3;
 }
-
 /*
  * ZONE EDITION
  */

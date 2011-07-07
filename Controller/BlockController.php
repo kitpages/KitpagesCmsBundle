@@ -165,10 +165,13 @@ class BlockController extends Controller
                 $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                 $resultingHtml = 
                     $this->toolbar($block).
+                    '<div class="kit-cms-block-container">'.
                     $this->renderView(
                             $dataRenderer['default']['twig'],
                             array('data' => $block->getData())
-                    );
+                    ).
+                    '</div>';
+                
             }
         } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PREVIEW) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
