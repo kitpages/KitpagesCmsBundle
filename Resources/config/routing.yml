@@ -23,14 +23,14 @@ kitpages_cms_zoneblock_delete:
         id: \d+
  
 kitpages_cms_zoneblock_moveup:
-    pattern:  /block/moveup/{zone}/{id}
-    defaults: { _controller: KitpagesCmsBundle:Block:moveUp }
+    pattern:  /zone/moveup/{id}/{block_id}
+    defaults: { _controller: KitpagesCmsBundle:Zone:moveUpBlock }
     requirements:
         id: \d+
 
 kitpages_cms_zoneblock_movedown:
-    pattern:  /block/movedown/{zone}/{id}
-    defaults: { _controller: KitpagesCmsBundle:Block:moveDown }
+    pattern:  /zone/movedown/{id}/{block_id}
+    defaults: { _controller: KitpagesCmsBundle:Zone:moveDownBlock }
     requirements:
         id: \d+
         

@@ -493,4 +493,54 @@ class Page
     {
         return $this->updatedAt;
     }
+    /**
+     * @var string $language
+     */
+    private $language;
+
+    /**
+     * @var string $title
+     */
+    private $title;
+
+
+    /**
+     * Set language
+     *
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
+     * Get language
+     *
+     * @return string 
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

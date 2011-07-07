@@ -11,12 +11,14 @@ namespace Kitpages\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
-use Kitpages\CmsBundle\Model\CmsManager;
+use Kitpages\CmsBundle\Controller\Context;
 
 class ZoneController extends Controller
 {
@@ -52,7 +54,7 @@ class ZoneController extends Controller
     public function toolbar(Zone $zone, $htmlBlock) {  
         $listAction['addBlock'] = $this->get('router')->generate(
             'kitpages_cms_block_create', 
-            array('id' => $zone->getId(), 'zone_id' => $zone->getId())
+            array('zone_id' => $zone->getId())
         );
         $listAction['publish'] = $this->get('router')->generate(
             'kitpages_cms_zone_publish', 
@@ -72,14 +74,19 @@ class ZoneController extends Controller
     
     public function toolbarBlock(Zone $zone, Block $block) {  
 
+        $dataUrl = array(
+            'id' => $zone->getId(), 
+            'block_id' => $block->getId(),
+            'kitpages_target' => $_SERVER["REQUEST_URI"]    
+        );
         $dataRenderer['listAction']['moveUp'] = $this->get('router')->generate(
             'kitpages_cms_zoneblock_moveup', 
-            array('id' => $block->getId(), 'zone' => $zone->getId())
+            $dataUrl
         );
 
         $dataRenderer['listAction']['moveDown'] = $this->get('router')->generate(
             'kitpages_cms_zoneblock_movedown', 
-            array('id' => $block->getId(), 'zone' => $zone->getId())
+            $dataUrl
         );
         
         $resultingHtml = $this->renderView(
@@ -88,31 +95,29 @@ class ZoneController extends Controller
         return $resultingHtml;
     } 
     
-    public function widgetAction($label) {
-        // récupérer le label ou l'id du block
-        
-        $cmsManager = $this->get('kitpages.cms.model.cmsManager');
+    public function widgetAction($label, $renderer = 'default') {
+        $context = $this->get('kitpages.cms.controller.context');
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
         $resultingHtml = '';
 
-        if ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_EDIT) {
-            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZoneId($zone->getId()) as $block){
+        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block).$this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
-                    array("label" => $block->getSlug()), array()
+                    array("label" => $block->getSlug(), "renderer" =>$renderer), array()
                 );
             }
             $resultingHtml = $this->toolbar($zone, $resultingHtml);
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PREVIEW) {
-            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZoneId($zone->getId()) as $block){
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
-                    array("label" => $block->getSlug()), array()
+                    array("label" => $block->getSlug(), "renderer" =>$renderer), array()
                 );
             }        
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PROD) {
-            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZoneId($zone->getId()) as $blockPublish){
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZoneAndRenderer($zone, $renderer) as $blockPublish){
                 $data = $blockPublish->getData();
 
                 if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
@@ -124,17 +129,53 @@ class ZoneController extends Controller
         
         return new Response($resultingHtml);
     }
-    
     public function publishAction(Zone $zone)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZoneId($zone->getId()) as $block){
-            $blockManager = $this->get('kitpages.cms.manager.block');
-            $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-            $blockManager->publish($block, $dataRenderer);
-        }
-
+        $zoneManager = $this->get('kitpages.cms.manager.zone');
+        $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');        
+        $zoneManager->firePublish($zone, $dataRenderer);
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
-    
+
+    public function unpublishAction(Zone $zone)
+    {
+        $blockManager = $this->get('kitpages.cms.manager.zone');
+        $blockManager->fireUnpublish($zone);
+
+        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+    }    
+//    public function publishAction(Zone $zone)
+//    {
+//        $em = $this->getDoctrine()->getEntityManager();
+//        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+//            $blockManager = $this->get('kitpages.cms.manager.block');
+//            $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
+//            $blockManager->publish($block, $dataRenderer);
+//        }
+//
+//        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+//    }
+
+    public function moveUpBlockAction($id, $block_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($id, $block_id);
+        $position = $zoneBlock->getPosition()-1;
+        $zoneBlock->setPosition($position);
+        $em->persist($zoneBlock);
+        $em->flush();
+        $request = Request::createFromGlobals();
+        return new RedirectResponse($request->query->get('kitpages_target'));
+    }
+    public function moveDownBlockAction($id, $block_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($id, $block_id);
+        $position = $zoneBlock->getPosition()+1;
+        $zoneBlock->setPosition($position);
+        $em->persist($zoneBlock);
+        $em->flush();
+        $request = Request::createFromGlobals();
+        return new RedirectResponse($request->query->get('kitpages_target'));
+    }    
 }

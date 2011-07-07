@@ -4,13 +4,13 @@ namespace Kitpages\CmsBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Kitpages\CmsBundle\Entity\Block;
 
-class FilterPublishEvent extends Event
+class BlockEvent extends Event
 {
     protected $block;
     protected $listRenderer;    
 
     
-    public function __construct(Block $block, $listRenderer)
+    public function __construct(Block $block, $listRenderer = null)
     {
         $this->block = $block;
         $this->listRenderer = $listRenderer;

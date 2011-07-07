@@ -10,122 +10,57 @@ use Doctrine\ORM\Mapping as ORM;
 class Zone
 {
     /**
-     * @var string $label
+     * @var string $slug
      */
-    private $label;
-
-    /**
-     * @var datetime $creationDate
-     */
-    private $creationDate;
-
-    /**
-     * @var datetime $modificationDate
-     */
-    private $modificationDate;
+    private $slug;
 
     /**
      * @var integer $id
      */
     private $id;
 
+    /**
+     * @var boolean $isPublished
+     */
+    private $isPublished;
+
+
+    /**
+     * @var datetime $publishedAt
+     */
+    private $publishedAt;
+
+    /**
+     * @var datetime $unpublishedAt
+     */
+    private $unpublishedAt;
+    
+    /**
+     * @var datetime $createdAt
+     */
+    private $createdAt;
+
+    /**
+     * @var datetime $updatedAt
+     */
+    private $updatedAt;
+
+    /**
+     * @var Kitpages\CmsBundle\Entity\ZoneBlock
+     */
+    private $zoneBlockList;
+
+    /**
+     * @var Kitpages\CmsBundle\Entity\Page
+     */
+    private $pageList;
 
     public function __construct()
     {
-        $this->blockList = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->pageList = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
-    /**
-     * Set label
-     *
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
-     * Get label
-     *
-     * @return string $label
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * Set creationDate
-     *
-     * @param datetime $creationDate
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
-    }
-
-    /**
-     * Get creationDate
-     *
-     * @return datetime $creationDate
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Set modificationDate
-     *
-     * @param datetime $modificationDate
-     */
-    public function setModificationDate($modificationDate)
-    {
-        $this->modificationDate = $modificationDate;
-    }
-
-    /**
-     * Get modificationDate
-     *
-     * @return datetime $modificationDate
-     */
-    public function getModificationDate()
-    {
-        return $this->modificationDate;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @ORM\prePersist
-     */
-    public function prePersist()
-    {
-        // Add your code here
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        // Add your code here
-    }
-    /**
-     * @var string $slug
-     */
-    private $slug;
-
-
     /**
      * Set slug
      *
@@ -139,252 +74,12 @@ class Zone
     /**
      * Get slug
      *
-     * @return string $slug
+     * @return string 
      */
     public function getSlug()
     {
         return $this->slug;
     }
-    /**
-     * @var Kitpages\CmsBundle\Entity\PageZone
-     */
-    private $listPage;
-
-    /**
-     * @var Kitpages\CmsBundle\Entity\ZoneBlock
-     */
-    private $listBlock;
-
-
-
-
-
-
-    /**
-     * Get listBlockByPosition
-     *
-     * @return Doctrine\Common\Collections\Collection $listBlock
-     */
-    public function getListBlockByPosition()
-    {
-//        foreach($this->listBlock as $block) {
-//            $listReturn[$block->getPosition]
-//        }
-        //echo var_dump($this->listBlock);
-        return $this->listBlock;
-    }
-    
-
-    /**
-     * @var string $pageType
-     */
-    private $pageType;
-
-    /**
-     * @var string $layout
-     */
-    private $layout;
-
-    /**
-     * @var boolean $isActive
-     */
-    private $isActive;
-
-    /**
-     * @var boolean $isPublished
-     */
-    private $isPublished;
-
-    /**
-     * @var array $data
-     */
-    private $data;
-
-    /**
-     * @var datetime $realModificationDate
-     */
-    private $realModificationDate;
-
-    /**
-     * @var datetime $publicationDate
-     */
-    private $publicationDate;
-
-    /**
-     * @var datetime $unpublicationDate
-     */
-    private $unpublicationDate;
-
-
-    /**
-     * Set pageType
-     *
-     * @param string $pageType
-     */
-    public function setPageType($pageType)
-    {
-        $this->pageType = $pageType;
-    }
-
-    /**
-     * Get pageType
-     *
-     * @return string $pageType
-     */
-    public function getPageType()
-    {
-        return $this->pageType;
-    }
-
-    /**
-     * Set layout
-     *
-     * @param string $layout
-     */
-    public function setLayout($layout)
-    {
-        $this->layout = $layout;
-    }
-
-    /**
-     * Get layout
-     *
-     * @return string $layout
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean $isActive
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Set isPublished
-     *
-     * @param boolean $isPublished
-     */
-    public function setIsPublished($isPublished)
-    {
-        $this->isPublished = $isPublished;
-    }
-
-    /**
-     * Get isPublished
-     *
-     * @return boolean $isPublished
-     */
-    public function getIsPublished()
-    {
-        return $this->isPublished;
-    }
-
-    /**
-     * Set data
-     *
-     * @param array $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * Get data
-     *
-     * @return array $data
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * Set realModificationDate
-     *
-     * @param datetime $realModificationDate
-     */
-    public function setRealModificationDate($realModificationDate)
-    {
-        $this->realModificationDate = $realModificationDate;
-    }
-
-    /**
-     * Get realModificationDate
-     *
-     * @return datetime $realModificationDate
-     */
-    public function getRealModificationDate()
-    {
-        return $this->realModificationDate;
-    }
-
-    /**
-     * Set publicationDate
-     *
-     * @param datetime $publicationDate
-     */
-    public function setPublicationDate($publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
-    }
-
-    /**
-     * Get publicationDate
-     *
-     * @return datetime $publicationDate
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set unpublicationDate
-     *
-     * @param datetime $unpublicationDate
-     */
-    public function setUnpublicationDate($unpublicationDate)
-    {
-        $this->unpublicationDate = $unpublicationDate;
-    }
-
-    /**
-     * Get unpublicationDate
-     *
-     * @return datetime $unpublicationDate
-     */
-    public function getUnpublicationDate()
-    {
-        return $this->unpublicationDate;
-    }
-    /**
-     * @var datetime $createdAt
-     */
-    private $createdAt;
-
-    /**
-     * @var datetime $updatedAt
-     */
-    private $updatedAt;
-
 
     /**
      * Set createdAt
@@ -399,7 +94,7 @@ class Zone
     /**
      * Get createdAt
      *
-     * @return datetime $createdAt
+     * @return datetime 
      */
     public function getCreatedAt()
     {
@@ -419,7 +114,7 @@ class Zone
     /**
      * Get updatedAt
      *
-     * @return datetime $updatedAt
+     * @return datetime 
      */
     public function getUpdatedAt()
     {
@@ -427,48 +122,157 @@ class Zone
     }
 
     /**
-     * Add listPage
+     * Get id
      *
-     * @param Kitpages\CmsBundle\Entity\PageZone $listPage
+     * @return integer 
      */
-    public function addListPage(\Kitpages\CmsBundle\Entity\PageZone $listPage)
+    public function getId()
     {
-        $this->listPage[] = $listPage;
+        return $this->id;
     }
 
     /**
-     * Get listPage
+     * Add zoneBlockList
      *
-     * @return Doctrine\Common\Collections\Collection $listPage
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
      */
-    public function getListPage()
+    public function addZoneBlockList(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
     {
-        return $this->listPage;
+        $this->zoneBlockList[] = $zoneBlockList;
     }
 
     /**
-     * @var Kitpages\CmsBundle\Entity\ZoneBlock
-     */
-    private $listZoneBlock;
-
-
-    /**
-     * Add listZoneBlock
+     * Get zoneBlockList
      *
-     * @param Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock
+     * @return Doctrine\Common\Collections\Collection 
      */
-    public function addListZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock)
+    public function getZoneBlockList()
     {
-        $this->listZoneBlock[] = $listZoneBlock;
+        return $this->zoneBlockList;
     }
 
     /**
-     * Get listZoneBlock
+     * Add pageList
      *
-     * @return Doctrine\Common\Collections\Collection $listZoneBlock
+     * @param Kitpages\CmsBundle\Entity\Page $pageList
      */
-    public function getListZoneBlock()
+    public function addPageList(\Kitpages\CmsBundle\Entity\Page $pageList)
     {
-        return $this->listZoneBlock;
+        $this->pageList[] = $pageList;
+    }
+
+    /**
+     * Get pageList
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getPageList()
+    {
+        return $this->pageList;
+    }
+    /**
+     * @ORM\prePersist
+     */
+    public function prePersist()
+    {
+        // Add your code here
+    }
+
+    /**
+     * @ORM\preUpdate
+     */
+    public function preUpdate()
+    {
+        // Add your code here
+    }
+    /**
+     * @var Kitpages\CmsBundle\Entity\ZonePublish
+     */
+    private $zonePublish;
+
+
+    /**
+     * Set zonePublish
+     *
+     * @param Kitpages\CmsBundle\Entity\ZonePublish $zonePublish
+     */
+    public function setZonePublish(\Kitpages\CmsBundle\Entity\ZonePublish $zonePublish)
+    {
+        $this->zonePublish = $zonePublish;
+    }
+
+    /**
+     * Get zonePublish
+     *
+     * @return Kitpages\CmsBundle\Entity\ZonePublish 
+     */
+    public function getZonePublish()
+    {
+        return $this->zonePublish;
+    }
+    
+    public function defaultSlug(){
+        $this->setSlug('zone_'.$this->getId());
+    }
+    
+
+    /**
+     * Set isPublished
+     *
+     * @param boolean $isPublished
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+    }
+
+    /**
+     * Get isPublished
+     *
+     * @return boolean 
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
+    }
+
+    /**
+     * Set publishedAt
+     *
+     * @param datetime $publishedAt
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+    }
+
+    /**
+     * Get publishedAt
+     *
+     * @return datetime 
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * Set unpublishedAt
+     *
+     * @param datetime $unpublishedAt
+     */
+    public function setUnpublishedAt($unpublishedAt)
+    {
+        $this->unpublishedAt = $unpublishedAt;
+    }
+
+    /**
+     * Get unpublishedAt
+     *
+     * @return datetime 
+     */
+    public function getUnpublishedAt()
+    {
+        return $this->unpublishedAt;
     }
 }

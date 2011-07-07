@@ -15,16 +15,6 @@ class ZoneBlock
     private $id;    
    
     /**
-     * @var integer $zone_id
-     */
-    private $zone_id;
-    
-    /**
-     * @var integer $page_id
-     */
-    private $block_id;
-    
-    /**
      * @var integer $position
      */
     private $position;
@@ -59,46 +49,6 @@ class ZoneBlock
     public function getPosition()
     {
         return $this->position;
-    }
-
-    /**
-     * Set zone_id
-     *
-     * @param integer $zoneId
-     */
-    public function setZoneId($zoneId)
-    {
-        $this->zone_id = $zoneId;
-    }
-
-    /**
-     * Get zone_id
-     *
-     * @return integer $zoneId
-     */
-    public function getZoneId()
-    {
-        return $this->zone_id;
-    }
-
-    /**
-     * Set block_id
-     *
-     * @param integer $blockId
-     */
-    public function setBlockId($blockId)
-    {
-        $this->block_id = $blockId;
-    }
-
-    /**
-     * Get block_id
-     *
-     * @return integer $blockId
-     */
-    public function getBlockId()
-    {
-        return $this->block_id;
     }
 
     /**
