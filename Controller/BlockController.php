@@ -118,7 +118,7 @@ class BlockController extends Controller
         $form = $builder->getForm();
         
         // persist form if needed
-        $request = $this->get('request');
+        $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
@@ -127,6 +127,10 @@ class BlockController extends Controller
                 $em->persist($block);
                 $em->flush();
 
+                $target = $request->query->get('kitpages_target', null);
+                if ($target) {
+                    return $this->redirect($target);
+                }
                 return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
             }
         }
@@ -134,14 +138,18 @@ class BlockController extends Controller
         //echo '<pre>'.print_r($view, true).'</pre>';
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),
-            'id' => $block->getId()
+            'id' => $block->getId(),
+            'kitpages_target' => $request->query->get('kitpages_target', null)
         ));
     }
 
     public function toolbar(Block $block) {  
         $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
             'kitpages_cms_block_edit', 
-            array('id' => $block->getId())
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
         );
         $dataRenderer['listAction']['unpublish'] = $this->get('router')->generate(
             'kitpages_cms_block_unpublish', 
