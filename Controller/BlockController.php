@@ -17,7 +17,7 @@ use Symfony\Component\Form\HiddenField;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Form\BlockType;
-use Kitpages\CmsBundle\Model\BlockManager;
+use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Model\CmsManager;
 
 class BlockController extends Controller
@@ -65,12 +65,18 @@ class BlockController extends Controller
                 $block->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $em->persist($block);
-                $em->flush();
-                $zone_id = $this->get('request')->query->get('zone_id');
-                if (!empty($zone_id) && is_int($zone_id)) {
+
+                $dataForm = $request->request->get('form');
+                $zone_id = $dataForm['zone_id'];
+                if (!empty($zone_id)) {
                     $zoneBlock = new ZoneBlock();
+                    $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
+                    $zoneBlock->setZone($zone);
+                    $zoneBlock->setBlock($block);
+                    $em->persist($zoneBlock);
                 }
-                //return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
+                $em->flush();
+                return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
             }
         }
         return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
@@ -152,35 +158,36 @@ class BlockController extends Controller
         return $resultingHtml;
     } 
 
-    public function widgetAction($label) {
-        // récupérer le label ou l'id du block
-        
-        $cmsManager = $this->get('kitpages.cms.model.cmsManager');
+    public function widgetAction($label, $renderer = 'default') {
+       
         $em = $this->getDoctrine()->getEntityManager();
-        
+        $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
-        if ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_EDIT) {
+        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                $resultingHtml = 
-                    $this->toolbar($block).
-                    '<div class="kit-cms-block-container">'.
-                    $this->renderView(
-                            $dataRenderer['default']['twig'],
+
+                if (!is_null($block->getData())) {
+                    $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
+                    $resultingHtml = $this->toolbar($block)
+                        .'<div class="kit-cms-block-container">'.
+                        $this->renderView(
+                            $dataRenderer[$renderer]['twig'],
                             array('data' => $block->getData())
-                    ).
-                    '</div>';
-                
+                        ).
+                        '</div>';
+                }
             }
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PREVIEW) {
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                $resultingHtml = $this->renderView($dataRenderer['default']['twig'], array('data' => $block->getData()));
+                if (!is_null($block->getData())) {                
+                    $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
+                    $resultingHtml = $this->renderView($dataRenderer[$renderer]['twig'], array('data' => $block->getData()));
+                }
             }          
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PROD) {
-            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $label));
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $label, 'renderer' => $renderer));
             if (!is_null($blockPublish)) {
                 $data = $blockPublish->getData();
                 if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
@@ -201,14 +208,14 @@ class BlockController extends Controller
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-        $blockManager->publish($block, $dataRenderer);
+        $blockManager->firePublish($block, $dataRenderer);
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
     public function unpublishAction(Block $block)
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
-        $blockManager->unpublish($block);
+        $blockManager->fireUnpublish($block);
 
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }

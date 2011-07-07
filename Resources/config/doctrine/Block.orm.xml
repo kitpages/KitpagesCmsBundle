@@ -10,7 +10,7 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" length="250"/>
+        <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
         <field name="blockType" column="block_type" type="string" length="100" />
         <field name="template" column="template" type="string" length="250" />
         
@@ -37,10 +37,10 @@
             <gedmo:timestampable on="update"/>
         </field>        
         
-        <one-to-many field="listBlockPublish" target-entity="Kitpages\CmsBundle\Entity\BlockPublish" mapped-by="block" >
+        <one-to-many field="blockPublishList" target-entity="Kitpages\CmsBundle\Entity\BlockPublish" mapped-by="block" >
         </one-to-many>
 
-        <one-to-many field="listZoneBlock" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
+        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
         </one-to-many>
         
     </entity>

@@ -11,8 +11,9 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" length="250"/>
-        
+        <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
+        <field name="language" column="language" type="string" nullable="true" length="250"/>       
+        <field name="title" column="title" type="string" nullable="false" length="250"/>          
         <field name="pageType" column="page_type" type="string" length="100" />
         <field name="layout" column="layout" type="string" length="250" />
         
@@ -21,10 +22,6 @@
         
         <field name="data" column="data" type="array" nullable="true" />
         
-        <field name="realUpdatedAt" column="real_updated_date" type="datetime">
-            <gedmo:timestampable on="create" />
-        </field>
-
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />
         </field>
@@ -44,8 +41,27 @@
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
-        <one-to-many field="listZone" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="zone" >
-        </one-to-many>
+        <many-to-many
+            field="zoneList"
+            target-entity="Kitpages\CmsBundle\Entity\Zone"
+            inversed-by="pageList"
+            fetch="EAGER"
+            >
+
+            <cascade>
+               <cascade-persist />
+            </cascade>
+
+            <join-table name="cms_page_zone">
+                <join-columns>
+                    <join-column name="page_id" referenced-column-name="id"/>
+                </join-columns>
+
+                <inverse-join-columns>
+                    <join-column name="zone_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
         
     </entity>
 

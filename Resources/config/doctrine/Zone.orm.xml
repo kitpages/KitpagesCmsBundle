@@ -12,7 +12,14 @@
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
-
+        <field name="isPublished" column="is_published" type="boolean"/>        
+        <field name="publishedAt" column="published_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="change" field="isPublished" value="1" />
+        </field>
+        <field name="unpublishedAt" column="unpublished_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="change" field="isPublished" value="0" />
+        </field>
+        
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
         </field>
@@ -24,13 +31,14 @@
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
+  
+        <many-to-many field="pageList" target-entity="Kitpages\CmsBundle\Entity\Page" mapped-by="zoneList" >
+        </many-to-many>
         
-        <one-to-many field="listPage" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="page" >
-        </one-to-many>
-        
-        <one-to-many field="listZoneBlock" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
+        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
         </one-to-many>
 
+        <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone" />
         
     </entity>
 

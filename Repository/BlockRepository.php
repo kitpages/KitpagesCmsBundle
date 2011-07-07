@@ -5,18 +5,14 @@ use Doctrine\ORM\EntityRepository;
 class BlockRepository extends EntityRepository
 {
    
-    public function findByZoneId($zoneId)
-    {      
-        
-        $query = $this->_em
-                         ->createQuery('SELECT zb.block_id FROM KitpagesCmsBundle:ZoneBlock zb WHERE zb.zone_id = :zone_id ORDER BY zb.position')
-                         ->setParameter("zone_id", $zoneId)
-                         ->getResult();
-        foreach($query as $blockId) {
-            $listBlock[] = $this->find($blockId['block_id']);
-        }
-        
+    public function findByZone($zone)
+    {   
+
+        $listBlock = $this->_em
+            ->createQuery('SELECT b FROM KitpagesCmsBundle:Block b JOIN b.zoneBlockList zb WHERE zb.zone = :zone ORDER BY zb.position')
+            ->setParameter("zone", $zone)
+            ->getResult();        
         return $listBlock;
-    }
+     }
     
 }

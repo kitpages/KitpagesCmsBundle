@@ -32,7 +32,9 @@ class KitpagesCmsExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-        
+        $this->remapParametersNamespaces($config, $container, array(
+            'block'  => 'kitpages_cms.block.%s'
+        ));
         $this->remapParametersNamespaces($config['block'], $container, array(
             'template'  => 'kitpages_cms.block.template.%s'
         ));

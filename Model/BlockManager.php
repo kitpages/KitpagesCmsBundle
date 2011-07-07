@@ -3,8 +3,7 @@ namespace Kitpages\CmsBundle\Model;
 
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
-use Kitpages\CmsBundle\Event\FilterPublishEvent;
-use Kitpages\CmsBundle\Event\FilterUnpublishEvent;
+use Kitpages\CmsBundle\Event\BlockEvent;
 use Kitpages\CmsBundle\KitpagesCmsStoreEvents;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -42,32 +41,41 @@ class BlockManager
     public function getDoctrine() {
         return $this->_doctrine;
     }    
-    
-    public function publish(Block $block, $listRenderer)
+
+    public function fireModify(Block $block)
     {
-        $event = new FilterPublishEvent($block, $listRenderer);
+        $event = new BlockEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockModify, $event);
+    }
+    
+    public function firePublish(Block $block, $listRenderer)
+    {
+        $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
     }
-    public function unpublish(Block $block)
+    public function fireUnpublish(Block $block)
     {
-        $event = new FilterUnpublishEvent($block);
+        $event = new BlockEvent($block);
         $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockUnpublish, $event);
     }    
     public function onPublish(Event $event)
     {
         $em = $this->getDoctrine()->getEntityManager();        
         $block = $event->getBlock();
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
+        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block) as $blockPublish){
             $em->remove($blockPublish);
         }
         $listRenderer = $event->getListRenderer();        
         if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-            foreach($listRenderer as $renderer) {
-                $resultingHtml = $this->getTemplating()->render($renderer['twig'], array('data' => $block->getData())); 
-                $blockPublish = new BlockPublish();
-                $blockPublish->initByBlock($block);
-                $blockPublish->setData(array("html"=>$resultingHtml));
-                $em->persist($blockPublish);
+            if (!is_null($block->getData())) {             
+                foreach($listRenderer as $nameRenderer => $renderer) {
+                    $resultingHtml = $this->getTemplating()->render($renderer['twig'], array('data' => $block->getData())); 
+                    $blockPublish = new BlockPublish();
+                    $blockPublish->initByBlock($block);
+                    $blockPublish->setData(array("html"=>$resultingHtml));
+                    $blockPublish->setRenderer($nameRenderer);
+                    $em->persist($blockPublish);
+                }                    
             }
         }
         
@@ -90,5 +98,63 @@ class BlockManager
         }
         $em->flush();
     }
+
+    public function onModify(Event $event)
+    {
+        
+    }
+    
+    public function prePersist(LifecycleEventArgs $event)
+    {
+        $entity = $event->getEntity();
+        if ($entity instanceof Block) {
+            $blockSlug = $entity->getSlug();
+            if(empty($blockSlug)) {
+                $entity->setSlug('block_ID');
+            }
+        }
+    }
+    public function postPersist(LifecycleEventArgs $event)
+    {    
+        /* Event BLOCK */
+        $entity = $event->getEntity();
+        if ($event->getEntity() instanceof Block) {
+            if($entity->getSlug() == 'block_ID') {
+                $entity->defaultSlug();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entity);
+                $em->flush();
+            }
+        }    
+    }
+    
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    {
+        $entity = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $uom = $em->getUnitOfWork();
+        
+        /* Event BLOCK */
+        if ($entity instanceof Block) {
+            $blockSlug = $entity->getSlug();
+            if(empty($blockSlug)) {
+                $entity->defaultSlug();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entity);
+                $em->flush();
+            }
+            
+            if ($eventArgs->hasChangedField('data')) {
+                $entity->setRealUpdatedAt(new \DateTime());
+                $this->fireModify($entity);
+                $entity->setIsPublished(false);
+                if ($entity->getIsPublished() == 1) {
+                    $entity->setUnpublishedAt(new \DateTime());
+                }
+                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
+            }
+           
+        }
+    }         
     
 }

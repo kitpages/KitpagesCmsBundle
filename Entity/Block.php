@@ -315,74 +315,55 @@ class Block
     {
         $this->listBlockPublish = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+ 
     /**
-     * Add listBlockPublish
-     *
-     * @param Kitpages\CmsBundle\Entity\BlockPublish $listBlockPublish
+     * @var Kitpages\CmsBundle\Entity\BlockPublish
      */
-    public function addListBlockPublish(\Kitpages\CmsBundle\Entity\BlockPublish $listBlockPublish)
-    {
-        $this->listBlockPublish[] = $listBlockPublish;
-    }
+    private $blockPublishList;
 
-    /**
-     * Get listBlockPublish
-     *
-     * @return Doctrine\Common\Collections\Collection $listBlockPublish
-     */
-    public function getListBlockPublish()
-    {
-        return $this->listBlockPublish;
-    }
     /**
      * @var Kitpages\CmsBundle\Entity\ZoneBlock
      */
-    private $listZone;
+    private $zoneBlockList;
 
 
     /**
-     * Add listZone
+     * Add blockPublishList
      *
-     * @param Kitpages\CmsBundle\Entity\ZoneBlock $listZone
+     * @param Kitpages\CmsBundle\Entity\BlockPublish $blockPublishList
      */
-    public function addListZone(\Kitpages\CmsBundle\Entity\ZoneBlock $listZone)
+    public function addBlockPublishList(\Kitpages\CmsBundle\Entity\BlockPublish $blockPublishList)
     {
-        $this->listZone[] = $listZone;
+        $this->blockPublishList[] = $blockPublishList;
     }
 
     /**
-     * Get listZone
+     * Get blockPublishList
      *
-     * @return Doctrine\Common\Collections\Collection $listZone
+     * @return Doctrine\Common\Collections\Collection 
      */
-    public function getListZone()
+    public function getBlockPublishList()
     {
-        return $this->listZone;
-    }
-    /**
-     * @var Kitpages\CmsBundle\Entity\ZoneBlock
-     */
-    private $listZoneBlock;
-
-
-    /**
-     * Add listZoneBlock
-     *
-     * @param Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock
-     */
-    public function addListZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $listZoneBlock)
-    {
-        $this->listZoneBlock[] = $listZoneBlock;
+        return $this->blockPublishList;
     }
 
     /**
-     * Get listZoneBlock
+     * Add zoneBlockList
      *
-     * @return Doctrine\Common\Collections\Collection $listZoneBlock
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
      */
-    public function getListZoneBlock()
+    public function addZoneBlockList(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
     {
-        return $this->listZoneBlock;
+        $this->zoneBlockList[] = $zoneBlockList;
+    }
+
+    /**
+     * Get zoneBlockList
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getZoneBlockList()
+    {
+        return $this->zoneBlockList;
     }
 }

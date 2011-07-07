@@ -197,4 +197,58 @@ class BlockPublish
     {
         // Add your code here
     }
+    /**
+     * @var string $renderer
+     */
+    private $renderer;
+
+
+    /**
+     * Set renderer
+     *
+     * @param string $renderer
+     */
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
+    /**
+     * Get renderer
+     *
+     * @return string 
+     */
+    public function getRenderer()
+    {
+        return $this->renderer;
+    }
+    /**
+     * @var Kitpages\CmsBundle\Entity\ZoneBlock
+     */
+    private $zoneBlockList;
+
+    public function __construct()
+    {
+        $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add zoneBlockList
+     *
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
+     */
+    public function addZoneBlockList(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
+    {
+        $this->zoneBlockList[] = $zoneBlockList;
+    }
+
+    /**
+     * Get zoneBlockList
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getZoneBlockList()
+    {
+        return $this->zoneBlockList;
+    }
 }

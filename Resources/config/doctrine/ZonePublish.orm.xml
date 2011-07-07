@@ -5,31 +5,27 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\BlockPublish" repository-class="Kitpages\CmsBundle\Repository\BlockPublishRepository" table="cms_block_publish">
+    <entity name="Kitpages\CmsBundle\Entity\ZonePublish" table="cms_zone_publish">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
-        <field name="blockType" column="block_type" type="string" length="100" />
-        <field name="renderer" column="renderer" type="string" length="250" />        
         <field name="data" column="data" type="array" nullable="true" />
-        
-        <field name="createdAt" column="created_at" type="datetime">
+        <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
-        </field>   
+        </field>
         
-        <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="blockPublishList" >
-            <join-columns>
-                <join-column name="block_id" referenced-column-name="id"/>
-            </join-columns>
-        </many-to-one>
-
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
+        <one-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zonePublish">
+            <join-column name="zone_id" referenced-column-name="id" />
+        </one-to-one> 
+
+        
     </entity>
 
 </doctrine-mapping>

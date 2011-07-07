@@ -23,22 +23,6 @@ class PageController extends Controller
         return $this->render($page->getLayout());        
     }
 
-    public function testTreeAction(Page $page)
-    {
-              $em = $this->get('doctrine')->getEntityManager();
-        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find(1);
-        $test = new PageZone();
-        $test->setPage($page);
-        $test->setZone($zone);  
-        $test->setPosition(0);
-        $em->persist($test);
-        $em->flush();        
-        $repo = $em->getRepository('KitpagesCmsBundle:PageZone');
-        // move it up by one position
-        $repo->moveUp($test, 1);
-        return $this->render($page->getLayout());        
-    }
-    
     public function createAction()
     {
         $page = new Page();
@@ -72,22 +56,20 @@ class PageController extends Controller
 
 
     public function widgetAction($label) {
-        // récupérer le label ou l'id du block
         
-        $cmsManager = $this->get('kitpages.cms.model.cmsManager');
         $em = $this->getDoctrine()->getEntityManager();
-        
+        $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
-        if ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_EDIT) {
+        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                 $resultingHtml = $this->renderView($dataRenderer['default']['twig'], array('data' => $block->getData()));
             }
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PREVIEW) {
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             echo var_dump($block);            
-        } elseif ($cmsManager->getViewMode() == CmsManager::VIEW_MODE_PROD) {
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $label));
             if (!is_null($blockPublish)) {
                 $data = $blockPublish->getData();
