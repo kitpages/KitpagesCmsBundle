@@ -1,7 +1,7 @@
 <?php
 namespace Kitpages\CmsBundle;
 
-final class KitpagesCmsStoreEvents
+final class KitpagesCmsEvents
 {
     /**
      * The store.order event is thrown each time an order is created

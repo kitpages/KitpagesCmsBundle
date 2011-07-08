@@ -4,7 +4,7 @@ namespace Kitpages\CmsBundle\Model;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Event\ZoneEvent;
-use Kitpages\CmsBundle\KitpagesCmsStoreEvents;
+use Kitpages\CmsBundle\KitpagesCmsEvents;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -53,12 +53,12 @@ class ZoneManager
     public function firePublish(Zone $zone, $listRenderer)
     {
         $event = new ZoneEvent($zone, $listRenderer);
-        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onZonePublish, $event);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZonePublish, $event);
     }
     public function fireUnpublish(Zone $zone)
     {
         $event = new ZoneEvent($zone);
-        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onZoneUnpublish, $event);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZoneUnpublish, $event);
     }    
     public function onPublish(Event $event)
     {

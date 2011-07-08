@@ -4,7 +4,7 @@ namespace Kitpages\CmsBundle\Model;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Event\BlockEvent;
-use Kitpages\CmsBundle\KitpagesCmsStoreEvents;
+use Kitpages\CmsBundle\KitpagesCmsEvents;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -45,18 +45,18 @@ class BlockManager
     public function fireModify(Block $block)
     {
         $event = new BlockEvent($block);
-        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockModify, $event);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockModify, $event);
     }
     
     public function firePublish(Block $block, $listRenderer)
     {
         $event = new BlockEvent($block, $listRenderer);
-        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockPublish, $event);
     }
     public function fireUnpublish(Block $block)
     {
         $event = new BlockEvent($block);
-        $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockUnpublish, $event);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockUnpublish, $event);
     }    
     public function onPublish(Event $event)
     {
