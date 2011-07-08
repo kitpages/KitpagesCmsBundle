@@ -12,6 +12,7 @@
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
+        <field name="renderer" column="renderer" type="string" length="250"/>
         <field name="isPublished" column="is_published" type="boolean"/>        
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />

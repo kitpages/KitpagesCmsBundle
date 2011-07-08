@@ -52,6 +52,7 @@ class BlockManager
     {
         $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
+        return $event;
     }
     public function fireUnpublish(Block $block)
     {
@@ -84,20 +85,20 @@ class BlockManager
         $em->flush();
     }  
     
-    public function onUnpublish(Event $event)
-    {
-   
-        $em = $this->getDoctrine()->getEntityManager();        
-        $block = $event->getBlock();
-        
-        $block->setIsPublished(false);
-        $em->persist($block);
-        
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
-            $em->remove($blockPublish);
-        }
-        $em->flush();
-    }
+//    public function onUnpublish(Event $event)
+//    {
+//   
+//        $em = $this->getDoctrine()->getEntityManager();        
+//        $block = $event->getBlock();
+//        
+//        $block->setIsPublished(false);
+//        $em->persist($block);
+//        
+//        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
+//            $em->remove($blockPublish);
+//        }
+//        $em->flush();
+//    }
 
     public function onModify(Event $event)
     {

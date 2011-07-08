@@ -32,7 +32,7 @@ class BlockController extends Controller
     public function createAction()
     {
         $block = new Block();
-        $request = Request::createFromGlobals();
+        $request = $this->getRequest();
 
         $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
         $selectTemplateList = array();
@@ -212,12 +212,12 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
-    public function unpublishAction(Block $block)
-    {
-        $blockManager = $this->get('kitpages.cms.manager.block');
-        $blockManager->fireUnpublish($block);
-
-        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-    }
+//    public function unpublishAction(Block $block)
+//    {
+//        $blockManager = $this->get('kitpages.cms.manager.block');
+//        $blockManager->fireUnpublish($block);
+//
+//        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+//    }
 
 }

@@ -9,15 +9,16 @@ use Kitpages\CmsBundle\Entity\Zone;
  */
 class ZonePublish
 {
+    
+    /**
+     * @var string $renderer
+     */
+    private $renderer;
+    
     /**
      * @var string $slug
      */
     private $slug;
-
-    /**
-     * @var datetime $creationDate
-     */
-    private $creationDate;
 
     /**
      * @var integer $id
@@ -135,25 +136,7 @@ class ZonePublish
         return $this->id;
     }
 
-    /**
-     * Set zone
-     *
-     * @param Kitpages\CmsBundle\Entity\ZonePublish $zone
-     */
-    public function setZone(\Kitpages\CmsBundle\Entity\ZonePublish $zone)
-    {
-        $this->zone = $zone;
-    }
-
-    /**
-     * Get zone
-     *
-     * @return Kitpages\CmsBundle\Entity\ZonePublish 
-     */
-    public function getZone()
-    {
-        return $this->zone;
-    }
+ 
     /**
      * @ORM\prePersist
      */
@@ -172,7 +155,47 @@ class ZonePublish
     
     public function initByZone(Zone $zone){
         $this->setSlug($zone->getSlug());
+        $this->setRenderer($zone->getRenderer());
         $this->setZone($zone);
     }
     
+    /**
+     * Set renderer
+     *
+     * @param string $renderer
+     */
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
+    /**
+     * Get renderer
+     *
+     * @return string 
+     */
+    public function getRenderer()
+    {
+        return $this->renderer;
+    }
+
+    /**
+     * Set zone
+     *
+     * @param Kitpages\CmsBundle\Entity\Zone $zone
+     */
+    public function setZone(\Kitpages\CmsBundle\Entity\Zone $zone)
+    {
+        $this->zone = $zone;
+    }
+
+    /**
+     * Get zone
+     *
+     * @return Kitpages\CmsBundle\Entity\Zone 
+     */
+    public function getZone()
+    {
+        return $this->zone;
+    }
 }

@@ -54,37 +54,4 @@ class PageController extends Controller
         ));
     }
 
-
-    public function widgetAction($label) {
-        
-        $em = $this->getDoctrine()->getEntityManager();
-        $context = $this->get('kitpages.cms.controller.context');
-        $resultingHtml = '';
-        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
-            if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                $resultingHtml = $this->renderView($dataRenderer['default']['twig'], array('data' => $block->getData()));
-            }
-        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
-            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
-            echo var_dump($block);            
-        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $label));
-            if (!is_null($blockPublish)) {
-                $data = $blockPublish->getData();
-                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                    $resultingHtml = $data['html'];
-                }
-            }
-        }
-        // si context = prod, $html pris dans le la table de publication
-        
-        // si context = preview ou edit : $html généré par le renderer
-        
-        // si context = edit, ajouter le code html des menus d'édition autour du bloc
-        
-        return new Response($resultingHtml);
-    }
-
 }

@@ -67,7 +67,7 @@ class ZoneManager
         $zone = $event->getZone();
         $listRenderer = $event->getListRenderer();
         foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-            $this->getBlockManager()->publish($block, $listRenderer[$block->getTemplate()]);
+            $this->getBlockManager()->firePublish($block, $listRenderer[$block->getTemplate()]);
         }
 
         foreach($em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone) as $zonePublish){
@@ -112,7 +112,8 @@ class ZoneManager
         }
         $em->flush();
     }
-    
+
+   
     public function prePersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();

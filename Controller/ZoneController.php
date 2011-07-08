@@ -117,13 +117,14 @@ class ZoneController extends Controller
                 );
             }        
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZoneAndRenderer($zone, $renderer) as $blockPublish){
-                $data = $blockPublish->getData();
-
-                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                    $resultingHtml .= $data['html'];
-                }
-            }            
+            $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone);
+//            foreach( as $blockPublish){
+//                $data = $blockPublish->getData();
+//
+//                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+//                    $resultingHtml .= $data['html'];
+//                }
+//            }            
 
         }
         
@@ -137,24 +138,14 @@ class ZoneController extends Controller
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
-    public function unpublishAction(Zone $zone)
-    {
-        $blockManager = $this->get('kitpages.cms.manager.zone');
-        $blockManager->fireUnpublish($zone);
-
-        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-    }    
-//    public function publishAction(Zone $zone)
+//    public function unpublishAction(Zone $zone)
 //    {
-//        $em = $this->getDoctrine()->getEntityManager();
-//        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-//            $blockManager = $this->get('kitpages.cms.manager.block');
-//            $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-//            $blockManager->publish($block, $dataRenderer);
-//        }
+//        $blockManager = $this->get('kitpages.cms.manager.zone');
+//        $blockManager->fireUnpublish($zone);
 //
 //        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-//    }
+//    }    
+
 
     public function moveUpBlockAction($id, $block_id)
     {

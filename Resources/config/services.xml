@@ -19,7 +19,7 @@
         </service>
         <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.block.firePublish" method="onPublish" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.fireUnpublish" method="onUnpublish" />
+            <!--<tag name="kernel.event_listener" event="kitpages.cms.block.fireUnpublish" method="onUnpublish" />-->
             <tag name="doctrine.event_listener" event="prePersist" /> 
             <tag name="doctrine.event_listener" event="postPersist" /> 
             <tag name="doctrine.event_listener" event="preUpdate" />
@@ -29,8 +29,9 @@
         </service>
         <service id="kitpages.cms.manager.zone" class="%kitpages_cms.cms.zoneManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.block.fireModify" method="onBlockModify" />
+            <!--<tag name="kernel.event_listener" event="kitpages.cms.block.fireUnpublish" method="onBlockUnpublish" />-->            
             <tag name="kernel.event_listener" event="kitpages.cms.zone.firePublish" method="onPublish" />
-            <tag name="kernel.event_listener" event="kitpages.cms.zone.fireUnpublish" method="onUnpublish" />
+            <!--<tag name="kernel.event_listener" event="kitpages.cms.zone.fireUnpublish" method="onUnpublish" />-->
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="templating"/>
