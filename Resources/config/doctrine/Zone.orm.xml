@@ -39,8 +39,11 @@
         <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
         </one-to-many>
 
-        <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone" />
-        
+        <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone" >
+            <cascade>
+                <cascade-all />
+            </cascade>               
+        </one-to-one>
     </entity>
 
 </doctrine-mapping>

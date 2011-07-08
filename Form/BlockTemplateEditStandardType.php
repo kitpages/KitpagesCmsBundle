@@ -11,4 +11,9 @@ class BlockTemplateEditStandardType extends AbstractType
         $builder->add('title', 'text');
         $builder->add('body', 'textarea');
     }
+    
+    public function getName() {
+        return 'BlockTemplateEditStandardType';
+    }
+    
 }

@@ -2,6 +2,7 @@
 namespace Kitpages\CmsBundle\Model;
 
 use Kitpages\CmsBundle\Entity\Zone;
+use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Event\ZoneEvent;
 use Kitpages\CmsBundle\KitpagesCmsStoreEvents;
@@ -11,6 +12,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
+
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class ZoneManager
 {
@@ -62,27 +66,35 @@ class ZoneManager
     }    
     public function onPublish(Event $event)
     {
-        
         $em = $this->getDoctrine()->getEntityManager();        
         $zone = $event->getZone();
         $listRenderer = $event->getListRenderer();
         foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
             $this->getBlockManager()->firePublish($block, $listRenderer[$block->getTemplate()]);
         }
-
-        foreach($em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone) as $zonePublish){
-            $em->remove($zonePublish);
-        }
+        //$zonePublish = $zone->getZonePublish();
+//        $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone);
+//        //echo var_dump($zonePublish);
+//        if ($zonePublish instanceof ZonePublish) {
+//            $em->remove($zonePublish);
+//            $em->flush();
+//        //    $em->refresh($zone);
+//        }
         
-        $zonePublish = new ZonePublish();
-        $zonePublish->initByZone($zone);
+//        $em->close();
+//        $em = $this->getDoctrine()->getEntityManager();
+//        $em->detach($zone);
+//        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone->getId());
+        //echo var_dump($zone);
         foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
             $listBlock[] = $block->getId();
         }
-        $zonePublish->setData(array("blockList"=>$listBlock));
-        $em->persist($zonePublish);
-                
+        $zonePublishNew = new ZonePublish();
+        $zonePublishNew->initByZone($zone);
+        $zonePublishNew->setData(array("blockList"=>$listBlock));
+        //$em->persist($zonePublishNew);
         $zone->setIsPublished(true);
+        $zone->setZonePublish($zonePublishNew);
         $em->persist($zone);
         $em->flush();
     }  

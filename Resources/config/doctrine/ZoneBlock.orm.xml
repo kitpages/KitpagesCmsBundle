@@ -22,7 +22,7 @@
 
         <many-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zoneBlockList" >
             <join-column name="zone_id" referenced-column-name="id"/>
-            <gedmo:sortable-group />  
+            <gedmo:sortable-group />
         </many-to-one>
         
         <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="zoneBlockList" >

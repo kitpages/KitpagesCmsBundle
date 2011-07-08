@@ -38,6 +38,9 @@
         </field>        
         
         <one-to-many field="blockPublishList" target-entity="Kitpages\CmsBundle\Entity\BlockPublish" mapped-by="block" >
+            <cascade>
+                <cascade-persist />
+            </cascade>            
         </one-to-many>
 
         <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >

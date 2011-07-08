@@ -1,28 +1,24 @@
 <?php
 namespace Kitpages\CmsBundle\Repository;
 use Doctrine\ORM\EntityRepository;
+use Kitpages\CmsBundle\Entity\ZoneBlock;
 
 class BlockPublishRepository extends EntityRepository
 {
    
-    public function findByZoneAndRenderer($zone, $renderer)
+    public function findByBlockAndRenderer($block, $renderer)
     {      
-        $listBlock = array();
-//        $query = $this->_em
-//                         ->createQuery('SELECT zb.block_id FROM KitpagesCmsBundle:ZoneBlock zb WHERE zb.zone_id = :zone_id ORDER BY zb.position')
-//                         ->setParameter("zone_id", $zoneId)
-//                         ->getResult();
-        $query = $this->_em
-                         ->createQuery('SELECT bp FROM KitpagesCmsBundle:BlockPublish bp JOIN ZoneBlock zb WHERE zb.zone = :zone ORDER BY zb.position')
-                         ->setParameter("zone", $zone)
+        $blockPublish = $this->_em
+                         ->createQuery('SELECT bp FROM KitpagesCmsBundle:BlockPublish bp WHERE bp.block = :block AND bp.renderer = :renderer')
+                         ->setParameter("block", $block)
+                         ->setParameter("renderer", $renderer)
                          ->getResult();
-        foreach($query as $blockId) {
-            $blockPublish = $this->findOneByBlockId($blockId['block_id']);
-            if (!is_null($blockPublish)) {
-              $listBlock[] = $blockPublish;
-            }
+        echo count($blockPublish);
+        if (count($blockPublish) == 1) {
+            return $blockPublish[0];
+        } else {
+            return null;
         }
-        return $listBlock;
     }
   
 }

@@ -12,6 +12,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+
 class BlockManager
 {
  
@@ -52,7 +55,6 @@ class BlockManager
     {
         $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsStoreEvents::onBlockPublish, $event);
-        return $event;
     }
     public function fireUnpublish(Block $block)
     {
@@ -63,9 +65,11 @@ class BlockManager
     {
         $em = $this->getDoctrine()->getEntityManager();        
         $block = $event->getBlock();
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block) as $blockPublish){
+        foreach($block->getBlockPublishList() as $blockPublish){
             $em->remove($blockPublish);
         }
+        $em->flush();
+        $em->refresh($block);
         $listRenderer = $event->getListRenderer();        
         if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
             if (!is_null($block->getData())) {             
@@ -79,7 +83,6 @@ class BlockManager
                 }                    
             }
         }
-        
         $block->setIsPublished(true);
         $em->persist($block);
         $em->flush();
