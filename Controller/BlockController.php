@@ -76,7 +76,16 @@ class BlockController extends Controller
                     $em->persist($zoneBlock);
                 }
                 $em->flush();
-                return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
+                $this->getRequest()->getSession()->setFlash('notice', 'Block created');
+                return $this->redirect(
+                    $this->generateUrl(
+                        'kitpages_cms_block_edit',
+                        array(
+                            'id' => $block->getId(),
+                            'kitpages_target' => $this->getRequest()->query('kitpages_target', null)
+                        )
+                    )
+                );
             }
         }
         return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
@@ -118,7 +127,7 @@ class BlockController extends Controller
         $form = $builder->getForm();
         
         // persist form if needed
-        $request = $this->get('request');
+        $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
@@ -127,6 +136,11 @@ class BlockController extends Controller
                 $em->persist($block);
                 $em->flush();
 
+                $this->getRequest()->getSession()->setFlash('notice', 'Block modified');
+                $target = $request->query->get('kitpages_target', null);
+                if ($target) {
+                    return $this->redirect($target);
+                }
                 return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
             }
         }
@@ -134,22 +148,32 @@ class BlockController extends Controller
         //echo '<pre>'.print_r($view, true).'</pre>';
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),
-            'id' => $block->getId()
+            'id' => $block->getId(),
+            'kitpages_target' => $request->query->get('kitpages_target', null)
         ));
     }
 
     public function toolbar(Block $block) {  
         $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
             'kitpages_cms_block_edit', 
-            array('id' => $block->getId())
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
         );
-        $dataRenderer['listAction']['unpublish'] = $this->get('router')->generate(
-            'kitpages_cms_block_unpublish', 
-            array('id' => $block->getId())
+        $dataRenderer['listAction']['publish'] = $this->get('router')->generate(
+            'kitpages_cms_block_publish', 
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
         );
         $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
             'kitpages_cms_zoneblock_delete', 
-            array('id' => $block->getId())
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
         );
         
         $resultingHtml = $this->renderView(
@@ -209,6 +233,13 @@ class BlockController extends Controller
         $blockManager = $this->get('kitpages.cms.manager.block');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
         $blockManager->firePublish($block, $dataRenderer);
+        
+        $this->getRequest()->getSession()->setFlash('notice', 'Block published');
+        
+        $target = $this->getRequest()->query->get('kitpages_target');
+        if ($target) {
+            return $this->redirect($target);
+        }
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
