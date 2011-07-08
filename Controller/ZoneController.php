@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
+use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Controller\Context;
@@ -117,14 +118,20 @@ class ZoneController extends Controller
                 );
             }        
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone);
-//            foreach( as $blockPublish){
-//                $data = $blockPublish->getData();
-//
-//                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-//                    $resultingHtml .= $data['html'];
-//                }
-//            }            
+            $zonePublish = $zone->getZonePublish();
+            if ($zonePublish instanceof ZonePublish) {
+                $zonePublishData = $zonePublish->getData();
+                foreach($zonePublishData['blockList'] as $blockId){
+                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockAndRenderer($blockId, $zonePublish->getRenderer());
+                    echo var_dump($blockPublish);
+                    if ($blockPublish instanceof BlockPublish) {
+                        $blockPublishData = $blockPublish->getData();
+                        if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                            $resultingHtml .= $blockPublishData['html'];
+                        }
+                    }
+                }   
+            }
 
         }
         
