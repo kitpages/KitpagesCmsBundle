@@ -1,12 +1,12 @@
-<div class="kitpages-builder-toolbar">
-    <div class="zoneBlockEdit">
-    <div class="blockEdit">
-        <div class="actions" >ZONE {{title}}
+<div class="kit-cms kit-cms-zone">
+    <div class="kit-cms-zone-toolbar">
+        <ul class="kit-cms-menu">
+            <li>Zone</li>
             {% for action, url in listAction %}
-               <a href='{{url}}' >{{action}}</a>
+            <li><a href='{{url}}' >{{action}}</a></li>
             {% endfor %}
-        </div>
-    </div><br /> 
-    {% autoescape false %}{{ htmlBlock }}{% endautoescape %}
+        </ul>
+    {{ htmlBlock | raw}}
+     </div>
 </div>
 

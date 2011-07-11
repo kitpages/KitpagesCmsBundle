@@ -40,7 +40,6 @@ class BlockController extends Controller
             $selectTemplateList[$key] = $template['name'];
         }
 
-        
         // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add('slug', 'text');
@@ -82,21 +81,22 @@ class BlockController extends Controller
                         'kitpages_cms_block_edit',
                         array(
                             'id' => $block->getId(),
-                            'kitpages_target' => $this->getRequest()->query('kitpages_target', null)
+                            'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
                         )
                     )
                 );
             }
         }
         return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
         ));
     }
 
     public function deleteAction(Block $block)
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
-        $blockManager->fireDelete($block);
+        $blockManager->delete($block);
         
         $this->getRequest()->getSession()->setFlash('notice', 'Block deleted');
         
@@ -148,10 +148,8 @@ class BlockController extends Controller
 
             if ($form->isValid()) {
                 $em->flush();
-                if ($oldBlockData != $block->getData()) {
-                    $blockManager = $this->get('kitpages.cms.manager.block');
-                    $blockManager->fireModify($block);
-                }
+                $blockManager = $this->get('kitpages.cms.manager.block');
+                $blockManager->afterModify($block, $oldBlockData);
                 $this->getRequest()->getSession()->setFlash('notice', 'Block modified');
                 $target = $request->query->get('kitpages_target', null);
                 if ($target) {
@@ -186,13 +184,6 @@ class BlockController extends Controller
                 )
             );
         }
-        $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
-            'kitpages_cms_block_delete', 
-            array(
-                'id' => $block->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
-            )
-        );
         
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
@@ -200,18 +191,24 @@ class BlockController extends Controller
         return $resultingHtml;
     } 
 
-    public function widgetAction($label, $renderer = 'default', $actionList = array()) {
+    public function widgetAction($label, $renderer = 'default', $actionList = array(), $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
-            if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+            if ($block == null) {
+                return new Response('Please create a block with the label "'.htmlspecialchars($label).'"');
+            }
 
+            if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                $resultingHtml = '';
+                if ($displayToolbar == true) {
+                    $resultingHtml .= $this->toolbar($block, $actionList);
+                }
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                    $resultingHtml = $this->toolbar($block, $actionList)
-                        .'<div class="kit-cms-block-container">'.
+                    $resultingHtml .= '<div class="kit-cms-block-container">'.
                         $this->renderView(
                             $dataRenderer[$renderer]['twig'],
                             array('data' => $block->getData())
@@ -221,6 +218,10 @@ class BlockController extends Controller
             }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
+            if ($block == null) {
+                return new Response('Please create a block with the label "'.htmlspecialchars($label).'"');
+            }
+
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 if (!is_null($block->getData())) {                
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
@@ -234,9 +235,10 @@ class BlockController extends Controller
                 if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                     $resultingHtml = $data['html'];
                 }
+            } else {
+                return new Response('The block with the label "'.htmlspecialchars($label).'" is not published');
             }
         }
-       
         return new Response($resultingHtml);
     }
     
@@ -249,7 +251,7 @@ class BlockController extends Controller
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-        $blockManager->firePublish($block, $dataRenderer);
+        $blockManager->publish($block, $dataRenderer);
         
         $this->getRequest()->getSession()->setFlash('notice', 'Block published');
         

@@ -366,4 +366,5 @@ class Block
     {
         return $this->zoneBlockList;
     }
+
 }

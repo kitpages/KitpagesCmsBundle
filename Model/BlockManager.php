@@ -18,6 +18,9 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 class BlockManager
 {
  
+    ////
+    // dependency injection
+    ////
     public function __construct(Registry $doctrine, EventDispatcher $dispatcher, $templating){
         $this->_dispatcher = $dispatcher;
         $this->_doctrine = $doctrine;
@@ -43,89 +46,80 @@ class BlockManager
      */
     public function getDoctrine() {
         return $this->_doctrine;
-    }    
-    public function fireDelete(Block $block)
-    {
-        $event = new BlockEvent($block);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
-    }
-    public function fireModify(Block $block)
-    {
-        $event = new BlockEvent($block);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockModify, $event);
     }
     
-    public function firePublish(Block $block, $listRenderer)
+    
+    ////
+    // action function
+    ////
+    /**
+     *
+     * @param Block $block 
+     */
+    public function delete(Block $block)
+    {
+        // throw on event
+        $event = new BlockEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
+        
+        // preventable action
+        if (!$event->isDefaultPrevented()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($block);
+            $em->flush();
+        }
+        // throw after event
+        $event = new BlockEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockDelete, $event);
+    }
+    
+    public function publish(Block $block, array $listRenderer)
     {
         $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockPublish, $event);
-    }
-    public function fireUnpublish(Block $block)
-    {
-        $event = new BlockEvent($block);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockUnpublish, $event);
-    }    
-    public function onPublish(Event $event)
-    {
-        $em = $this->getDoctrine()->getEntityManager();        
-        $block = $event->getBlock();
-        foreach($block->getBlockPublishList() as $blockPublish){
-            $em->remove($blockPublish);
-        }
-        $em->flush();
-        $em->refresh($block);
-        $listRenderer = $event->getListRenderer();        
-        if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-            if (!is_null($block->getData())) {             
-                foreach($listRenderer as $nameRenderer => $renderer) {
-                    $resultingHtml = $this->getTemplating()->render($renderer['twig'], array('data' => $block->getData())); 
-                    $blockPublish = new BlockPublish();
-                    $blockPublish->initByBlock($block);
-                    $blockPublish->setData(array("html"=>$resultingHtml));
-                    $blockPublish->setRenderer($nameRenderer);
-                    $em->persist($blockPublish);
-                }                    
-            }
-        }
-        $block->setIsPublished(true);
-        $em->persist($block);
-        $em->flush();
-    }  
-    
-//    public function onUnpublish(Event $event)
-//    {
-//   
-//        $em = $this->getDoctrine()->getEntityManager();        
-//        $block = $event->getBlock();
-//        
-//        $block->setIsPublished(false);
-//        $em->persist($block);
-//        
-//        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
-//            $em->remove($blockPublish);
-//        }
-//        $em->flush();
-//    }
-
-    public function onDelete(Event $event)
-    {
-        $em = $this->getDoctrine()->getEntityManager();        
-        $block = $event->getBlock();
-      
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block->getId()) as $blockPublish){
-            $block->getBlockPublishList()->removeElement($blockPublish);
-            //$blockPublish->setBlock(null);
-        }
-        $em->flush();
-        $em->remove($block);
-        $em->flush();
-    }
-    
-    public function onModify(Event $event)
-    {
         
+        if (!$event->isDefaultPrevented()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            foreach($block->getBlockPublishList() as $blockPublish){
+                $em->remove($blockPublish);
+            }
+            $em->flush();
+            $em->refresh($block);
+            if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                if (!is_null($block->getData())) {             
+                    foreach($listRenderer as $nameRenderer => $renderer) {
+                        $resultingHtml = $this->getTemplating()->render($renderer['twig'], array('data' => $block->getData())); 
+                        $blockPublish = new BlockPublish();
+                        $blockPublish->initByBlock($block);
+                        $blockPublish->setData(array("html"=>$resultingHtml));
+                        $blockPublish->setRenderer($nameRenderer);
+                        $em->persist($blockPublish);
+                    }
+                }
+            }
+            $block->setIsPublished(true);
+            $em->persist($block);
+            $em->flush();
+        }
+        $event = new BlockEvent($block, $listRenderer);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockPublish, $event);
     }
     
+    public function afterModify($block, $oldBlockData)
+    {
+        if ($oldBlockData != $block->getData()) {
+            $block->setRealUpdatedAt(new \DateTime());
+            $block->setIsPublished(false);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->flush();
+            $event = new BlockEvent($block);
+            $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockModify, $event);
+        }
+    }
+
+    ////
+    // doctrine events
+    ////
     public function prePersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
@@ -154,7 +148,7 @@ class BlockManager
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();
-        $uom = $em->getUnitOfWork();
+//        $uom = $em->getUnitOfWork();
         
         /* Event BLOCK */
         if ($entity instanceof Block) {
@@ -166,14 +160,14 @@ class BlockManager
                 $em->flush();
             }
             
-            if ($eventArgs->hasChangedField('data')) {
-                $entity->setRealUpdatedAt(new \DateTime());
-                $entity->setIsPublished(false);
-                if ($entity->getIsPublished() == 1) {
-                    $entity->setUnpublishedAt(new \DateTime());
-                }
-                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
-            }
+//            if ($eventArgs->hasChangedField('data')) {
+//                $entity->setRealUpdatedAt(new \DateTime());
+//                $entity->setIsPublished(false);
+//                if ($entity->getIsPublished() == 1) {
+//                    $entity->setUnpublishedAt(new \DateTime());
+//                }
+//                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
+//            }
            
         }
     }         

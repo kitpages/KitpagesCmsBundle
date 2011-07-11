@@ -40,6 +40,7 @@ class ZoneController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+                $zone->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $em->persist($zone);
                 $em->flush();
@@ -55,11 +56,18 @@ class ZoneController extends Controller
     public function toolbar(Zone $zone, $htmlBlock) {  
         $listAction['addBlock'] = $this->get('router')->generate(
             'kitpages_cms_block_create', 
-            array('zone_id' => $zone->getId())
+            array(
+                'zone_id' => $zone->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
+
         );
         $listAction['publish'] = $this->get('router')->generate(
-            'kitpages_cms_zone_publish', 
-            array('id' => $zone->getId())
+            'kitpages_cms_zone_publish',
+            array(
+                'id' => $zone->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
         );
         
         $dataRenderer = array(
@@ -73,7 +81,22 @@ class ZoneController extends Controller
         return $resultingHtml;
     } 
     
-    public function toolbarBlock(Zone $zone, Block $block) {  
+    public function toolbarBlock(Zone $zone, Block $block)
+    {
+        $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
+            'kitpages_cms_block_edit', 
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
+        );
+        $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
+            'kitpages_cms_block_delete', 
+            array(
+                'id' => $block->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
+        );
 
         $dataUrl = array(
             'id' => $zone->getId(), 
@@ -100,6 +123,11 @@ class ZoneController extends Controller
         $context = $this->get('kitpages.cms.controller.context');
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
+        
+        if ($zone == null) {
+            return new Response('Please create a zone with the label "'.htmlspecialchars($label).'"');
+        }
+        
         $resultingHtml = '';
 
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
@@ -109,18 +137,32 @@ class ZoneController extends Controller
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block).$this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
-                    array("label" => $block->getSlug(), "renderer" =>$renderer, "actionList" =>$blockActionList), array()
+                    array(
+                        "label" => $block->getSlug(),
+                        "renderer" =>$renderer,
+                        "actionList" =>$blockActionList,
+                        'displayToolbar' => false
+                    ),
+                    array()
                 );
             }
             $resultingHtml = $this->toolbar($zone, $resultingHtml);
-        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+        }
+        
+        elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
-                    array("label" => $block->getSlug(), "renderer" =>$renderer), array()
+                    array(
+                        "label" => $block->getSlug(),
+                        "renderer" =>$renderer
+                    ),
+                    array()
                 );
-            }        
-        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+            }
+        }
+        
+        elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $zonePublish = $zone->getZonePublish();
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();

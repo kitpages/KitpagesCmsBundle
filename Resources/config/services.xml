@@ -18,9 +18,14 @@
             <argument type="service" id="session"/>            
         </service>
         <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
-            <tag name="kernel.event_listener" event="kitpages.cms.block.publish" method="onPublish" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.delete" method="onDelete" />
-            <!--<tag name="kernel.event_listener" event="kitpages.cms.block.unpublish" method="onUnpublish" />-->
+<!--
+            <tag name="kernel.event_listener" event="kitpages.cms.block.on.publish" method="onPublish" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.after.publish" method="afterPublish" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterModify" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.on.delete" method="onDelete" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.after.delete" method="afterDelete" />
+-->
+
             <tag name="doctrine.event_listener" event="prePersist" /> 
             <tag name="doctrine.event_listener" event="postPersist" /> 
             <tag name="doctrine.event_listener" event="preUpdate" />

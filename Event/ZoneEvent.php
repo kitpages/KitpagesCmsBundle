@@ -1,10 +1,10 @@
 <?php
 namespace Kitpages\CmsBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Kitpages\CmsBundle\Event\AbstractEvent;
 use Kitpages\CmsBundle\Entity\Zone;
 
-class ZoneEvent extends Event
+class ZoneEvent extends AbstractEvent
 {
     protected $zone;
     protected $listRenderer;    

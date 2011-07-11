@@ -171,7 +171,7 @@ class ZoneManager
     {
         $entity = $eventArgs->getEntity();
         $em = $eventArgs->getEntityManager();
-        $uom = $em->getUnitOfWork();
+//        $uom = $em->getUnitOfWork();
         
         /* Event Zone */
         if ($entity instanceof Zone) {
