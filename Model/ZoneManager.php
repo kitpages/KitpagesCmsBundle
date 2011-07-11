@@ -2,7 +2,9 @@
 namespace Kitpages\CmsBundle\Model;
 
 use Kitpages\CmsBundle\Entity\Zone;
+use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\ZonePublish;
+use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Event\ZoneEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 
@@ -11,6 +13,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
+
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class ZoneManager
 {
@@ -59,60 +64,85 @@ class ZoneManager
     {
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZoneUnpublish, $event);
-    }    
+    }  
+    public function fireBlockMove(Zone $zone)
+    {
+        $event = new ZoneEvent($zone);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockMove, $event);
+    }     
     public function onPublish(Event $event)
     {
-        
         $em = $this->getDoctrine()->getEntityManager();        
         $zone = $event->getZone();
         $listRenderer = $event->getListRenderer();
         foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-            $this->getBlockManager()->publish($block, $listRenderer[$block->getTemplate()]);
+            $this->getBlockManager()->firePublish($block, $listRenderer[$block->getTemplate()]);
+        }
+        $zonePublish = $zone->getZonePublish();
+
+        if ($zonePublish instanceof ZonePublish) {
+            $em->remove($zonePublish);
+            $em->flush();
         }
 
-        foreach($em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone) as $zonePublish){
-            $em->remove($zonePublish);
-        }
-        
-        $zonePublish = new ZonePublish();
-        $zonePublish->initByZone($zone);
         foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
             $listBlock[] = $block->getId();
         }
-        $zonePublish->setData(array("blockList"=>$listBlock));
-        $em->persist($zonePublish);
-                
+        $zonePublishNew = new ZonePublish();
+        $zonePublishNew->initByZone($zone);
+        $zonePublishNew->setData(array("blockList"=>$listBlock));
         $zone->setIsPublished(true);
-        $em->persist($zone);
+        $zone->setZonePublish($zonePublishNew);
         $em->flush();
     }  
     
     public function onUnpublish(Event $event)
     {
-   
         $em = $this->getDoctrine()->getEntityManager();        
         $zone = $event->getZone();
         // suppression de la zone et si pas de zone pas d'affichage en production
-//        $block->setIsPublished(false);
-//        $em->persist($block);
-        
-//        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
-//            $em->remove($blockPublish);
-//        }
-//        $em->flush();
-    }
+        $zone->setIsPublished(false);
+        $em->persist($zone);
+        $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone);
+        $em->remove($zonePublish);
 
+        $em->flush();
+    }
     public function onBlockModify(Event $event)
     {
         $block = $event->getBlock();
         $em = $this->getDoctrine()->getEntityManager(); 
         foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block) as $zone) {
-            $zone->setIsPublished(false); 
-            $em->persist($zone);
+            if ($zone instanceof Zone) {
+                $zone->setIsPublished(false);
+            }
         }
         $em->flush();
     }
-    
+    public function onBlockDelete(Event $event)
+    {
+        $block = $event->getBlock();
+        $em = $this->getDoctrine()->getEntityManager(); 
+        foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block) as $zone) {
+            if ($zone instanceof Zone) {
+                $zone->setIsPublished(false);
+            }
+        }
+//        foreach($em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByBlock($block) as $zoneBlock) {
+//            if ($zoneBlock instanceof ZoneBlock) {
+//                $em->remove($zoneBlock);
+//            }
+//        }
+        $em->flush();
+    }
+    public function onBlockMove(Event $event)
+    {
+        $zone = $event->getZone();
+        $em = $this->getDoctrine()->getEntityManager(); 
+        $zone->setIsPublished(false);
+        $em->flush();
+    }
+   
     public function prePersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();

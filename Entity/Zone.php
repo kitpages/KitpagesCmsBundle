@@ -15,6 +15,11 @@ class Zone
     private $slug;
 
     /**
+     * @var string $renderer
+     */
+    private $renderer;
+    
+    /**
      * @var integer $id
      */
     private $id;
@@ -275,4 +280,27 @@ class Zone
     {
         return $this->unpublishedAt;
     }
+
+
+    /**
+     * Set renderer
+     *
+     * @param string $renderer
+     */
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
+    /**
+     * Get renderer
+     *
+     * @return string 
+     */
+    public function getRenderer()
+    {
+        return $this->renderer;
+    }
+
+
 }

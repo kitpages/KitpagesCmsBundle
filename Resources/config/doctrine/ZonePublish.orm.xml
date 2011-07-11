@@ -5,13 +5,14 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\ZonePublish" table="cms_zone_publish">
+    <entity name="Kitpages\CmsBundle\Entity\ZonePublish" repository-class="Kitpages\CmsBundle\Repository\ZonePublishRepository" table="cms_zone_publish">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
+        <field name="renderer" column="renderer" type="string" length="250"/>
         <field name="data" column="data" type="array" nullable="true" />
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -23,6 +24,9 @@
         </lifecycle-callbacks>
         <one-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zonePublish">
             <join-column name="zone_id" referenced-column-name="id" />
+            <cascade>
+                <cascade-persist />
+            </cascade>                
         </one-to-one> 
 
         

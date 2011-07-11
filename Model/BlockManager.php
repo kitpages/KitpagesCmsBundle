@@ -12,6 +12,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+
 class BlockManager
 {
  
@@ -41,7 +44,11 @@ class BlockManager
     public function getDoctrine() {
         return $this->_doctrine;
     }    
-
+    public function fireDelete(Block $block)
+    {
+        $event = new BlockEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
+    }
     public function fireModify(Block $block)
     {
         $event = new BlockEvent($block);
@@ -62,9 +69,11 @@ class BlockManager
     {
         $em = $this->getDoctrine()->getEntityManager();        
         $block = $event->getBlock();
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block) as $blockPublish){
+        foreach($block->getBlockPublishList() as $blockPublish){
             $em->remove($blockPublish);
         }
+        $em->flush();
+        $em->refresh($block);
         $listRenderer = $event->getListRenderer();        
         if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
             if (!is_null($block->getData())) {             
@@ -78,27 +87,40 @@ class BlockManager
                 }                    
             }
         }
-        
         $block->setIsPublished(true);
         $em->persist($block);
         $em->flush();
     }  
     
-    public function onUnpublish(Event $event)
+//    public function onUnpublish(Event $event)
+//    {
+//   
+//        $em = $this->getDoctrine()->getEntityManager();        
+//        $block = $event->getBlock();
+//        
+//        $block->setIsPublished(false);
+//        $em->persist($block);
+//        
+//        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
+//            $em->remove($blockPublish);
+//        }
+//        $em->flush();
+//    }
+
+    public function onDelete(Event $event)
     {
-   
         $em = $this->getDoctrine()->getEntityManager();        
         $block = $event->getBlock();
-        
-        $block->setIsPublished(false);
-        $em->persist($block);
-        
-        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockId($block->getId()) as $blockPublish){
-            $em->remove($blockPublish);
+      
+        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block->getId()) as $blockPublish){
+            $block->getBlockPublishList()->removeElement($blockPublish);
+            //$blockPublish->setBlock(null);
         }
         $em->flush();
+        $em->remove($block);
+        $em->flush();
     }
-
+    
     public function onModify(Event $event)
     {
         
@@ -146,7 +168,6 @@ class BlockManager
             
             if ($eventArgs->hasChangedField('data')) {
                 $entity->setRealUpdatedAt(new \DateTime());
-                $this->fireModify($entity);
                 $entity->setIsPublished(false);
                 if ($entity->getIsPublished() == 1) {
                     $entity->setUnpublishedAt(new \DateTime());

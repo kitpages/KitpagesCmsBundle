@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
+use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Controller\Context;
@@ -102,10 +103,13 @@ class ZoneController extends Controller
         $resultingHtml = '';
 
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+            
+            $blockActionList = array('publish' => false);
+            
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block).$this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
-                    array("label" => $block->getSlug(), "renderer" =>$renderer), array()
+                    array("label" => $block->getSlug(), "renderer" =>$renderer, "actionList" =>$blockActionList), array()
                 );
             }
             $resultingHtml = $this->toolbar($zone, $resultingHtml);
@@ -117,13 +121,19 @@ class ZoneController extends Controller
                 );
             }        
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZoneAndRenderer($zone, $renderer) as $blockPublish){
-                $data = $blockPublish->getData();
-
-                if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                    $resultingHtml .= $data['html'];
-                }
-            }            
+            $zonePublish = $zone->getZonePublish();
+            if ($zonePublish instanceof ZonePublish) {
+                $zonePublishData = $zonePublish->getData();
+                foreach($zonePublishData['blockList'] as $blockId){
+                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockAndRenderer($blockId, $zonePublish->getRenderer());
+                    if ($blockPublish instanceof BlockPublish) {
+                        $blockPublishData = $blockPublish->getData();
+                        if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                            $resultingHtml .= $blockPublishData['html'];
+                        }
+                    }
+                }   
+            }
 
         }
         
@@ -134,48 +144,43 @@ class ZoneController extends Controller
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');        
         $zoneManager->firePublish($zone, $dataRenderer);
-        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+        $this->getRequest()->getSession()->setFlash('notice', 'Zone published');
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
     }
 
-    public function unpublishAction(Zone $zone)
-    {
-        $blockManager = $this->get('kitpages.cms.manager.zone');
-        $blockManager->fireUnpublish($zone);
-
-        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-    }    
-//    public function publishAction(Zone $zone)
+//    public function unpublishAction(Zone $zone)
 //    {
-//        $em = $this->getDoctrine()->getEntityManager();
-//        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-//            $blockManager = $this->get('kitpages.cms.manager.block');
-//            $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-//            $blockManager->publish($block, $dataRenderer);
-//        }
+//        $blockManager = $this->get('kitpages.cms.manager.zone');
+//        $blockManager->fireUnpublish($zone);
 //
 //        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-//    }
+//    }    
 
-    public function moveUpBlockAction($id, $block_id)
+
+    public function moveUpBlockAction(Zone $zone, $block_id)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($id, $block_id);
+        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
         $position = $zoneBlock->getPosition()-1;
         $zoneBlock->setPosition($position);
-        $em->persist($zoneBlock);
         $em->flush();
-        $request = Request::createFromGlobals();
-        return new RedirectResponse($request->query->get('kitpages_target'));
+        $zoneManager = $this->get('kitpages.cms.manager.zone');
+        $zoneManager->fireBlockMove($zone);
+        return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }
-    public function moveDownBlockAction($id, $block_id)
+    public function moveDownBlockAction(Zone $zone, $block_id)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($id, $block_id);
+        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
         $position = $zoneBlock->getPosition()+1;
         $zoneBlock->setPosition($position);
-        $em->persist($zoneBlock);
         $em->flush();
-        $request = Request::createFromGlobals();
-        return new RedirectResponse($request->query->get('kitpages_target'));
+        $zoneManager = $this->get('kitpages.cms.manager.zone');
+        $zoneManager->fireBlockMove($zone);
+        return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }    
 }

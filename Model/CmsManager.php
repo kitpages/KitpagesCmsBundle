@@ -8,7 +8,6 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 
 use Kitpages\CmsBundle\Entity\Block;
 
