@@ -44,7 +44,11 @@ class BlockManager
     public function getDoctrine() {
         return $this->_doctrine;
     }    
-
+    public function fireDelete(Block $block)
+    {
+        $event = new BlockEvent($block);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
+    }
     public function fireModify(Block $block)
     {
         $event = new BlockEvent($block);
@@ -103,6 +107,20 @@ class BlockManager
 //        $em->flush();
 //    }
 
+    public function onDelete(Event $event)
+    {
+        $em = $this->getDoctrine()->getEntityManager();        
+        $block = $event->getBlock();
+      
+        foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlock($block->getId()) as $blockPublish){
+            $block->getBlockPublishList()->removeElement($blockPublish);
+            //$blockPublish->setBlock(null);
+        }
+        $em->flush();
+        $em->remove($block);
+        $em->flush();
+    }
+    
     public function onModify(Event $event)
     {
         
@@ -150,7 +168,6 @@ class BlockManager
             
             if ($eventArgs->hasChangedField('data')) {
                 $entity->setRealUpdatedAt(new \DateTime());
-                $this->fireModify($entity);
                 $entity->setIsPublished(false);
                 if ($entity->getIsPublished() == 1) {
                     $entity->setUnpublishedAt(new \DateTime());

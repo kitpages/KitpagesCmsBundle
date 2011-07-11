@@ -9,11 +9,7 @@ use Kitpages\CmsBundle\Entity\Block;
 class BlockPublish
 {
     
-    /**
-     * @var integer $blockId
-     */
-    private $blockId;
-    
+   
     /**
      * @var string $slug
      */
@@ -47,31 +43,7 @@ class BlockPublish
         $this->setBlock($block);
     }
 
-    /**
-     * @var Kitpages\CmsBundle\Entity\Block
-     */
-    private $block;
 
-
-    /**
-     * Set blockId
-     *
-     * @param integer $blockId
-     */
-    public function setBlockId($blockId)
-    {
-        $this->blockId = $blockId;
-    }
-
-    /**
-     * Get blockId
-     *
-     * @return integer $blockId
-     */
-    public function getBlockId()
-    {
-        return $this->blockId;
-    }
 
     /**
      * Set slug
@@ -163,25 +135,7 @@ class BlockPublish
         return $this->id;
     }
 
-    /**
-     * Set block
-     *
-     * @param Kitpages\CmsBundle\Entity\Block $block
-     */
-    public function setBlock(\Kitpages\CmsBundle\Entity\Block $block)
-    {
-        $this->block = $block;
-    }
-
-    /**
-     * Get block
-     *
-     * @return Kitpages\CmsBundle\Entity\Block $block
-     */
-    public function getBlock()
-    {
-        return $this->block;
-    }
+ 
     /**
      * @ORM\prePersist
      */
@@ -232,23 +186,33 @@ class BlockPublish
         $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
+
+
+
+
     /**
-     * Add zoneBlockList
-     *
-     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
+     * @var Kitpages\CmsBundle\Entity\Block
      */
-    public function addZoneBlockList(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
+    private $block;
+
+
+    /**
+     * Set block
+     *
+     * @param Kitpages\CmsBundle\Entity\Block $block
+     */
+    public function setBlock($block)
     {
-        $this->zoneBlockList[] = $zoneBlockList;
+        $this->block = $block;
     }
 
     /**
-     * Get zoneBlockList
+     * Get block
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Kitpages\CmsBundle\Entity\Block 
      */
-    public function getZoneBlockList()
+    public function getBlock()
     {
-        return $this->zoneBlockList;
+        return $this->block;
     }
 }

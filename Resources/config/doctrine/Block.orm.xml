@@ -43,8 +43,7 @@
             </cascade>            
         </one-to-many>
 
-        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
-        </one-to-many>
+        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" on-delete="CASCADE" />
         
     </entity>
 

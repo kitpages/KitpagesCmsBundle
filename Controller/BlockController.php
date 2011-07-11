@@ -93,10 +93,24 @@ class BlockController extends Controller
         ));
     }
 
-    public function editAction($id)
+    public function deleteAction(Block $block)
+    {
+        $blockManager = $this->get('kitpages.cms.manager.block');
+        $blockManager->fireDelete($block);
+        
+        $this->getRequest()->getSession()->setFlash('notice', 'Block deleted');
+        
+        $target = $this->getRequest()->query->get('kitpages_target');
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
+    }
+    
+    public function editAction(Block $block)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $block = $em->getRepository('KitpagesCmsBundle:Block')->find($id);
+
         if (!$block->getData()) {
             $block->setData(array('root'=>null));
         }
@@ -129,13 +143,15 @@ class BlockController extends Controller
         // persist form if needed
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
+            $oldBlockData = $block->getData();
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $em = $this->get('doctrine')->getEntityManager();
-                $em->persist($block);
                 $em->flush();
-
+                if ($oldBlockData != $block->getData()) {
+                    $blockManager = $this->get('kitpages.cms.manager.block');
+                    $blockManager->fireModify($block);
+                }
                 $this->getRequest()->getSession()->setFlash('notice', 'Block modified');
                 $target = $request->query->get('kitpages_target', null);
                 if ($target) {
@@ -153,7 +169,7 @@ class BlockController extends Controller
         ));
     }
 
-    public function toolbar(Block $block) {  
+    public function toolbar(Block $block, $actionList) {  
         $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
             'kitpages_cms_block_edit', 
             array(
@@ -161,15 +177,17 @@ class BlockController extends Controller
                 'kitpages_target' => $_SERVER['REQUEST_URI']
             )
         );
-        $dataRenderer['listAction']['publish'] = $this->get('router')->generate(
-            'kitpages_cms_block_publish', 
-            array(
-                'id' => $block->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
-            )
-        );
+        if (!isset($actionList['publish']) || $actionList['publish']) {
+            $dataRenderer['listAction']['publish'] = $this->get('router')->generate(
+                'kitpages_cms_block_publish', 
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
+            );
+        }
         $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
-            'kitpages_cms_zoneblock_delete', 
+            'kitpages_cms_block_delete', 
             array(
                 'id' => $block->getId(),
                 'kitpages_target' => $_SERVER['REQUEST_URI']
@@ -182,8 +200,7 @@ class BlockController extends Controller
         return $resultingHtml;
     } 
 
-    public function widgetAction($label, $renderer = 'default') {
-       
+    public function widgetAction($label, $renderer = 'default', $actionList = array()) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
@@ -193,7 +210,7 @@ class BlockController extends Controller
 
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                    $resultingHtml = $this->toolbar($block)
+                    $resultingHtml = $this->toolbar($block, $actionList)
                         .'<div class="kit-cms-block-container">'.
                         $this->renderView(
                             $dataRenderer[$renderer]['twig'],

@@ -23,10 +23,10 @@
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
         <one-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zonePublish">
-            <join-column name="zone_id" referenced-column-name="id" on-delete="CASCADE" on-update="CASCADE" />
+            <join-column name="zone_id" referenced-column-name="id" />
             <cascade>
-                <cascade-all />
-            </cascade> 
+                <cascade-persist />
+            </cascade>                
         </one-to-one> 
 
         

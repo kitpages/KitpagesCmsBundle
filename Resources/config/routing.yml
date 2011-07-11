@@ -16,6 +16,12 @@ kitpages_cms_block_edit:
     requirements:
         id: \d+
 
+kitpages_cms_block_delete:
+    pattern:  /block/delete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Block:delete }
+    requirements:
+        id: \d+
+
 kitpages_cms_zoneblock_delete:
     pattern:  /block/zoneBlockDelete/{id}
     defaults: { _controller: KitpagesCmsBundle:Block:zoneBlockDelete }

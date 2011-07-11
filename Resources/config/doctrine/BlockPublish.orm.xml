@@ -20,9 +20,9 @@
             <gedmo:timestampable on="create"/>
         </field>   
         
-        <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="blockPublishList" >
+        <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="blockPublishList" nullable="true" >
             <join-columns>
-                <join-column name="block_id" referenced-column-name="id"/>
+                <join-column name="block_id" referenced-column-name="id" nullable="true"  />
             </join-columns>
         </many-to-one>
 

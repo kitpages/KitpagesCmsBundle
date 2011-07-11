@@ -19,6 +19,7 @@
         </service>
         <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.block.publish" method="onPublish" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.delete" method="onDelete" />
             <!--<tag name="kernel.event_listener" event="kitpages.cms.block.unpublish" method="onUnpublish" />-->
             <tag name="doctrine.event_listener" event="prePersist" /> 
             <tag name="doctrine.event_listener" event="postPersist" /> 
@@ -29,6 +30,8 @@
         </service>
         <service id="kitpages.cms.manager.zone" class="%kitpages_cms.cms.zoneManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.block.modify" method="onBlockModify" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.delete" method="onBlockDelete" />
+            <tag name="kernel.event_listener" event="kitpages.cms.zone.blockmove" method="onBlockMove" />
             <!--<tag name="kernel.event_listener" event="kitpages.cms.block.unpublish" method="onBlockUnpublish" />-->            
             <tag name="kernel.event_listener" event="kitpages.cms.zone.publish" method="onPublish" />
             <!--<tag name="kernel.event_listener" event="kitpages.cms.zone.unpublish" method="onUnpublish" />-->

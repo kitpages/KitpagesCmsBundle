@@ -36,12 +36,12 @@
         <many-to-many field="pageList" target-entity="Kitpages\CmsBundle\Entity\Page" mapped-by="zoneList" >
         </many-to-many>
         
-        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="block" >
+        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
         </one-to-many>
 
         <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone" >
             <cascade>
-                <cascade-all />
+                <cascade-persist />
             </cascade>               
         </one-to-one>
     </entity>

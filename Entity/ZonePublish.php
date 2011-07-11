@@ -31,11 +31,6 @@ class ZonePublish
     private $data;
 
     /**
-     * @var integer $zone_id
-     */
-    private $zone_id;
-
-    /**
      * @var datetime $createdAt
      */
     private $createdAt;
@@ -45,26 +40,6 @@ class ZonePublish
      */
     private $zone;
 
-
-    /**
-     * Set zone_id
-     *
-     * @param integer $zoneId
-     */
-    public function setZoneId($zoneId)
-    {
-        $this->zone_id = $zoneId;
-    }
-
-    /**
-     * Get zone_id
-     *
-     * @return integer 
-     */
-    public function getZoneId()
-    {
-        return $this->zone_id;
-    }
 
     /**
      * Set slug
