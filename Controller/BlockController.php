@@ -167,7 +167,7 @@ class BlockController extends Controller
         ));
     }
 
-    public function toolbar(Block $block, $actionList) {  
+    public function toolbar(Block $block) {  
         $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
             'kitpages_cms_block_edit', 
             array(
@@ -191,7 +191,7 @@ class BlockController extends Controller
         return $resultingHtml;
     } 
 
-    public function widgetAction($label, $renderer = 'default', $actionList = array(), $displayToolbar = true) {
+    public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
@@ -204,7 +204,7 @@ class BlockController extends Controller
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 $resultingHtml = '';
                 if ($displayToolbar == true) {
-                    $resultingHtml .= $this->toolbar($block, $actionList);
+                    $resultingHtml .= $this->toolbar($block);
                 }
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());

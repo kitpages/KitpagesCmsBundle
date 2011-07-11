@@ -132,15 +132,13 @@ class ZoneController extends Controller
 
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             
-            $blockActionList = array('publish' => false);
-            
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-                $resultingHtml .= $this->toolbarBlock($zone, $block).$this->get('templating.helper.actions')->render(
+                $resultingHtml .= $this->toolbarBlock($zone, $block);
+                $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
                     array(
                         "label" => $block->getSlug(),
                         "renderer" =>$renderer,
-                        "actionList" =>$blockActionList,
                         'displayToolbar' => false
                     ),
                     array()
@@ -185,7 +183,7 @@ class ZoneController extends Controller
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');        
-        $zoneManager->firePublish($zone, $dataRenderer);
+        $zoneManager->publish($zone, $dataRenderer);
         $this->getRequest()->getSession()->setFlash('notice', 'Zone published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
