@@ -137,7 +137,9 @@ class ZoneManager
                 $em->flush();
             }
             $this->reorderBlockList($zone);
-        }        
+            $zone->setIsPublished(false);
+            $em->flush();
+        }
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockMove, $event);
     }
@@ -154,6 +156,8 @@ class ZoneManager
                 $em->flush();
             }
             $this->reorderBlockList($zone);
+            $zone->setIsPublished(false);
+            $em->flush();
         }        
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockMove, $event);
@@ -179,7 +183,7 @@ class ZoneManager
     ////
     // event listener
     ////
-    public function onBlockModify(Event $event)
+    public function afterBlockModify(Event $event)
     {
         $block = $event->getBlock();
         $em = $this->getDoctrine()->getEntityManager(); 
@@ -208,14 +212,6 @@ class ZoneManager
         }
         $em->flush();
     }
-    public function onBlockMove(Event $event)
-    {
-        $zone = $event->getZone();
-        $em = $this->getDoctrine()->getEntityManager(); 
-        $zone->setIsPublished(false);
-        $em->flush();
-    }
-   
     
     ////
     // doctrine events

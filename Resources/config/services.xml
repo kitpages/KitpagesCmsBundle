@@ -35,13 +35,12 @@
         </service>
         <service id="kitpages.cms.manager.zone" class="%kitpages_cms.cms.zoneManager%">
             <!--
-            <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="onBlockModify" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.delete" method="onBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.zone.blockmove" method="onBlockMove" />
             <tag name="kernel.event_listener" event="kitpages.cms.zone.publish" method="onPublish" />
             -->
             <tag name="kernel.event_listener" event="kitpages.cms.block.on.delete" method="onBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.delete" method="afterBlockDelete" />
+            <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterBlockModify" />
             
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
