@@ -12,7 +12,6 @@
         </id>
 
         <field name="slug" column="slug" type="string" length="250"/>
-        <field name="renderer" column="renderer" type="string" length="250"/>
         <field name="data" column="data" type="array" nullable="true" />
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
@@ -24,10 +23,7 @@
         </lifecycle-callbacks>
         
         <one-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zonePublish">
-            <join-column name="zone_id" referenced-column-name="id" on-delete="SET NULL" on-update="CASCADE" />
-            <cascade>
-                <cascade-all />
-            </cascade>                
+            <join-column name="zone_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL"/>
         </one-to-one> 
 
         

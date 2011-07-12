@@ -37,7 +37,11 @@
             <gedmo:timestampable on="update"/>
         </field>        
         
-        <one-to-many field="blockPublishList" target-entity="Kitpages\CmsBundle\Entity\BlockPublish" mapped-by="block" >
+        <one-to-many 
+            field="blockPublishList"
+            target-entity="Kitpages\CmsBundle\Entity\BlockPublish"
+            mapped-by="block"
+        >
             <cascade>
                 <cascade-all />
             </cascade>            

@@ -13,48 +13,76 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class ZoneManager
 {
- 
-    public function __construct(Registry $doctrine, EventDispatcher $dispatcher, $templating, $blockManager){
-        $this->_dispatcher = $dispatcher;
-        $this->_doctrine = $doctrine;
-        $this->_templating = $templating;
-        $this->_blockManager = $blockManager;
+    ////
+    // dependency injection
+    ////
+    protected $dispatcher = null;
+    protected $doctrine = null;
+    protected $templating = null;
+    protected $blockManager = null;
+    protected $logger = null;
+    
+    public function __construct(
+        Registry $doctrine,
+        EventDispatcher $dispatcher,
+        $templating,
+        $blockManager,
+        LoggerInterface $logger
+    )
+    {
+        $this->dispatcher = $dispatcher;
+        $this->doctrine = $doctrine;
+        $this->templating = $templating;
+        $this->blockManager = $blockManager;
+        $this->logger = $logger;
     }      
 
     /**
      * @return EventDispatcher $dispatcher
      */
     public function getDispatcher() {
-        return $this->_dispatcher;
+        return $this->dispatcher;
     }  
     
     /**
      * @return $templating
      */
     public function getTemplating() {
-        return $this->_templating;
+        return $this->templating;
     }    
     
     /**
      * @return Registry $doctrine
      */
     public function getDoctrine() {
-        return $this->_doctrine;
+        return $this->doctrine;
     }    
 
     /**
      * @return $blockManager
      */
     public function getBlockManager() {
-        return $this->_blockManager;
-    }  
+        return $this->blockManager;
+    }
     
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    ////
+    // fire events
+    ////
     public function firePublish(Zone $zone, $listRenderer)
     {
         $event = new ZoneEvent($zone, $listRenderer);
@@ -69,45 +97,52 @@ class ZoneManager
     {
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockMove, $event);
-    }     
-    public function onPublish(Event $event)
+    }
+    
+    ////
+    // actions
+    ////
+    public function publish(Zone $zone, array $listRenderer)
     {
-        $em = $this->getDoctrine()->getEntityManager();        
-        $zone = $event->getZone();
-        $listRenderer = $event->getListRenderer();
-        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-            $this->getBlockManager()->firePublish($block, $listRenderer[$block->getTemplate()]);
-        }
-        $zonePublish = $zone->getZonePublish();
+        $event = new ZoneEvent($zone, $listRenderer);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZonePublish, $event);
+        if (! $event->isDefaultPrevented()) {
+            // publish blocks
+            $em = $this->getDoctrine()->getEntityManager();
+            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+                $this->getBlockManager()->publish($block, $listRenderer[$block->getTemplate()]);
+            }
+            $em->flush();
+            // remove old zonePublish
+            $zonePublish = null;
+            $query = $em->createQuery("
+                SELECT zp FROM KitpagesCmsBundle:ZonePublish zp
+                WHERE zp.zone = :zone
+            ")->setParameter('zone', $zone);
+            $zonePublishList = $query->getResult();
+            if (count($zonePublishList) == 1) {
+                $zonePublish = $zonePublishList[0];
+                $em->remove($zonePublish);
+                $em->flush();
+            }
 
-        if ($zonePublish instanceof ZonePublish) {
-            $em->remove($zonePublish);
+            // create zone publish
+            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+                $listBlock[] = $block->getId();
+            }
+            $zonePublishNew = new ZonePublish();
+            $zonePublishNew->initByZone($zone);
+            $zonePublishNew->setData(array("blockList"=>$listBlock));
+            $zone->setIsPublished(true);
+            $zone->setZonePublish($zonePublishNew);
+            $em->persist($zonePublishNew);
+            $em->persist($zone);
             $em->flush();
         }
-
-        foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-            $listBlock[] = $block->getId();
-        }
-        $zonePublishNew = new ZonePublish();
-        $zonePublishNew->initByZone($zone);
-        $zonePublishNew->setData(array("blockList"=>$listBlock));
-        $zone->setIsPublished(true);
-        $zone->setZonePublish($zonePublishNew);
-        $em->flush();
-    }  
-    
-    public function onUnpublish(Event $event)
-    {
-        $em = $this->getDoctrine()->getEntityManager();        
-        $zone = $event->getZone();
-        // suppression de la zone et si pas de zone pas d'affichage en production
-        $zone->setIsPublished(false);
-        $em->persist($zone);
-        $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findByZone($zone);
-        $em->remove($zonePublish);
-
-        $em->flush();
+        $event = new ZoneEvent($zone, $listRenderer);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZonePublish, $event);
     }
+    
     public function onBlockModify(Event $event)
     {
         $block = $event->getBlock();
@@ -143,6 +178,10 @@ class ZoneManager
         $em->flush();
     }
    
+    
+    ////
+    // doctrine events
+    ////
     public function prePersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();

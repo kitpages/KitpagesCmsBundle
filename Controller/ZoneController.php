@@ -131,7 +131,6 @@ class ZoneController extends Controller
         $resultingHtml = '';
 
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block);
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
@@ -165,18 +164,17 @@ class ZoneController extends Controller
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();
                 foreach($zonePublishData['blockList'] as $blockId){
-                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockAndRenderer($blockId, $zonePublish->getRenderer());
-                    if ($blockPublish instanceof BlockPublish) {
-                        $blockPublishData = $blockPublish->getData();
-                        if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                            $resultingHtml .= $blockPublishData['html'];
-                        }
+                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockAndRenderer($blockId, $renderer);
+                    $blockPublishData = $blockPublish->getData();
+                    if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                        $resultingHtml .= $blockPublishData['html'];
                     }
                 }   
             }
-
+            else {
+                return new Response('This zone is not published');
+            }
         }
-        
         return new Response($resultingHtml);
     }
     public function publishAction(Zone $zone)
@@ -191,15 +189,6 @@ class ZoneController extends Controller
         }
         return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
     }
-
-//    public function unpublishAction(Zone $zone)
-//    {
-//        $blockManager = $this->get('kitpages.cms.manager.zone');
-//        $blockManager->fireUnpublish($zone);
-//
-//        return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
-//    }    
-
 
     public function moveUpBlockAction(Zone $zone, $block_id)
     {

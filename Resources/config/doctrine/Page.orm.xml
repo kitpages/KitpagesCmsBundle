@@ -45,11 +45,10 @@
             field="zoneList"
             target-entity="Kitpages\CmsBundle\Entity\Zone"
             inversed-by="pageList"
-            fetch="EAGER"
             >
 
             <cascade>
-               <cascade-persist />
+               <cascade-all />
             </cascade>
 
             <join-table name="cms_page_zone">

@@ -80,9 +80,16 @@ class BlockManager
         
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
-            foreach($block->getBlockPublishList() as $blockPublish){
+            $query = $em->createQuery("
+                SELECT bp FROM KitpagesCmsBundle:BlockPublish bp
+                WHERE bp.block = :block
+            ")->setParameter('block', $block);
+            $blockPublishList = $query->getResult();
+
+            foreach($blockPublishList as $blockPublish){
                 $em->remove($blockPublish);
             }
+            $em->persist($block);
             $em->flush();
             $em->refresh($block);
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {

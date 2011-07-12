@@ -4,7 +4,11 @@ namespace Kitpages\CmsBundle\Model;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\EventDispatcher\Event;
+
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\DoctrineBundle\Registry;
+
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -14,22 +18,33 @@ use Kitpages\CmsBundle\Entity\Block;
 class CmsManager
 {
   
-    private $_doctrine = null;
-    private $_layout = null;
-    private $_targetParameter = null;
+    protected $doctrine = null;
+    protected $layout = null;
     
-    public function __construct(Registry $doctrine, $defaultLayout, $targetParam)
+    public function __construct(
+        Registry $doctrine,
+        $defaultLayout,
+        LoggerInterface $logger
+    )
     {
-        $this->_layout = $defaultLayout;
-        $this->_targetParameter = $targetParam;
-        $this->_doctrine = $doctrine;
+        $this->layout = $defaultLayout;
+        $this->doctrine = $doctrine;
+        $this->logger = $logger;
     }      
     /**
      * @return Registry $doctrine
      */
     public function getDoctrine() {
-        return $this->_doctrine;
-    }  
+        return $this->doctrine;
+    } 
+    
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 
    
     public function onCoreController(FilterControllerEvent $event)
@@ -41,13 +56,14 @@ class CmsManager
     
     public function getLayout()
     {
-        return $this->_layout;
+        return $this->layout;
     }
     public function setLayout($layout)
     {
-        $this->_layout = $layout;
+        $this->layout = $layout;
     }
     
    
+    
   
 }

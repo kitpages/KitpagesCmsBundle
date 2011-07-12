@@ -9,12 +9,7 @@ use Kitpages\CmsBundle\Entity\Zone;
  */
 class ZonePublish
 {
-    
-    /**
-     * @var string $renderer
-     */
-    private $renderer;
-    
+
     /**
      * @var string $slug
      */
@@ -130,29 +125,9 @@ class ZonePublish
     
     public function initByZone(Zone $zone){
         $this->setSlug($zone->getSlug());
-        $this->setRenderer($zone->getRenderer());
         $this->setZone($zone);
     }
     
-    /**
-     * Set renderer
-     *
-     * @param string $renderer
-     */
-    public function setRenderer($renderer)
-    {
-        $this->renderer = $renderer;
-    }
-
-    /**
-     * Get renderer
-     *
-     * @return string 
-     */
-    public function getRenderer()
-    {
-        return $this->renderer;
-    }
 
     /**
      * Set zone

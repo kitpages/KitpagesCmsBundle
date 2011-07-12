@@ -18,6 +18,9 @@ final class KitpagesCmsEvents
     // zone events
     ////
     const onBlockMove = 'kitpages.cms.zone.on.block_move'; 
+    const afterBlockMove = 'kitpages.cms.zone.on.block_move'; 
+    
     const onZonePublish = 'kitpages.cms.zone.on.publish';
-    const onZoneUnpublish = 'kitpages.cms.zone.on.unpublish';
+    const afterZonePublish = 'kitpages.cms.zone.after.publish';
+    
 }
