@@ -69,7 +69,6 @@ class BlockManager
             $em->flush();
         }
         // throw after event
-        $event = new BlockEvent($block);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockDelete, $event);
     }
     
@@ -108,7 +107,6 @@ class BlockManager
             $em->persist($block);
             $em->flush();
         }
-        $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockPublish, $event);
     }
     

@@ -192,24 +192,16 @@ class ZoneController extends Controller
 
     public function moveUpBlockAction(Zone $zone, $block_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
-        $position = $zoneBlock->getPosition()-1;
-        $zoneBlock->setPosition($position);
-        $em->flush();
         $zoneManager = $this->get('kitpages.cms.manager.zone');
-        $zoneManager->fireBlockMove($zone);
+        $zoneManager->moveUpBlock($zone, $block_id);
+        $this->getRequest()->getSession()->setFlash('notice', 'Block moved up');
         return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }
     public function moveDownBlockAction(Zone $zone, $block_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
-        $position = $zoneBlock->getPosition()+1;
-        $zoneBlock->setPosition($position);
-        $em->flush();
         $zoneManager = $this->get('kitpages.cms.manager.zone');
-        $zoneManager->fireBlockMove($zone);
+        $zoneManager->moveDownBlock($zone, $block_id);
+        $this->getRequest()->getSession()->setFlash('notice', 'Block moved down');
         return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }    
 }
