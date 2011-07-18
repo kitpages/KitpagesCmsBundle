@@ -1,0 +1,8 @@
+{% extends inToolbar ? "KitpagesCmsBundle:page:edit_form.html.twig" : "KitpagesCmsBundle:page:edit.html.twig" %}
+
+{% block editData %}
+
+{{ form_row(form.data.root.backgroundColor) }}
+
+{% endblock editData %}
+

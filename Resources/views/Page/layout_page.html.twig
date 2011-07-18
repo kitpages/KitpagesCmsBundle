@@ -1,0 +1,7 @@
+{% extends 'KitpagesCmsBundle:page:layout.html.twig' %}
+{% block toolbar %}
+<div class="kit-cms kit-cms-toolbar">
+{% render 'KitpagesCmsBundle:Admin:widgetToolbar'%}
+{% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':page} %}
+</div>
+{% endblock toolbar %}

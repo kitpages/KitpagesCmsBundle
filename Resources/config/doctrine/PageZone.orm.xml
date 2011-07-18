@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\ZoneBlock" repository-class="Kitpages\CmsBundle\Repository\ZoneBlockRepository" table="cms_zone_block">
+    <entity name="Kitpages\CmsBundle\Entity\PageZone" repository-class="Kitpages\CmsBundle\Repository\PageZoneRepository" table="cms_page_zone">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>      
-        <field name="position" column="position" type="integer">
-            <gedmo:sortable-position />
+        <field name="locationInPage" column="location_in_page" type="string">
         </field>
         
       
@@ -20,14 +18,13 @@
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
-        <many-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="zoneBlockList" >
+        <many-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="pageZoneList" >
             <join-column name="zone_id" referenced-column-name="id" on-delete="CASCADE" on-update="CASCADE" />
-            <gedmo:sortable-group />
         </many-to-one>
         
-        <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="zoneBlockList" >
+        <many-to-one field="page" target-entity="Kitpages\CmsBundle\Entity\Page" inversed-by="pageZoneList" >
             <join-columns>
-                <join-column name="block_id" referenced-column-name="id"  mapped-by="block" on-delete="CASCADE" on-update="CASCADE" />
+                <join-column name="page_id" referenced-column-name="id" on-delete="CASCADE" on-update="CASCADE" />
             </join-columns>
         </many-to-one>     
                 

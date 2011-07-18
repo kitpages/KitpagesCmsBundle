@@ -1,0 +1,28 @@
+{% if viewMode == 2 %}
+<a class="kit-cms-no-expand" id="kit-cms-page-edit" >page edit</a>
+<div class="kit-cms-hidden kit-cms-toolbar-page">
+    <div class="kit-cms-toolbar-page-action">
+        <ul class="kit-cms-toolbar-page-contextSwitch">
+            <li>
+                <a href="{{ path('kitpages_cms_page_publish', { 'id': page.id, 'kitpages_target' : target }) }}">Publish</a>
+            </li>
+        </ul>
+    </div>
+    <div class="kit-cms-toolbar-page-form">
+        {% render 'KitpagesCmsBundle:Page:edit' with {'id': page.id, 'inToolbar' : true, 'target' : target } %}
+    </div>
+</div>
+<script>
+$('#kit-cms-page-edit').click(function() {
+    if ($(this).hasClass('kit-cms-no-expand')) {
+        $('.kit-cms-toolbar-page').removeClass('kit-cms-hidden');
+        $(this).removeClass('kit-cms-no-expand');
+        $(this).addClass('kit-cms-expand');
+    } else {
+        $('.kit-cms-toolbar-page').addClass('kit-cms-hidden');
+        $(this).addClass('kit-cms-no-expand');
+        $(this).removeClass('kit-cms-expand');
+    }
+});
+</script>
+{% endif %}

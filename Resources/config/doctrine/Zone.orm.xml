@@ -32,13 +32,16 @@
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
   
-        <many-to-many field="pageList" target-entity="Kitpages\CmsBundle\Entity\Page" mapped-by="zoneList" >
-        </many-to-many>
+        <one-to-many field="pageZoneList" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="zone" >
+        </one-to-many>
         
-        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" on-delete="CASCADE" on-update="CASCADE" >
+        <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
         </one-to-many>
 
         <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone">
+            <cascade>
+                <cascade-persist />
+            </cascade>  
         </one-to-one>
     </entity>
 

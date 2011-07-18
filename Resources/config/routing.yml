@@ -78,16 +78,64 @@ kitpages_cms_admin_view_mode_change:
 kitpages_cms_page_create:
     pattern:  /page/create
     defaults: { _controller: KitpagesCmsBundle:Page:create }        
+
+kitpages_cms_page_create_technical:
+    pattern:  /page/createTechnical
+    defaults: { _controller: KitpagesCmsBundle:Page:createTechnical } 
+
+kitpages_cms_page_create_link:
+    pattern:  /page/createLink
+    defaults: { _controller: KitpagesCmsBundle:Page:createLink } 
+
+kitpages_cms_page_edit:
+    pattern:  /page/edit/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:edit }  
+    requirements:
+        id: \d+
+ 
+kitpages_cms_page_edit_technical:
+    pattern:  /page/editTechnical/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:editTechnical }  
+    requirements:
+        id: \d+        
+   
+kitpages_cms_page_edit_link:
+    pattern:  /page/editLink/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:editLink }  
+    requirements:
+        id: \d+ 
         
 kitpages_cms_page_view:
     pattern:  /page/{id}
     defaults: { _controller: KitpagesCmsBundle:Page:view }
     requirements:
         id: \d+
- 
+
+
 kitpages_cms_page_publish:
     pattern:  /page/publish/{id}
     defaults: { _controller: KitpagesCmsBundle:Page:publish }
     requirements:
         id: \d+
 
+kitpages_cms_page_delete:
+    pattern:  /page/delete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:delete }
+    requirements:
+        id: \d+
+
+kitpages_cms_page_arbo:
+    pattern:  /arbo
+    defaults: { _controller: KitpagesCmsBundle:Page:arbo }
+    
+kitpages_cms_page_moveup:
+    pattern:  /page/moveup/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:moveUp }  
+    requirements:
+        id: \d+
+        
+kitpages_cms_page_movedown:
+    pattern:  /page/movedown/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:moveDown }  
+    requirements:
+        id: \d+

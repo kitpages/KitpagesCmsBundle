@@ -12,4 +12,16 @@ class ZoneBlockRepository extends SortableRepository
             ->getResult(); 
         return $zoneBlock[0];
     }
+    
+    public function nbrZoneBlockByBlockWithZoneDiff($block, $zone)
+    {   
+
+        $nbr = $this->_em
+            ->createQuery('SELECT count(zb.id) FROM KitpagesCmsBundle:ZoneBlock zb JOIN zb.block b JOIN zb.zone z WHERE zb.block = :block AND zb.zone != :zone')
+            ->setParameter("block", $block)
+            ->setParameter("zone", $zone)                
+            ->getResult();        
+        return $nbr;
+    }
+    
 }

@@ -39,40 +39,12 @@ class Page
      */
     private $data;
 
-    /**
-     * @var datetime $realModificationDate
-     */
-    private $realModificationDate;
 
-    /**
-     * @var datetime $publicationDate
-     */
-    private $publicationDate;
-
-    /**
-     * @var datetime $unpublicationDate
-     */
-    private $unpublicationDate;
-
-    /**
-     * @var datetime $creationDate
-     */
-    private $creationDate;
-
-    /**
-     * @var datetime $modificationDate
-     */
-    private $modificationDate;
-
-    /**
+     /**
      * @var integer $id
      */
     private $id;
 
-    /**
-     * @var Kitpages\CmsBundle\Entity\Zone
-     */
-    private $zoneList;
 
     public function __construct()
     {
@@ -309,25 +281,7 @@ class Page
         return $this->id;
     }
 
-    /**
-     * Add zoneList
-     *
-     * @param Kitpages\CmsBundle\Entity\Zone $zoneList
-     */
-    public function addZoneList(\Kitpages\CmsBundle\Entity\Zone $zoneList)
-    {
-        $this->zoneList[] = $zoneList;
-    }
 
-    /**
-     * Get zoneList
-     *
-     * @return Doctrine\Common\Collections\Collection $zoneList
-     */
-    public function getZoneList()
-    {
-        return $this->zoneList;
-    }
     /**
      * @ORM\prePersist
      */
@@ -343,31 +297,8 @@ class Page
     {
         // Add your code here
     }
-    /**
-     * @var Kitpages\CmsBundle\Entity\PageZone
-     */
-    private $listZone;
 
 
-    /**
-     * Add listZone
-     *
-     * @param Kitpages\CmsBundle\Entity\PageZone $listZone
-     */
-    public function addListZone(\Kitpages\CmsBundle\Entity\PageZone $listZone)
-    {
-        $this->listZone[] = $listZone;
-    }
-
-    /**
-     * Get listZone
-     *
-     * @return Doctrine\Common\Collections\Collection $listZone
-     */
-    public function getListZone()
-    {
-        return $this->listZone;
-    }
     /**
      * @var datetime $realUpdatedAt
      */
@@ -498,10 +429,6 @@ class Page
      */
     private $language;
 
-    /**
-     * @var string $title
-     */
-    private $title;
 
 
     /**
@@ -525,6 +452,87 @@ class Page
     }
 
     /**
+     * @var Kitpages\CmsBundle\Entity\PageZone
+     */
+    private $pageZoneList;
+
+
+    /**
+     * Add pageZoneList
+     *
+     * @param Kitpages\CmsBundle\Entity\PageZone $pageZoneList
+     */
+    public function addPageZoneList(\Kitpages\CmsBundle\Entity\PageZone $pageZoneList)
+    {
+        $this->pageZoneList[] = $pageZoneList;
+    }
+
+    /**
+     * Get pageZoneList
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getPageZoneList()
+    {
+        return $this->pageZoneList;
+    }
+    /**
+     * @var string $urlTitle
+     */
+    private $urlTitle;
+
+    /**
+     * @var Kitpages\CmsBundle\Entity\PagePublish
+     */
+    private $pagePublish;
+
+
+    /**
+     * Set urlTitle
+     *
+     * @param string $urlTitle
+     */
+    public function setUrlTitle($urlTitle)
+    {
+        $this->urlTitle = $urlTitle;
+    }
+
+    /**
+     * Get urlTitle
+     *
+     * @return string 
+     */
+    public function getUrlTitle()
+    {
+        return $this->urlTitle;
+    }
+
+    /**
+     * Set pagePublish
+     *
+     * @param Kitpages\CmsBundle\Entity\PagePublish $pagePublish
+     */
+    public function setPagePublish(\Kitpages\CmsBundle\Entity\PagePublish $pagePublish)
+    {
+        $this->pagePublish = $pagePublish;
+    }
+
+    /**
+     * Get pagePublish
+     *
+     * @return Kitpages\CmsBundle\Entity\PagePublish 
+     */
+    public function getPagePublish()
+    {
+        return $this->pagePublish;
+    }
+    /**
+     * @var string $title
+     */
+    private $title;
+
+
+    /**
      * Set title
      *
      * @param string $title
@@ -542,5 +550,155 @@ class Page
     public function getTitle()
     {
         return $this->title;
+    }
+    /**
+     * @var integer $left
+     */
+    private $left;
+
+    /**
+     * @var integer $right
+     */
+    private $right;
+
+    /**
+     * @var integer $root
+     */
+    private $root;
+
+    /**
+     * @var integer $level
+     */
+    private $level;
+
+    /**
+     * @var Kitpages\CmsBundle\Entity\Page
+     */
+    private $parent;
+
+
+    /**
+     * Set left
+     *
+     * @param integer $left
+     */
+    public function setLeft($left)
+    {
+        $this->left = $left;
+    }
+
+    /**
+     * Get left
+     *
+     * @return integer 
+     */
+    public function getLeft()
+    {
+        return $this->left;
+    }
+
+    /**
+     * Set right
+     *
+     * @param integer $right
+     */
+    public function setRight($right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * Get right
+     *
+     * @return integer 
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * Set root
+     *
+     * @param integer $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    }
+
+    /**
+     * Get root
+     *
+     * @return integer 
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer 
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param Kitpages\CmsBundle\Entity\Page $parent
+     */
+    public function setParent(\Kitpages\CmsBundle\Entity\Page $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return Kitpages\CmsBundle\Entity\Page 
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+    /**
+     * @var string $linkUrl
+     */
+    private $linkUrl;
+
+
+    /**
+     * Set linkUrl
+     *
+     * @param string $linkUrl
+     */
+    public function setLinkUrl($linkUrl)
+    {
+        $this->linkUrl = $linkUrl;
+    }
+
+    /**
+     * Get linkUrl
+     *
+     * @return string 
+     */
+    public function getLinkUrl()
+    {
+        return $this->linkUrl;
     }
 }
