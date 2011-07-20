@@ -80,6 +80,9 @@
             </cascade>               
         </one-to-one>
 
+        <one-to-one field="navPublish" target-entity="Kitpages\CmsBundle\Entity\NavPublish" mapped-by="page">
+        </one-to-one>
+
     </entity>
 
 </doctrine-mapping>

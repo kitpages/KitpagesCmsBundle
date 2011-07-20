@@ -120,10 +120,17 @@ class ZoneController extends Controller
         return $resultingHtml;
     } 
     
-    public function renderer($zone, $renderer) {
+    
+    public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
+        
+        if ($zone == null) {
+            return new Response('Please create a zone with the label "'.htmlspecialchars($label).'"');
+        }
+        
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
-        $em = $this->getDoctrine()->getEntityManager();
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block);
@@ -137,7 +144,9 @@ class ZoneController extends Controller
                     array()
                 );
             }
-            $resultingHtml = $this->toolbar($zone, $resultingHtml);
+            if ($displayToolbar) {
+                $resultingHtml = $this->toolbar($zone, $resultingHtml);
+            }
         }
         
         elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
@@ -169,29 +178,10 @@ class ZoneController extends Controller
                 return new Response('This zone is not published');
             }
         } 
-        return $resultingHtml;
+        return new Response($resultingHtml);
     }
-    
-    
-    public function widgetAction($label, $renderer = 'default') {
-        $em = $this->getDoctrine()->getEntityManager();
-        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
-        
-        if ($zone == null) {
-            return new Response('Please create a zone with the label "'.htmlspecialchars($label).'"');
-        }
 
-        return new Response($this->renderer($zone, $renderer));
-    }
-    public function widgetPageAction($location_in_page, Page $page) {
-        $em = $this->getDoctrine()->getEntityManager();
-        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findByPageAndLocation($page, $location_in_page);
-        $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
-        if ($zone == null) {
-            return new Response('Please create a zone with the location "'.htmlspecialchars($location_in_page).'"');
-        }
-        return new Response($this->renderer($zone, $layout['zone_list'][$location_in_page]['render']));
-    }
+    
     public function publishAction(Zone $zone)
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');

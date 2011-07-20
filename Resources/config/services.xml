@@ -39,6 +39,9 @@
             <tag name="kernel.event_listener" event="kitpages.cms.zone.blockmove" method="onBlockMove" />
             <tag name="kernel.event_listener" event="kitpages.cms.zone.publish" method="onPublish" />
             -->
+            <tag name="doctrine.event_listener" event="prePersist" /> 
+            <tag name="doctrine.event_listener" event="postPersist" /> 
+            <tag name="doctrine.event_listener" event="preUpdate" />            
             <tag name="kernel.event_listener" event="kitpages.cms.block.on.delete" method="onBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.delete" method="afterBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterBlockModify" />

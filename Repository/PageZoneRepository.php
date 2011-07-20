@@ -16,11 +16,11 @@ class PageZoneRepository extends EntityRepository
     {   
 
         $nbr = $this->_em
-            ->createQuery('SELECT count(pz.id) as nbr FROM KitpagesCmsBundle:PageZone pz JOIN pz.page p JOIN pz.zone z WHERE pz.page != :page AND pz.zone = :zone')
+            ->createQuery('SELECT count(pz.id) FROM KitpagesCmsBundle:PageZone pz JOIN pz.page p JOIN pz.zone z WHERE pz.page != :page AND pz.zone = :zone')
             ->setParameter("page", $page)
             ->setParameter("zone", $zone)                
-            ->getSingleResult();        
-        return $nbr['nbr'];
+            ->getSingleScalarResult();        
+        return $nbr;
     }
     
 }

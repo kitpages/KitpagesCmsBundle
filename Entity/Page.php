@@ -701,4 +701,29 @@ class Page
     {
         return $this->linkUrl;
     }
+    /**
+     * @var Kitpages\CmsBundle\Entity\NavPublish
+     */
+    private $navPublish;
+
+
+    /**
+     * Set navPublish
+     *
+     * @param Kitpages\CmsBundle\Entity\NavPublish $navPublish
+     */
+    public function setNavPublish(\Kitpages\CmsBundle\Entity\NavPublish $navPublish)
+    {
+        $this->navPublish = $navPublish;
+    }
+
+    /**
+     * Get navPublish
+     *
+     * @return Kitpages\CmsBundle\Entity\NavPublish 
+     */
+    public function getNavPublish()
+    {
+        return $this->navPublish;
+    }
 }

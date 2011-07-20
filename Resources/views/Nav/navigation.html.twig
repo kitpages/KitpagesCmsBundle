@@ -1,0 +1,20 @@
+<ul {% if root %} class='kit-cms-navigation-{{navigationLabel}}' {% endif %} >
+    {% for navigationElem in navigation %}
+        <li class="kit-cms-navigation-{{navigationLabel}}-level{{navigationElem.url}} kit-cms-navigation-{{navigationLabel}}-slug-{{navigationElem.slug}}">
+            <a href="{{navigationElem.url}}" >{{navigationElem.title}}</a>
+            {% include 'KitpagesCmsBundle:Nav:navigation.html.twig' with {'navigation': navigationElem.children, 'navigationLabel':navigationLabel, 'root':false } %}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if root %}
+<script>
+$(document).ready(function(){
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('select');
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('current');
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').parents('li').addClass('current');
+});
+</script>
+
+{% endif %}
+

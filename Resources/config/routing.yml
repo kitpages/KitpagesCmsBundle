@@ -139,3 +139,10 @@ kitpages_cms_page_movedown:
     defaults: { _controller: KitpagesCmsBundle:Page:moveDown }  
     requirements:
         id: \d+
+
+###
+# Nav
+###
+kitpages_cms_nav_publish:
+    pattern:  /nav/publish
+    defaults: { _controller: KitpagesCmsBundle:Nav:publish }

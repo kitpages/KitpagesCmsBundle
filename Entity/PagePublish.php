@@ -194,6 +194,8 @@ class PagePublish
     public function initByPage(Page $page){
         $this->setSlug($page->getSlug());
         $this->setPageType($page->getPageType());
+        $this->setLayout($page->getLayout());      
+        $this->setLanguage($page->getLanguage());          
         $this->setUrlTitle($page->getUrlTitle());        
         $this->setPage($page);
     }
@@ -222,5 +224,55 @@ class PagePublish
     public function getPageType()
     {
         return $this->pageType;
+    }
+    /**
+     * @var string $language
+     */
+    private $language;
+
+    /**
+     * @var string $layout
+     */
+    private $layout;
+
+
+    /**
+     * Set language
+     *
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
+     * Get language
+     *
+     * @return string 
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * Set layout
+     *
+     * @param string $layout
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
+    }
+
+    /**
+     * Get layout
+     *
+     * @return string 
+     */
+    public function getLayout()
+    {
+        return $this->layout;
     }
 }

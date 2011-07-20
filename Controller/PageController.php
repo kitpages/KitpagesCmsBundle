@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Kitpages\CmsBundle\Entity\Page;
+use Kitpages\CmsBundle\Entity\PagePublish;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\PageZone;
 
@@ -31,33 +32,75 @@ class PageController extends Controller
    
     public function viewAction(Page $page, $lng, $urlTitle)
     {
+        $em = $this->getDoctrine()->getEntityManager();
+        $context = $this->get('kitpages.cms.controller.context');
+        $pageId = $page->getId();
+        $pageType = $page->getPageType();
+        $pageLanguage = $page->getLanguage();
+        $pageUrlTitle = $page->getUrlTitle();
+        $pageLayout = $page->getLayout();
+        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+            
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+            $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+            $pageType = $pagePublish->getPageType();
+            $pageLanguage = $pagePublish->getLanguage();
+            $pageUrlTitle = $pagePublish->getUrlTitle();
+            $pageLayout = $pagePublish->getLayout();
+        }
         
-        if ($page->getPageType() == "technical") {
+        if ($pageType == "technical") {
             throw new NotFoundHttpException('The page does not exist.');
         }
 
-        if ($page->getPageType() == "link") {
+        if ($pageType == "link") {
             return $this->redirect ($page->getLinkUrl(), 301);
         }
         
-        if ($page->getLanguage() != $lng || $page->getUrlTitle() != $urlTitle) {
+        if ($pageLanguage != $lng || $pageUrlTitle != $urlTitle) {
             return $this->redirect ($this->generateUrl(
                         'kitpages_cms_page_view_lng',
                         array(
-                            'id' => $page->getId(),
-                            'lng' => $page->getLanguage(),
-                            'urlTitle' => $page->getUrlTitle()
+                            'id' => $pageId,
+                            'lng' => $pageLanguage,
+                            'urlTitle' => $pageUrlTitle
                         )
                     ), 301); 
         }
      
         $cmsManager = $this->get('kitpages.cms.model.cmsManager');
-        $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
+        $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$pageLayout);
         $cmsManager->setLayout($layout['twig']);
         
-        return $this->render('KitpagesCmsBundle:page:layout_page.html.twig', array('page' => $page));        
+        return $this->render('KitpagesCmsBundle:page:layout_page.html.twig', array('viewMode' => $context->getViewMode(), 'page' => $page));        
     }
 
+    public function widgetZoneAction($location_in_page, Page $page) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findByPageAndLocation($page, $location_in_page);
+        $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
+        if ($zone == null) {
+            return new Response('Please create a zone with the location "'.htmlspecialchars($location_in_page).'"');
+        }
+        
+        $context = $this->get('kitpages.cms.controller.context');
+        $resultingHtml = $this->get('templating.helper.actions')->render(
+                    "KitpagesCmsBundle:Zone:widget", 
+                    array(
+                        "label" => $zone->getSlug(),
+                        "renderer" =>$layout['zone_list'][$location_in_page]['render'],
+                        'displayToolbar' => false
+                    ),
+                    array()
+        );
+        if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+            $resultingHtml = $this->toolbarZone($zone, $resultingHtml);
+        }
+        return new Response($resultingHtml);
+    }
+    
     public function createAction()
     {
         $page = new Page();
@@ -411,6 +454,27 @@ class PageController extends Controller
             'kitpages_target' => $target
         ));
     }
+
+    public function toolbarZone(Zone $zone, $htmlZone) {  
+        $listAction['addBlock'] = $this->get('router')->generate(
+            'kitpages_cms_block_create', 
+            array(
+                'zone_id' => $zone->getId(),
+                'kitpages_target' => $_SERVER['REQUEST_URI']
+            )
+
+        );
+        
+        $dataRenderer = array(
+            'title' => $zone->getSlug(),
+            'listAction' => $listAction,
+            'htmlBlock' => $htmlZone
+        );
+        $resultingHtml = $this->renderView(
+            'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer
+        );  
+        return $resultingHtml;
+    }
     
     public function publish(Page $page, $childrenPublish)
     {
@@ -459,14 +523,6 @@ class PageController extends Controller
     {
         $childrenDelete = $this->get('request')->query->get('children', false);
         $this->delete($page, $childrenDelete);
-//        $em = $this->getDoctrine()->getEntityManager();
-//            foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
-//                $nbr = $em->getRepository('KitpagesCmsBundle:PageZone')->nbrPageZoneByZoneWithPageDiff($zone, $page);
-//                echo var_dump($nbr);  
-//                if ($nbr == 0) {
-//                  
-//                }
-//            }
         $this->getRequest()->getSession()->setFlash('notice', 'Page deleted');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
@@ -487,7 +543,7 @@ class PageController extends Controller
     
     public function arboChildren($page){
         $em = $this->getDoctrine()->getEntityManager();
-        $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+        $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
         return $this->pageListRenderer($pageList);
 
     }
@@ -613,5 +669,7 @@ class PageController extends Controller
         return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
 
     }
+ 
+    
     
 }

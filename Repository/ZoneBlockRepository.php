@@ -20,7 +20,7 @@ class ZoneBlockRepository extends SortableRepository
             ->createQuery('SELECT count(zb.id) FROM KitpagesCmsBundle:ZoneBlock zb JOIN zb.block b JOIN zb.zone z WHERE zb.block = :block AND zb.zone != :zone')
             ->setParameter("block", $block)
             ->setParameter("zone", $zone)                
-            ->getResult();        
+            ->getSingleScalarResult();        
         return $nbr;
     }
     
