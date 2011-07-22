@@ -78,16 +78,78 @@ kitpages_cms_admin_view_mode_change:
 kitpages_cms_page_create:
     pattern:  /page/create
     defaults: { _controller: KitpagesCmsBundle:Page:create }        
+
+kitpages_cms_page_create_technical:
+    pattern:  /page/createTechnical
+    defaults: { _controller: KitpagesCmsBundle:Page:createTechnical } 
+
+kitpages_cms_page_create_link:
+    pattern:  /page/createLink
+    defaults: { _controller: KitpagesCmsBundle:Page:createLink } 
+
+kitpages_cms_page_edit:
+    pattern:  /page/edit/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:edit }  
+    requirements:
+        id: \d+
+ 
+kitpages_cms_page_edit_technical:
+    pattern:  /page/editTechnical/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:editTechnical }  
+    requirements:
+        id: \d+        
+   
+kitpages_cms_page_edit_link:
+    pattern:  /page/editLink/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:editLink }  
+    requirements:
+        id: \d+ 
         
 kitpages_cms_page_view:
     pattern:  /page/{id}
     defaults: { _controller: KitpagesCmsBundle:Page:view }
     requirements:
         id: \d+
- 
+
+
 kitpages_cms_page_publish:
     pattern:  /page/publish/{id}
     defaults: { _controller: KitpagesCmsBundle:Page:publish }
     requirements:
         id: \d+
 
+kitpages_cms_page_delete:
+    pattern:  /page/delete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:delete }
+    requirements:
+        id: \d+
+
+kitpages_cms_page_undelete:
+    pattern:  /page/undelete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:undelete }
+    requirements:
+        id: \d+
+
+###
+# Nav
+###
+kitpages_cms_nav_publish:
+    pattern:  /nav/publish
+    defaults: { _controller: KitpagesCmsBundle:Nav:publish }
+    
+    
+kitpages_cms_nav_arbo:
+    pattern:  /arbo
+    defaults: { _controller: KitpagesCmsBundle:Nav:arbo }
+    
+kitpages_cms_nav_moveup:
+    pattern:  /nav/moveup/{id}
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveUp }  
+    requirements:
+        id: \d+
+        
+kitpages_cms_nav_movedown:
+    pattern:  /nav/movedown/{id}
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveDown }  
+    requirements:
+        id: \d+

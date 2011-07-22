@@ -1,0 +1,16 @@
+    <ul>
+        {% for page in arbo %}
+            <li>
+                <a href="{{page.url}}" >{{page.menuTitle}} ({{page.slug}})</a>
+                <div class='kit-cms-arbo-actions'><ul>
+                {% for name, url in page.actionList %}
+                    <li><a href="{{url}}">{{name}}</a></li>
+                    
+
+                {% endfor %}
+                </ul></div>
+
+                {% include 'KitpagesCmsBundle:page:arboChildren.html.twig' with {'arbo': page.children } %}
+            </li>
+        {% endfor %}
+    </ul>

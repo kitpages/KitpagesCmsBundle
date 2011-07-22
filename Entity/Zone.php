@@ -51,17 +51,7 @@ class Zone
      */
     private $zoneBlockList;
 
-    /**
-     * @var Kitpages\CmsBundle\Entity\Page
-     */
-    private $pageList;
 
-    public function __construct()
-    {
-        $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->pageList = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
     /**
      * Set slug
      *
@@ -152,25 +142,6 @@ class Zone
         return $this->zoneBlockList;
     }
 
-    /**
-     * Add pageList
-     *
-     * @param Kitpages\CmsBundle\Entity\Page $pageList
-     */
-    public function addPageList(\Kitpages\CmsBundle\Entity\Page $pageList)
-    {
-        $this->pageList[] = $pageList;
-    }
-
-    /**
-     * Get pageList
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getPageList()
-    {
-        return $this->pageList;
-    }
     /**
      * @ORM\prePersist
      */
@@ -277,4 +248,34 @@ class Zone
         return $this->unpublishedAt;
     }
 
+    /**
+     * @var Kitpages\CmsBundle\Entity\PageZone
+     */
+    private $pageZoneList;
+
+    public function __construct()
+    {
+        $this->pageZoneList = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add pageZoneList
+     *
+     * @param Kitpages\CmsBundle\Entity\PageZone $pageZoneList
+     */
+    public function addPageZoneList(\Kitpages\CmsBundle\Entity\PageZone $pageZoneList)
+    {
+        $this->pageZoneList[] = $pageZoneList;
+    }
+
+    /**
+     * Get pageZoneList
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getPageZoneList()
+    {
+        return $this->pageZoneList;
+    }
 }

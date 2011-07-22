@@ -1,0 +1,11 @@
+{% extends 'KitpagesCmsBundle:page:layout.html.twig' %}
+
+{% block body %}
+<h1>Create Page Technical</h1>
+
+<form action="{{ path('kitpages_cms_page_create_technical', { 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" />
+</form>
+{% endblock body %}

@@ -5,22 +5,32 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\Page" table="cms_page">
+    <entity name="Kitpages\CmsBundle\Entity\Page" repository-class="Kitpages\CmsBundle\Repository\PageRepository" table="cms_page">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
         <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
-        <field name="language" column="language" type="string" nullable="true" length="250"/>       
-        <field name="title" column="title" type="string" nullable="false" length="250"/>          
+        <field name="language" column="language" type="string" nullable="true" length="250"/>   
+        <field name="title" column="title" type="string" nullable="false" length="250">
+            <gedmo:sluggable/>
+        </field>          
+        <field name="urlTitle" column="url_title" type="string" nullable="false" length="250">
+            <gedmo:slug unique="true" style="default" updatable="true" separator="_"/>
+        </field>       
+        <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250">
+        </field>   
         <field name="pageType" column="page_type" type="string" length="100" />
-        <field name="layout" column="layout" type="string" length="250" />
+        <field name="layout" column="layout" type="string" length="250"  nullable="true" />
         
         <field name="isActive" column="is_active" type="boolean"/>
         <field name="isPublished" column="is_published" type="boolean"/>
-        
+        <field name="isInNavigation" column="is_in_navigation" type="boolean"/>           
+        <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>        
         <field name="data" column="data" type="array" nullable="true" />
+
+        <field name="linkUrl" column="link_url" type="string" nullable="true" />
         
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />
@@ -35,33 +45,48 @@
         <field name="updatedAt" type="datetime">
             <gedmo:timestampable on="update"/>
         </field>  
-        
+ 
+        <field name="left" column="lft" type="integer">
+            <gedmo:tree-left/>
+        </field>
+        <field name="right" column="rgt" type="integer">
+            <gedmo:tree-right/>
+        </field>
+        <field name="root" type="integer">
+            <gedmo:tree-root/>
+        </field>
+        <field name="level" column="lvl" type="integer">
+            <gedmo:tree-level/>
+        </field>
+
+        <many-to-one field="parent" target-entity="Page">
+            <join-column name="parent_id" referenced-column-name="id" on-delete="SET NULL"/>
+            <gedmo:tree-parent/>
+        </many-to-one>
+
+        <gedmo:tree type="nested"/>
+ 
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
-        <many-to-many
-            field="zoneList"
-            target-entity="Kitpages\CmsBundle\Entity\Zone"
-            inversed-by="pageList"
-            >
-
+        <one-to-many field="pageZoneList" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="page" >
             <cascade>
-               <cascade-all />
-            </cascade>
+                <cascade-persist />
+            </cascade>   
+        </one-to-many>
 
-            <join-table name="cms_page_zone">
-                <join-columns>
-                    <join-column name="page_id" referenced-column-name="id"/>
-                </join-columns>
+        <one-to-one field="pagePublish" target-entity="Kitpages\CmsBundle\Entity\PagePublish" mapped-by="page">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>               
+        </one-to-one>
 
-                <inverse-join-columns>
-                    <join-column name="zone_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-        
+        <one-to-one field="navPublish" target-entity="Kitpages\CmsBundle\Entity\NavPublish" mapped-by="page" >
+        </one-to-one>
+
     </entity>
 
 </doctrine-mapping>

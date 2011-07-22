@@ -13,4 +13,28 @@ class ZoneRepository extends EntityRepository
         return $listZone;        
         
     }
+    public function findByPageAndLocation($page, $location) {
+        
+        $zone = $this->_em
+            ->createQuery('SELECT z FROM KitpagesCmsBundle:Zone z JOIN z.pageZoneList pz WHERE pz.page = :page AND pz.locationInPage = :location')
+            ->setParameter("page", $page)
+            ->setParameter("location", $location)
+            ->getResult();   
+        if (count($zone) > 0) {
+            return $zone[0];        
+        } else {
+            return null;
+        }
+    }
+    public function findByPage($page)
+    {   
+
+        $listZone = $this->_em
+            ->createQuery('SELECT z FROM KitpagesCmsBundle:Zone z JOIN z.pageZoneList pz WHERE pz.page = :page')
+            ->setParameter("page", $page)
+            ->getResult();        
+        return $listZone;
+    }
+
+     
 }

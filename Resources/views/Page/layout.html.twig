@@ -1,7 +1,12 @@
 {% extends cms.layout %}
+{% block mainNavigation %}
+{% render 'KitpagesCmsBundle:Nav:widget' with {'label':'main', 'slug':page.slug|default('')} %}
+{% endblock  mainNavigation %}
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kitpagescms/css/common.css') }}"  media="screen" />
 {% endblock stylesheets %}
 {% block toolbar %}
+<div class="kit-cms kit-cms-toolbar">
 {% render 'KitpagesCmsBundle:Admin:widgetToolbar'%}
+</div>
 {% endblock toolbar %}

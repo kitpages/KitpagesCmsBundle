@@ -13,7 +13,6 @@ class BlockPublishRepository extends EntityRepository
                          ->setParameter("block", $block)
                          ->setParameter("renderer", $renderer)
                          ->getResult();
-        echo count($blockPublish);
         if (count($blockPublish) == 1) {
             return $blockPublish[0];
         } else {

@@ -5,13 +5,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Kitpages\CmsBundle\Controller\Context;
+use Kitpages\CmsBundle\Entity\Site;
 
 class AdminController extends Controller
 {
  
     public function widgetToolbarAction() {
         $context = $this->get('kitpages.cms.controller.context');
+        $em = $this->getDoctrine()->getEntityManager();
         $dataRender = array(
+            'isNavPublished' => $em->getRepository('KitpagesCmsBundle:Site')->get(Site::IS_NAV_PUBLISHED),
             'viewMode' => $context->getViewMode(),
             'target' => $_SERVER["REQUEST_URI"]
         );

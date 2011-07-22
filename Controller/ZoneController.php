@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Entity\ZonePublish;
@@ -119,8 +120,8 @@ class ZoneController extends Controller
         return $resultingHtml;
     } 
     
-    public function widgetAction($label, $renderer = 'default') {
-        $context = $this->get('kitpages.cms.controller.context');
+    
+    public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
         
@@ -128,8 +129,8 @@ class ZoneController extends Controller
             return new Response('Please create a zone with the label "'.htmlspecialchars($label).'"');
         }
         
+        $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
-
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block);
@@ -143,7 +144,9 @@ class ZoneController extends Controller
                     array()
                 );
             }
-            $resultingHtml = $this->toolbar($zone, $resultingHtml);
+            if ($displayToolbar) {
+                $resultingHtml = $this->toolbar($zone, $resultingHtml);
+            }
         }
         
         elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
@@ -174,9 +177,11 @@ class ZoneController extends Controller
             else {
                 return new Response('This zone is not published');
             }
-        }
+        } 
         return new Response($resultingHtml);
     }
+
+    
     public function publishAction(Zone $zone)
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');
