@@ -68,7 +68,7 @@ kitpages_cms_zone_publish:
 ###
 kitpages_cms_admin_view_mode_change:
     pattern:  /admin/viewModeChange/{viewMode}
-    defaults: { _controller: KitpagesCmsBundle:Admin:viewModeChange }
+    defaults: { _controller: KitpagesCmsBundle:Toolbar:viewModeChange }
     requirements:
         id: \d+
 

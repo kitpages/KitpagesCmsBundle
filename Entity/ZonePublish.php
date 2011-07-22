@@ -1,8 +1,6 @@
 <?php
-
 namespace Kitpages\CmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Kitpages\CmsBundle\Entity\Zone;
 /**
  * Kitpages\CmsBundle\Entity\Zone

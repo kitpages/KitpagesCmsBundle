@@ -31,6 +31,7 @@ class NavController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
+        $navigation = array();
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($label);
             $navigation = $this->navPageChildren($page, $context->getViewMode());
@@ -39,7 +40,7 @@ class NavController extends Controller
             $navigation = $this->navPageChildren($page, $context->getViewMode());      
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($label);
-            $navigation = $this->navPublishChildren($navPublish, $slug);
+            $navigation = $this->navPublishChildren($navPublish);
         }
         return $this->render('KitpagesCmsBundle:Nav:navigation.html.twig', array('slugCurrent' => $slug, 'navigation' => $navigation, 'navigationLabel' => $label, 'root' => true));
     }

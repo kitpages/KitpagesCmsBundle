@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Entity\Site;
 
-class AdminController extends Controller
+class ToolbarController extends Controller
 {
  
     public function widgetToolbarAction() {
@@ -18,7 +18,7 @@ class AdminController extends Controller
             'viewMode' => $context->getViewMode(),
             'target' => $_SERVER["REQUEST_URI"]
         );
-        return $this->render('KitpagesCmsBundle:Admin:toolbar.html.twig', $dataRender);
+        return $this->render('KitpagesCmsBundle:Toolbar:toolbar.html.twig', $dataRender);
     }    
 
     public function viewModeChangeAction($viewMode) {

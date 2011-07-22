@@ -46,7 +46,7 @@ class ZoneController extends Controller
                 $em->persist($zone);
                 $em->flush();
 
-                //return $this->redirect($this->generateUrl('kitpages_cms_block_edit', array('id' => $block->getId() )));
+                return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
             }
         }
         return $this->render('KitpagesCmsBundle:Zone:create.html.twig', array(

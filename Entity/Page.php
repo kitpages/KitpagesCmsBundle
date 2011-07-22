@@ -3,7 +3,7 @@
 namespace Kitpages\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Sluggable\Util\Urlizer;
 /**
  * Kitpages\CmsBundle\Entity\Page
  */
@@ -27,7 +27,7 @@ class Page
     /**
      * @var boolean $isActive
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
      * @var boolean $isPublished
@@ -287,7 +287,7 @@ class Page
      */
     public function prePersist()
     {
-        // Add your code here
+        $this->urlTitle = Urlizer::transliterate($this->title, '-');
     }
 
     /**
@@ -295,7 +295,7 @@ class Page
      */
     public function preUpdate()
     {
-        // Add your code here
+        $this->urlTitle = Urlizer::transliterate($this->title, '-');
     }
 
 

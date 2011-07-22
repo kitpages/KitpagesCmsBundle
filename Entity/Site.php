@@ -1,6 +1,5 @@
 <?php
 namespace Kitpages\CmsBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
 /**
  * Kitpages\CmsBundle\Entity\Site
  */

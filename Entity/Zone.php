@@ -2,8 +2,6 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Kitpages\CmsBundle\Entity\Zone
  */
@@ -23,7 +21,7 @@ class Zone
     /**
      * @var boolean $isPublished
      */
-    private $isPublished;
+    private $isPublished = false;
 
 
     /**
@@ -142,17 +140,11 @@ class Zone
         return $this->zoneBlockList;
     }
 
-    /**
-     * @ORM\prePersist
-     */
     public function prePersist()
     {
         // Add your code here
     }
 
-    /**
-     * @ORM\preUpdate
-     */
     public function preUpdate()
     {
         // Add your code here

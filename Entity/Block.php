@@ -1,5 +1,4 @@
 <?php
-use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @Gedmo\Tree
  */
@@ -26,7 +25,7 @@ class Block
     /**
      * @var boolean $isActive
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
      * @var boolean $isPublished
