@@ -85,6 +85,38 @@ class PageManager
     ////
     // actions
     ////
+
+    public function unpendingDelete(Page $page)
+    {
+        // throw on event
+        $event = new PageEvent($page);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);  
+        
+        // preventable action
+        if (!$event->isDefaultPrevented()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $page->setIsPendingDelete(0);
+            $em->flush();
+        }
+        // throw after event
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePendingDelete, $event);
+    }
+    
+    public function pendingDelete(Page $page)
+    {
+        // throw on event
+        $event = new PageEvent($page);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);  
+        
+        // preventable action
+        if (!$event->isDefaultPrevented()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $page->setIsPendingDelete(1);
+            $em->flush();
+        }
+        // throw after event
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePendingDelete, $event);
+    }
     
     public function delete(Page $page)
     {
@@ -114,36 +146,41 @@ class PageManager
         $event = new PageEvent($page, $listLayout);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
         if (! $event->isDefaultPrevented()) {
-            // publish zone
             $em = $this->getDoctrine()->getEntityManager();
-            foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
-                $this->getZoneManager()->publish($zone, $listRenderer);
-            }
-            $em->flush();
-            // remove old pagePublish
-            $zonePublish = null;
-            $query = $em->createQuery("
-                SELECT pp FROM KitpagesCmsBundle:PagePublish pp
-                WHERE pp.page = :page
-            ")->setParameter('page', $page);
-            $pagePublishList = $query->getResult();
-            if (count($pagePublishList) == 1) {
-                $pagePublish = $pagePublishList[0];
-                $em->remove($pagePublish);
+            if ($page->getIsPendingDelete()) {
+                $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+                if (!is_null($pagePublish)) {
+                    $em->remove($pagePublish);
+                    $em->flush();
+                }
+                $this->delete($page);
+            } else {
+                // publish zone
+                $em = $this->getDoctrine()->getEntityManager();
+                foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
+                    $this->getZoneManager()->publish($zone, $listRenderer);
+                }
+                $em->flush();
+                // remove old pagePublish
+                $zonePublish = null;
+                $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+                if (!is_null($pagePublish)) {
+                    $em->remove($pagePublish);
+                    $em->flush();
+                }
+
+                $zoneList = array();
+                // create page publish
+                foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
+                    $zoneList[] = $zone->getId();
+                }
+                $pagePublishNew = new PagePublish();
+                $pagePublishNew->initByPage($page);
+                $pagePublishNew->setZoneList(array("blockList"=>$zoneList));
+                $page->setIsPublished(true);
+                $page->setPagePublish($pagePublishNew);
                 $em->flush();
             }
-
-            $zoneList = array();
-            // create page publish
-            foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
-                $zoneList[] = $zone->getId();
-            }
-            $pagePublishNew = new PagePublish();
-            $pagePublishNew->initByPage($page);
-            $pagePublishNew->setZoneList(array("blockList"=>$zoneList));
-            $page->setIsPublished(true);
-            $page->setPagePublish($pagePublishNew);
-            $em->flush();
         }
         $event = new PageEvent($page, $listLayout, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePublish, $event);

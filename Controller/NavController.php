@@ -15,17 +15,15 @@ class NavController extends Controller
  
     public function publishAction() {
         
-        $em = $this->getDoctrine()->getEntityManager();
-        $query = $em->createQuery('DELETE Kitpages\CmsBundle\Entity\NavPublish np');
-        $resultDelete = $query->getResult();
-        $query = $em->getConnection()->executeUpdate("INSERT INTO cms_nav_publish (id, parent_id, page_id, lft, rgt, lvl, root, title, slug) SELECT id, parent_id, id, lft, rgt, lvl, root, title, slug FROM cms_page order by lft");
+
+        $navManager = $this->get('kitpages.cms.manager.nav');
+        $navManager->publish();
         
-        $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->findByNoPagePublish();
-        foreach($navPublishList as $navPublish) {
-            $em->getRepository('KitpagesCmsBundle:NavPublish')->removeFromTree($navPublish);
-        }
-        
-        $em->flush();
+        $this->getRequest()->getSession()->setFlash('notice', 'Navigation published');
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }        
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }  
     
@@ -35,10 +33,10 @@ class NavController extends Controller
         $resultingHtml = '';
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($label);
-            $navigation = $this->pageChildren($page, $context->getViewMode());
+            $navigation = $this->navPageChildren($page, $context->getViewMode());
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($label);
-            $navigation = $this->pageChildren($page, $context->getViewMode());      
+            $navigation = $this->navPageChildren($page, $context->getViewMode());      
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($label);
             $navigation = $this->navPublishChildren($navPublish, $slug);
@@ -70,36 +68,134 @@ class NavController extends Controller
         return $listNavigationElem;
     }
 
-    public function pageChildren($page, $viewMode){
+    public function navPageChildren($page, $viewMode){
         $em = $this->getDoctrine()->getEntityManager();
         $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
         $listNavigationElem = array();
         foreach($pageList as $pageChild) {
-            $addPageChild = true;
-            if ($viewMode == Context::VIEW_MODE_PREVIEW) {
-                $pagePublish = $pageChild->getPagePublish();
-                if (!($pagePublish instanceof PagePublish)) {
-                    $addPageChild = false;
-                }
-            }
-            if ($addPageChild) {
-                $navigationElem = array(
-                    'slug' => $pageChild->getSlug(),                
-                    'title' => $pageChild->getTitle(),
-                    'level' => $pageChild->getLevel(),   
-                    'url' => $this->generateUrl(
-                            'kitpages_cms_page_view_lng',
-                            array(
-                                'id' => $pageChild->getId(),
-                                'lng' => $pageChild->getLanguage(),
-                                'urlTitle' => $pageChild->getUrlTitle()
-                            ))                 
-                );
-                $navigationElem['children'] = $this->pageChildren($pageChild, $viewMode);
-                $listNavigationElem[] = $navigationElem;
-            }
+            $navigationElem = array(
+                'slug' => $pageChild->getSlug(),                
+                'title' => $pageChild->getTitle(),
+                'level' => $pageChild->getLevel(),   
+                'url' => $this->generateUrl(
+                        'kitpages_cms_page_view_lng',
+                        array(
+                            'id' => $pageChild->getId(),
+                            'lng' => $pageChild->getLanguage(),
+                            'urlTitle' => $pageChild->getUrlTitle()
+                        ))                 
+            );
+            $navigationElem['children'] = $this->navPageChildren($pageChild, $viewMode);
+            $listNavigationElem[] = $navigationElem;
         }
         return $listNavigationElem;
+    }
+    
+    
+    public function arboAction(){
+      
+        $arbo = $this->arboChildren();
+        return $this->render('KitpagesCmsBundle:Page:arbo.html.twig', array('arbo' => $arbo));
+    }    
+ 
+    
+   
+    public function arboChildren($pageParent = null){ 
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        
+        if (is_null($pageParent)) {
+            $pageList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
+        } else {
+            $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($pageParent, true);        
+        }
+        
+        $pageListRenderer = array();
+        foreach($pageList as $page) {
+            $pageArbo = array();
+            $pageArbo['slug'] = $page->getSlug();
+            $pageArbo['menuTitle'] = $page->getMenuTitle(); 
+            $paramUrl = array(
+                'id' => $page->getId(),
+                'kitpages_target' => $_SERVER["REQUEST_URI"]
+            );
+            $paramUrlCreate = array(
+                'parent_id' => $page->getId(),
+                'kitpages_target' => $_SERVER["REQUEST_URI"]
+            );
+            $paramUrlWithChild = array(
+                'id' => $page->getId(),
+                'children' => true,
+                'kitpages_target' => $_SERVER["REQUEST_URI"]
+            ); 
+        
+            
+            if ($page->getIsPendingDelete() == 1) {
+                $pageArbo['actionList'] = array(
+                    "publish All" => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
+                ); 
+                if ($pageParent->getIsPendingDelete() == 0) {
+                    $pageArbo['actionList']["undelete"] = $this->generateUrl('kitpages_cms_page_undelete', $paramUrl);
+                }
+            } else {
+                
+                $pageArbo['actionList'] = array(
+                    "publish" => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
+                    "publish All" => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
+                    "up" => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
+                    "down" => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
+                    "add page" => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate),
+                    "add page technical" => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
+                    "add page link" => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate),
+                    "delete" => $this->generateUrl('kitpages_cms_page_delete', $paramUrl) 
+                );                
+            }
+            
+            
+            if ($page->getPageType() == 'edito') {
+                $pageArbo['url'] = $this->generateUrl(
+                            'kitpages_cms_page_view_lng',
+                            array(
+                                'id' => $page->getId(),
+                                'lng' => $page->getLanguage(),
+                                'urlTitle' => $page->getUrlTitle()
+                            )
+                        );
+            } elseif($page->getPageType() == 'technical') {
+                $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_technical', $paramUrl);
+            } elseif($page->getPageType() == 'link') {
+                $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
+                $pageArbo['actionList']['link'] = $page->getLinkUrl();
+            }
+            $pageArbo['children'] = $this->arboChildren($page);
+            $pageListRenderer[] = $pageArbo;
+        }
+        return $pageListRenderer;
+    }
+
+    public function moveUpAction(Page $page){
+        
+        $navManager = $this->get('kitpages.cms.manager.nav');
+        $navManager->moveUp($page, 1);        
+        
+        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
+    }
+
+    public function moveDownAction(Page $page){
+        $navManager = $this->get('kitpages.cms.manager.nav');
+        $navManager->moveDown($page, 1);    
+        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
+
     }
     
 }

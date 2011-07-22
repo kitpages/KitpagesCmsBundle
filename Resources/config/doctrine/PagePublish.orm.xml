@@ -28,7 +28,7 @@
         </lifecycle-callbacks>
         
         <one-to-one field="page" target-entity="Kitpages\CmsBundle\Entity\Page" inversed-by="pagePublish">
-            <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL"/>
+            <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL" />
         </one-to-one> 
 
   

@@ -8,7 +8,7 @@ class PageLayoutEditDefault extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('backgroundColor', 'text');
+        $builder->add('backgroundColor', 'text', array('required' => false));
     }
     
     public function getName() {

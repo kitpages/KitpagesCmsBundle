@@ -182,15 +182,19 @@ class PageController extends Controller
     {
         $page = new Page();
 
-   
+        $parent_id = $this->get('request')->query->get('parent_id', null);
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text');        
-        $builder->add('language', 'text');
+        $builder->add('title', 'text');   
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
+        $builder->add('menuTitle', 'text', array('required' => false)); 
+        if (empty($parent_id)) {
+            $builder->add('language', 'text');
+        }
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
-            'data' => $this->get('request')->query->get('parent_id')
+            'data' => $parent_id
         ));         
       
         // get form
@@ -239,8 +243,10 @@ class PageController extends Controller
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text');    
-        $builder->add('linkUrl', 'text');          
+        $builder->add('title', 'text'); 
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));         
+        $builder->add('menuTitle', 'text', array('required' => false));         
+        $builder->add('linkUrl', 'text'); 
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
@@ -304,7 +310,9 @@ class PageController extends Controller
         }
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text'); 
+        $builder->add('title', 'text');
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
+        $builder->add('menuTitle', 'text', array('required' => false)); 
         $builder->add('parent_id','text',array(
             'property_path' => false,
             'data' => $parentId
@@ -369,6 +377,8 @@ class PageController extends Controller
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
         $builder->add('title', 'text');    
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
+        $builder->add('menuTitle', 'text', array('required' => false)); 
          $builder->add('parent_id','text',array(
             'property_path' => false,
             'data' => $parentId
@@ -418,7 +428,9 @@ class PageController extends Controller
         }             
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text');    
+        $builder->add('title', 'text'); 
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
+        $builder->add('menuTitle', 'text', array('required' => false)); 
         $builder->add('linkUrl', 'text');    
         $builder->add('parent_id','text',array(
             'property_path' => false,
@@ -518,12 +530,52 @@ class PageController extends Controller
         }   
         $pageManager->delete($page);
     }  
+
+    public function pendingDelete(Page $page, $childrenDelete)
+    {
+        $pageManager = $this->get('kitpages.cms.manager.page');
+        if ($childrenDelete) {
+            
+            $em = $this->getDoctrine()->getEntityManager();
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            foreach($pageChildren as $pageChild) {
+                $this->pendingDelete($pageChild, $childrenDelete);
+            }
+        }   
+        $pageManager->pendingDelete($page);
+    }  
+
+    public function unpendingDelete(Page $page, $childrenUndelete)
+    {
+        $pageManager = $this->get('kitpages.cms.manager.page');
+        if ($childrenUndelete) {
+            
+            $em = $this->getDoctrine()->getEntityManager();
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            foreach($pageChildren as $pageChild) {
+                $this->unpendingDelete($pageChild, $childrenUndelete);
+            }
+        }   
+        $pageManager->unpendingDelete($page);
+    } 
     
     public function deleteAction(Page $page)
     {
-        $childrenDelete = $this->get('request')->query->get('children', false);
-        $this->delete($page, $childrenDelete);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page deleted');
+        $childrenDelete = $this->get('request')->query->get('children', true);
+        $this->pendingDelete($page, $childrenDelete);
+        $this->getRequest()->getSession()->setFlash('notice', 'Page pending delete');
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
+    } 
+
+    public function undeleteAction(Page $page)
+    {
+        $childrenUndelete = $this->get('request')->query->get('children', true);
+        $this->unpendingDelete($page, $childrenUndelete);
+        $this->getRequest()->getSession()->setFlash('notice', 'Page unpending delete');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -531,145 +583,16 @@ class PageController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     } 
     
-    public function arboAction(){
-        $em = $this->getDoctrine()->getEntityManager();
-        $pageRootList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
-        
-        $arbo = $this->pageListRenderer($pageRootList);
-
-        return $this->render('KitpagesCmsBundle:Page:arbo.html.twig', array('arbo' => $arbo));
-    }    
- 
-    
-    public function arboChildren($page){
-        $em = $this->getDoctrine()->getEntityManager();
-        $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
-        return $this->pageListRenderer($pageList);
-
-    }
-    
-    public function pageListRenderer($pageList){   
-        $pageListRenderer = array();
-        foreach($pageList as $page) {
-            $pageArbo = array();
-            $pageArbo['slug'] = $page->getSlug();
-            
-            $pageArbo['actionList'] = array(
-                "publish" => $this->generateUrl(
-                    'kitpages_cms_page_publish',
-                    array(
-                        'id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "publish All" => $this->generateUrl(
-                    'kitpages_cms_page_publish',
-                    array(
-                        'id' => $page->getId(),
-                        'children' => true,
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "delete" => $this->generateUrl(
-                    'kitpages_cms_page_delete',
-                    array(
-                        'id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "up" => $this->generateUrl(
-                    'kitpages_cms_page_moveup',
-                    array(
-                        'id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "down" => $this->generateUrl(
-                    'kitpages_cms_page_movedown',
-                    array(
-                        'id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "add page" => $this->generateUrl(
-                    'kitpages_cms_page_create',
-                    array(
-                        'parent_id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "add page technical" => $this->generateUrl(
-                    'kitpages_cms_page_create_technical',
-                    array(
-                        'parent_id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),
-                "add page link" => $this->generateUrl(
-                    'kitpages_cms_page_create_link',
-                    array(
-                        'parent_id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                ),   
-            );             
-            
-            if ($page->getPageType() == 'edito') {
-                $pageArbo['url'] = $this->generateUrl(
-                            'kitpages_cms_page_view_lng',
-                            array(
-                                'id' => $page->getId(),
-                                'lng' => $page->getLanguage(),
-                                'urlTitle' => $page->getUrlTitle()
-                            )
-                        );
-            } elseif($page->getPageType() == 'technical') {
-                $pageArbo['url'] = $this->generateUrl(
-                            'kitpages_cms_page_edit_technical',
-                            array(
-                                'id' => $page->getId(),
-                                'kitpages_target' => $_SERVER["REQUEST_URI"]
-                            )
-                        );
-            } elseif($page->getPageType() == 'link') {
-                $pageArbo['url'] = $this->generateUrl(
-                    'kitpages_cms_page_edit_link',
-                    array(
-                        'id' => $page->getId(),
-                        'kitpages_target' => $_SERVER["REQUEST_URI"]
-                    )
-                );
-                $pageArbo['actionList']['link'] = $page->getLinkUrl();
-            }
-            $pageArbo['children'] = $this->arboChildren($page);
-            $pageListRenderer[] = $pageArbo;
-        }
-        return $pageListRenderer;
-    }
-
-    public function moveUpAction(Page $page){
-        $em = $this->getDoctrine()->getEntityManager();
-        $pageList = $em->getRepository('KitpagesCmsBundle:Page')->moveUp($page, 1);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
-        $target = $this->getRequest()->query->get('kitpages_target', null);
-        if ($target) {
-            return $this->redirect($target);
-        }
-        return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
-    }
-
-    public function moveDownAction(Page $page){
-        $em = $this->getDoctrine()->getEntityManager();
-        $pageList = $em->getRepository('KitpagesCmsBundle:Page')->moveDown($page, 1);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
-        $target = $this->getRequest()->query->get('kitpages_target', null);
-        if ($target) {
-            return $this->redirect($target);
-        }
-        return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
-
-    }
- 
-    
+//    public function deleteAction(Page $page)
+//    {
+//        $childrenDelete = $this->get('request')->query->get('children', false);
+//        $this->delete($page, $childrenDelete);
+//        $this->getRequest()->getSession()->setFlash('notice', 'Page deleted');
+//        $target = $this->getRequest()->query->get('kitpages_target', null);
+//        if ($target) {
+//            return $this->redirect($target);
+//        }
+//        return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
+//    } 
     
 }

@@ -124,19 +124,9 @@ kitpages_cms_page_delete:
     requirements:
         id: \d+
 
-kitpages_cms_page_arbo:
-    pattern:  /arbo
-    defaults: { _controller: KitpagesCmsBundle:Page:arbo }
-    
-kitpages_cms_page_moveup:
-    pattern:  /page/moveup/{id}
-    defaults: { _controller: KitpagesCmsBundle:Page:moveUp }  
-    requirements:
-        id: \d+
-        
-kitpages_cms_page_movedown:
-    pattern:  /page/movedown/{id}
-    defaults: { _controller: KitpagesCmsBundle:Page:moveDown }  
+kitpages_cms_page_undelete:
+    pattern:  /page/undelete/{id}
+    defaults: { _controller: KitpagesCmsBundle:Page:undelete }
     requirements:
         id: \d+
 
@@ -146,3 +136,20 @@ kitpages_cms_page_movedown:
 kitpages_cms_nav_publish:
     pattern:  /nav/publish
     defaults: { _controller: KitpagesCmsBundle:Nav:publish }
+    
+    
+kitpages_cms_nav_arbo:
+    pattern:  /arbo
+    defaults: { _controller: KitpagesCmsBundle:Nav:arbo }
+    
+kitpages_cms_nav_moveup:
+    pattern:  /nav/moveup/{id}
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveUp }  
+    requirements:
+        id: \d+
+        
+kitpages_cms_nav_movedown:
+    pattern:  /nav/movedown/{id}
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveDown }  
+    requirements:
+        id: \d+

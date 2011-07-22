@@ -32,7 +32,7 @@ class Page
     /**
      * @var boolean $isPublished
      */
-    private $isPublished;
+    private $isPublished = false;
 
     /**
      * @var array $data
@@ -725,5 +725,80 @@ class Page
     public function getNavPublish()
     {
         return $this->navPublish;
+    }
+    /**
+     * @var string $menuTitle
+     */
+    private $menuTitle;
+
+
+    /**
+     * Set menuTitle
+     *
+     * @param string $menuTitle
+     */
+    public function setMenuTitle($menuTitle)
+    {
+        $this->menuTitle = $menuTitle;
+    }
+
+    /**
+     * Get menuTitle
+     *
+     * @return string 
+     */
+    public function getMenuTitle()
+    {
+        return $this->menuTitle;
+    }
+    /**
+     * @var boolean $isPendingDelete
+     */
+    private $isPendingDelete = false;
+
+
+    /**
+     * Set isPendingDelete
+     *
+     * @param boolean $isPendingDelete
+     */
+    public function setIsPendingDelete($isPendingDelete)
+    {
+        $this->isPendingDelete = $isPendingDelete;
+    }
+
+    /**
+     * Get isPendingDelete
+     *
+     * @return boolean 
+     */
+    public function getIsPendingDelete()
+    {
+        return $this->isPendingDelete;
+    }
+    /**
+     * @var boolean $isInNavigation
+     */
+    private $isInNavigation = true;
+
+
+    /**
+     * Set isInNavigation
+     *
+     * @param boolean $isInNavigation
+     */
+    public function setIsInNavigation($isInNavigation)
+    {
+        $this->isInNavigation = $isInNavigation;
+    }
+
+    /**
+     * Get isInNavigation
+     *
+     * @return boolean 
+     */
+    public function getIsInNavigation()
+    {
+        return $this->isInNavigation;
     }
 }

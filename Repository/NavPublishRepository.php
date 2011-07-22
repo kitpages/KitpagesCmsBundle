@@ -4,6 +4,7 @@ namespace Kitpages\CmsBundle\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Kitpages\CmsBundle\Entity\PagePublish;
+use Kitpages\CmsBundle\Entity\NavPublish;
 /**
  * NavPublishRepository
  *
@@ -16,9 +17,32 @@ class NavPublishRepository extends NestedTreeRepository
     {   
 
         $listNavPublish = $this->_em
-            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np LEFT JOIN np.page p LEFT JOIN p.pagePublish pb WHERE pb.id is null')
+            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p LEFT JOIN p.pagePublish pb WHERE pb.id is null')
             ->getResult();        
         return $listNavPublish;
-     }    
+     }   
+ 
+    public function findByPageIsNotInNavigation()
+    {   
+
+        $listNavPublish = $this->_em
+            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p WHERE p.isInNavigation = 0')
+            ->getResult();        
+        return $listNavPublish;
+     }  
+     
+    public function removeWithChildren(NavPublish $navPublish)
+    {
+
+        // remove the node from database
+        $dql = "DELETE KitpagesCmsBundle:NavPublish np";
+        $dql .= " WHERE np.left >= :left AND np.right <= :right";
+        $this->_em
+                ->createQuery($dql)
+                ->setParameter("left", $navPublish->getLeft())
+                ->setParameter("right", $navPublish->getRight())
+                ->getResult();
+
+    }
      
 }

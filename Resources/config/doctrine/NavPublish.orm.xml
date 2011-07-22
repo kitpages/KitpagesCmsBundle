@@ -10,12 +10,8 @@
             <generator strategy="AUTO" />
         </id>
         <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
-        <field name="title" column="title" type="string" unique="true" nullable="true" length="250"/>
+        <field name="title" column="title" type="string" nullable="true" length="250"/>
         <field name="data" column="data" type="array" nullable="true" />
-       
-        <field name="createdAt" type="datetime">
-            <gedmo:timestampable on="create"/>
-        </field>
 
         <field name="left" column="lft" type="integer">
             <gedmo:tree-left/>

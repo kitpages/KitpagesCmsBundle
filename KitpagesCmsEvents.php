@@ -44,4 +44,22 @@ final class KitpagesCmsEvents
     const onPageDelete = 'kitpages.cms.page.on.delete';
     const afterPageDelete = 'kitpages.cms.page.after.delete';
     
+    const onPagePendingDelete = 'kitpages.cms.page.on.pending_delete';
+    const afterPagePendingDelete = 'kitpages.cms.page.after.pending_delete';
+
+    const onPageUnpendingDelete = 'kitpages.cms.page.on.unpending_delete';
+    const afterPageUnpendingDelete = 'kitpages.cms.page.after.unpending_delete';
+    
+    ////
+    // nav events
+    ////
+    const onNavMove = 'kitpages.cms.nav.on.move'; 
+    const afterNavMove = 'kitpages.cms.nav.after.move'; 
+    
+    const onNavPublish = 'kitpages.cms.nav.on.publish';
+    const afterNavPublish = 'kitpages.cms.nav.after.publish';
+    
+    const onNavUnpublish = 'kitpages.cms.nav.on.unpublish';
+    const afterNavUnpublish = 'kitpages.cms.nav.after.unpublish';
+    
 }
