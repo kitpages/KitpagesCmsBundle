@@ -10,6 +10,7 @@ class BlockTemplateEditStandardType extends AbstractType
     {
         $builder->add('title', 'text');
         $builder->add('body', 'textarea');
+        $builder->add('media', 'hidden');
     }
     
     public function getName() {

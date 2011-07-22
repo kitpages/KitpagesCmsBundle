@@ -22,5 +22,4 @@ final class KitpagesCmsEvents
     
     const onZonePublish = 'kitpages.cms.zone.on.publish';
     const afterZonePublish = 'kitpages.cms.zone.after.publish';
-    
 }

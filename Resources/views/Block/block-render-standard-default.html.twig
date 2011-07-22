@@ -2,5 +2,6 @@
 <div class="kit-cms-block-standard">
     <h1>{{data.root.title}}</h1>
     <div>{{data.root.body}}</div>
+    {% if data.root.media %}<img src="[[file:id={{data.root.media}}&version=original]]"/>{% endif %}
 </div>
 {% endautoescape %}

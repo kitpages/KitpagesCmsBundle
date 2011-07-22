@@ -4,7 +4,13 @@
 
 {{ form_row(form.data.root.title) }}
 
-{{ form_row(form.data.root.body) }}
+<div>
+{{ form_label(form.data.root.body) }}
+{{ form_errors(form.data.root.body) }}
+{{ form_widget(form.data.root.body, {'attr': {'class':'kit-cms-rte-simple'} } ) }}
+</div>
+{{ form_widget(form.data.root.media) }}
+{% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media'} %}
 
 {% endblock editData %}
 
