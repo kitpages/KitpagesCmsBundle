@@ -1,7 +1,13 @@
 {% extends cms.layout %}
+
 {% block mainNavigation %}
 {% render 'KitpagesCmsBundle:Nav:widget' with {'label':'main', 'slug':page.slug|default('')} %}
 {% endblock  mainNavigation %}
+
+{% block footerNavigation %}
+{% render 'KitpagesCmsBundle:Nav:widget' with {'label':'footer', 'slug':page.slug|default('')} %}
+{% endblock  footerNavigation %}
+
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kitpagescms/css/common.css') }}"  media="screen" />
 {% endblock stylesheets %}

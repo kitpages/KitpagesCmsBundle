@@ -95,7 +95,7 @@ class NavController extends Controller
     public function arboAction(){
       
         $arbo = $this->arboChildren();
-        return $this->render('KitpagesCmsBundle:Page:arbo.html.twig', array('arbo' => $arbo));
+        return $this->render('KitpagesCmsBundle:Nav:arbo.html.twig', array('arbo' => $arbo));
     }    
  
     

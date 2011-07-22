@@ -186,7 +186,6 @@ class PageController extends Controller
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text');   
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
         if (empty($parent_id)) {
@@ -376,7 +375,6 @@ class PageController extends Controller
         }        
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text');
-        $builder->add('title', 'text');    
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
          $builder->add('parent_id','text',array(

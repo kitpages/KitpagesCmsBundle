@@ -13,10 +13,10 @@
 
         <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
         <field name="language" column="language" type="string" nullable="true" length="250"/>   
-        <field name="title" column="title" type="string" nullable="false" length="250">
+        <field name="title" column="title" type="string" nullable="true" length="250">
             <gedmo:sluggable/>
         </field>          
-        <field name="urlTitle" column="url_title" type="string" nullable="false" length="250">
+        <field name="urlTitle" column="url_title" type="string" nullable="true" length="250">
             <gedmo:slug unique="true" style="default" updatable="true" separator="_"/>
         </field>       
         <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250">
