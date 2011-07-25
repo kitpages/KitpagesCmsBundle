@@ -1,18 +1,23 @@
 {% extends cms.layout %}
 
 {% block mainNavigation %}
-{% render 'KitpagesCmsBundle:Nav:widget' with {'label':'main', 'slug':page.slug|default('')} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {'label':'main', 'slug':page.slug|default('')} %}
 {% endblock  mainNavigation %}
 
 {% block footerNavigation %}
-{% render 'KitpagesCmsBundle:Nav:widget' with {'label':'footer', 'slug':page.slug|default('')} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {'label':'footer', 'slug':page.slug|default('')} %}
 {% endblock  footerNavigation %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/kitpagescms/css/common.css') }}"  media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kitpagescms/css/common.css') }}"  media="screen" />
 {% endblock stylesheets %}
+
+
 {% block toolbar %}
-<div class="kit-cms kit-cms-toolbar">
-{% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
-</div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="kit-cms kit-cms-toolbar">
+        {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
+        </div>
+    {% endif %}
 {% endblock toolbar %}
+

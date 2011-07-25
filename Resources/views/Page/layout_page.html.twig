@@ -1,9 +1,13 @@
 {% extends 'KitpagesCmsBundle:page:layout.html.twig' %}
+
 {% block toolbar %}
-<div class="kit-cms kit-cms-toolbar">
-{% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
-{% if viewMode == 2 %}
-{% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':page} %}
-{% endif %}
-</div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="kit-cms kit-cms-toolbar">
+        {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
+        {% if viewMode == 2 %}
+            {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':page} %}
+        {% endif %}
+        </div>
+    {% endif %}
 {% endblock toolbar %}
+

@@ -11,6 +11,7 @@ namespace Kitpages\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\PagePublish;
@@ -32,6 +33,8 @@ class PageController extends Controller
    
     public function viewAction(Page $page, $lng, $urlTitle)
     {
+        
+       
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $pageId = $page->getId();
@@ -45,10 +48,14 @@ class PageController extends Controller
 
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+            if ($pagePublish == null ) {
+                throw new NotFoundHttpException('The page does not exist.');
+            }
             $pageType = $pagePublish->getPageType();
             $pageLanguage = $pagePublish->getLanguage();
             $pageUrlTitle = $pagePublish->getUrlTitle();
             $pageLayout = $pagePublish->getLayout();
+
         }
         
         if ($pageType == "technical") {
