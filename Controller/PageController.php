@@ -120,7 +120,7 @@ class PageController extends Controller
     
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('required' => false));
         $builder->add('title', 'text');        
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
@@ -192,7 +192,7 @@ class PageController extends Controller
         $parent_id = $this->get('request')->query->get('parent_id', null);
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('required' => false));
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
         if (empty($parent_id)) {
@@ -248,7 +248,7 @@ class PageController extends Controller
    
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('required' => false));
         $builder->add('title', 'text'); 
         $builder->add('isInNavigation', 'checkbox', array('required' => false));         
         $builder->add('menuTitle', 'text', array('required' => false));         

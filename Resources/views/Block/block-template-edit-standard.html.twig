@@ -3,14 +3,14 @@
 {% block editData %}
 
 {{ form_row(form.data.root.title) }}
-
+{{ form_widget(form.data.root.media_1) }}
+{% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_1'} %}
 <div>
 {{ form_label(form.data.root.body) }}
 {{ form_errors(form.data.root.body) }}
 {{ form_widget(form.data.root.body, {'attr': {'class':'kit-cms-rte-simple'} } ) }}
 </div>
-{{ form_widget(form.data.root.media) }}
-{% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media'} %}
-
+{{ form_widget(form.data.root.media_2) }}
+{% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_2'} %}
 {% endblock editData %}
 

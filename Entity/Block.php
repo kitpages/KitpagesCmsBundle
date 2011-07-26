@@ -366,4 +366,29 @@ class Block
         return $this->zoneBlockList;
     }
 
+    /**
+     * @var array $dataMedia
+     */
+    private $dataMedia;
+
+
+    /**
+     * Set dataMedia
+     *
+     * @param array $dataMedia
+     */
+    public function setDataMedia($dataMedia)
+    {
+        $this->dataMedia = $dataMedia;
+    }
+
+    /**
+     * Get dataMedia
+     *
+     * @return array 
+     */
+    public function getDataMedia()
+    {
+        return $this->dataMedia;
+    }
 }

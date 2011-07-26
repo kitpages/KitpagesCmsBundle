@@ -176,7 +176,7 @@ class PageManager
                 }
                 $pagePublishNew = new PagePublish();
                 $pagePublishNew->initByPage($page);
-                $pagePublishNew->setZoneList(array("blockList"=>$zoneList));
+                $pagePublishNew->setZoneList(array("zoneList"=>$zoneList));
                 $page->setIsPublished(true);
                 $page->setPagePublish($pagePublishNew);
                 $em->flush();

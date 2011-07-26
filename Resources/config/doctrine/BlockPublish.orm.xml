@@ -15,7 +15,7 @@
         <field name="blockType" column="block_type" type="string" length="100" />
         <field name="renderer" column="renderer" type="string" length="250" />        
         <field name="data" column="data" type="array" nullable="true" />
-        
+        <field name="dataMedia" column="data_media" type="array" nullable="true" />
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create"/>
         </field>   
