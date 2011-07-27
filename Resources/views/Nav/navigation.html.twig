@@ -1,6 +1,6 @@
 <ul {% if root %} class='kit-cms-navigation-{{navigationLabel}}' {% endif %} >
     {% for navigationElem in navigation %}
-        <li class="kit-cms-navigation-{{navigationLabel}}-level{{navigationElem.url}} kit-cms-navigation-{{navigationLabel}}-slug-{{navigationElem.slug}}">
+        <li class="kit-cms-navigation-{{navigationLabel}}-level{{navigationElem.level}} kit-cms-navigation-{{navigationLabel}}-slug-{{navigationElem.slug}}">
             {% if navigationElem.url == '' %}{{navigationElem.title}}{% else %}<a href="{{navigationElem.url}}" >{{navigationElem.title}}</a>{% endif %}
             {% include 'KitpagesCmsBundle:Nav:navigation.html.twig' with {'navigation': navigationElem.children, 'navigationLabel':navigationLabel, 'root':false } %}
         </li>
@@ -10,9 +10,9 @@
 {% if root %}
 <script>
 $(document).ready(function(){
-    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('select');
-    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('current');
-    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').parents('li').addClass('current');
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('kit-cms-select');
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').addClass('kit-cms-current');
+    $('.kit-cms-navigation-{{navigationLabel}}-slug-{{slugCurrent}}').parents('li').addClass('kit-cms-current');
 });
 </script>
 
