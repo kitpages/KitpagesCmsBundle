@@ -14,7 +14,6 @@
         <field name="blockType" column="block_type" type="string" length="100" />
         <field name="template" column="template" type="string" length="250" />
         
-        <field name="isActive" column="is_active" type="boolean"/>
         <field name="isPublished" column="is_published" type="boolean"/>
         
         <field name="data" column="data" type="array" nullable="true" />

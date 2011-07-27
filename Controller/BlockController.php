@@ -43,7 +43,7 @@ class BlockController extends Controller
 
         // build basic form
         $builder = $this->createFormBuilder($block);
-        $builder->add('slug', 'text', array('required' => false));
+        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('zone_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
@@ -61,7 +61,6 @@ class BlockController extends Controller
 
             if ($form->isValid()) {
                 $block->setBlockType('edito');
-                $block->setIsActive(true);
                 $block->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $em->persist($block);
@@ -125,12 +124,12 @@ class BlockController extends Controller
         
         // build basic form
         $builder = $this->createFormBuilder($block);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('template', 'choice',array(
+            'attr' => array('class'=>'kit-cms-advanced'),
             'choices' => $selectTemplateList,
             'required' => true
         ));
-        $builder->add('isActive', 'checkbox');
 
         // build custom form
         $className = $templateList[$block->getTemplate()]['class'];

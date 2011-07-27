@@ -119,7 +119,7 @@ class PageController extends Controller
     
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false));
+        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('title', 'text');        
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
@@ -138,7 +138,6 @@ class PageController extends Controller
 
             if ($form->isValid()) {
                 $page->setPageType('edito');
-                $page->setIsActive(true);
                 $page->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
@@ -191,7 +190,7 @@ class PageController extends Controller
         $parent_id = $this->get('request')->query->get('parent_id', null);
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false));
+        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
         if (empty($parent_id)) {
@@ -211,7 +210,6 @@ class PageController extends Controller
 
             if ($form->isValid()) {
                 $page->setPageType('technical');
-                $page->setIsActive(true);
                 $page->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
@@ -247,7 +245,7 @@ class PageController extends Controller
    
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false));
+        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('title', 'text'); 
         $builder->add('isInNavigation', 'checkbox', array('required' => false));         
         $builder->add('menuTitle', 'text', array('required' => false));         
@@ -267,7 +265,6 @@ class PageController extends Controller
 
             if ($form->isValid()) {
                 $page->setPageType('link');
-                $page->setIsActive(true);
                 $page->setIsPublished(false);
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
@@ -314,17 +311,17 @@ class PageController extends Controller
             $parentId = $pageParent->getId();
         }
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('title', 'text');
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
         $builder->add('parent_id','text',array(
+            'attr' => array('class'=>'kit-cms-advanced'),
             'property_path' => false,
             'data' => $parentId
         ));         
   
         $builder->add('language', 'text');
-        $builder->add('isActive', 'checkbox');
 
         // build custom form
         $className = $layout['class_data'];
@@ -380,7 +377,7 @@ class PageController extends Controller
             $parentId = $pageParent->getId();
         }        
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
          $builder->add('parent_id','text',array(
@@ -431,7 +428,7 @@ class PageController extends Controller
             $parentId = $pageParent->getId();
         }             
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
         $builder->add('title', 'text'); 
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
