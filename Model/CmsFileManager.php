@@ -55,12 +55,13 @@ class CmsFileManager extends FileManager {
     public function publishInBlockData($blockData) {
         $fileManager = $this->getFileManager();
         $em = $this->getDoctrine()->getEntityManager();
-        $fieldList = $blockData['root'];
-        foreach($fieldList as $field => $value) {
-            if (substr($field, '0', '6') == 'media_') {
-                $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                if ($file != null) {
-                    $fileManager->publish($file);
+        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
+            foreach($blockData['root'] as $field => $value) {
+                if (substr($field, '0', '6') == 'media_') {
+                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                    if ($file != null) {
+                        $fileManager->publish($file);
+                    }
                 }
             }
         }
@@ -69,12 +70,13 @@ class CmsFileManager extends FileManager {
     public function deleteInBlockData($blockData) { 
         $fileManager = $this->getFileManager();        
         $em = $this->getDoctrine()->getEntityManager();
-        $fieldList = $blockData['root'];
-        foreach($fieldList as $field => $value) {
-            if (substr($field, '0', '6') == 'media_') {
-                $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                if ($file != null) {
-                    $fileManager->delete($file);
+        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
+            foreach($blockData['root'] as $field => $value) {
+                if (substr($field, '0', '6') == 'media_') {
+                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                    if ($file != null) {
+                        $fileManager->delete($file);
+                    }
                 }
             }
         }
@@ -87,12 +89,12 @@ class CmsFileManager extends FileManager {
         }
     }
     
-    public function urlListInBlockData($data, $publish) {
+    public function urlListInBlockData($blockData, $publish) {
         $fileManager = $this->getFileManager();          
         $em = $this->getDoctrine()->getEntityManager();
         $listMediaUrl = array();
-        if (isset($data['root']) && count($data['root'])>0 ) {
-            foreach($data['root'] as $field => $value) {
+        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
+            foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     if ($publish) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
@@ -111,16 +113,17 @@ class CmsFileManager extends FileManager {
     public function afterBlockModify(Event $event)
     {
         $block = $event->getBlock();
-        $data = $block->getData();
-        $fieldList = $data['root'];
+        $blockData = $block->getData();
         $em = $this->getDoctrine()->getEntityManager();
-        foreach($fieldList as $field => $value) {
-            if (substr($field, '0', '6') == 'media_') {
-                $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                if ($file != null) {
-                    $file->setStatus(File::STATUS_VALID);
-                    $em->persist($file);
-                    $em->flush();
+        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
+            foreach($blockData['root'] as $field => $value) {
+                if (substr($field, '0', '6') == 'media_') {
+                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                    if ($file != null) {
+                        $file->setStatus(File::STATUS_VALID);
+                        $em->persist($file);
+                        $em->flush();
+                    }
                 }
             }
         }
