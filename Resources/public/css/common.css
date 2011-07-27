@@ -223,7 +223,7 @@
 .kit-cms-arbo > .kit-cms-arbo-node-container:first-child > .kit-cms-arbo-node:first-child > .kit-cms-arbo-line:first-child {
     border-top: 1px solid #D0D0D0;
 }
-.kit-cms-arbo-node-container {
+.kit-cms .kit-cms-arbo-node-container {
     margin-left: 20px;
     list-style: none;
 }

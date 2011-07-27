@@ -1,11 +1,11 @@
 {% extends cms.layout %}
 
 {% block mainNavigation %}
-    {% render 'KitpagesCmsBundle:Nav:widget' with {'label':'main', 'slug':page.slug|default('')} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {'slug':'main', 'currentPageSlug':page.slug|default('')} %}
 {% endblock  mainNavigation %}
 
 {% block footerNavigation %}
-    {% render 'KitpagesCmsBundle:Nav:widget' with {'label':'footer', 'slug':page.slug|default('')} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {'slug':'footer', 'currentPageSlug':page.slug|default('')} %}
 {% endblock  footerNavigation %}
 
 {% block stylesheets %}

@@ -27,22 +27,22 @@ class NavController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }  
     
-    public function widgetAction($label, $slug) {
+    public function widgetAction($slug, $currentPageSlug) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $navigation = array();
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($label);
+            $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
             $navigation = $this->navPageChildren($page, $context->getViewMode());
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
-            $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($label);
+            $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
             $navigation = $this->navPageChildren($page, $context->getViewMode());      
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($label);
+            $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slug);
             $navigation = $this->navPublishChildren($navPublish);
         }
-        return $this->render('KitpagesCmsBundle:Nav:navigation.html.twig', array('slugCurrent' => $slug, 'navigation' => $navigation, 'navigationLabel' => $label, 'root' => true));
+        return $this->render('KitpagesCmsBundle:Nav:navigation.html.twig', array('slugCurrent' => $currentPageSlug, 'navigation' => $navigation, 'navigationLabel' => $slug, 'root' => true));
     }
 
     public function navPublishChildren($navPublish){
