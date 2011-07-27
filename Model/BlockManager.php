@@ -102,6 +102,9 @@ class BlockManager
         if (is_null($listMediaUrl)) {
             $listMediaUrl = $fileManager->urlListInBlockData($blockData, $publish);
         }
+        if (!isset($blockData['root'])) {
+            $blockData['root'] = array();
+        }
         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
 
         return $this->getTemplating()->render(

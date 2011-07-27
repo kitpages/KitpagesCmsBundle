@@ -48,7 +48,7 @@ class BlockController extends Controller
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
         ));  
-        $builder->add('position','hidden',array(
+        $builder->add('position','text',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('position', null)
         ));          
@@ -71,17 +71,18 @@ class BlockController extends Controller
 
                 $dataForm = $request->request->get('form');
                 $zone_id = $dataForm['zone_id'];
-                $position = $dataForm['position'];                
+                $position = $dataForm['position']; 
+                if ($position == null) {
+                    $position = 0;
+                }
                 if (!empty($zone_id)) {
                     $zoneBlock = new ZoneBlock();
                     $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
                     $zoneBlock->setZone($zone);
                     $zoneBlock->setBlock($block);
                     $em->persist($zoneBlock);
-                    if ($position != '') {
-                        $em->flush();
-                        $zoneBlock->setPosition($position);  
-                    }
+                    $em->flush();
+                    $zoneBlock->setPosition($position);  
                 }
                 $em->flush();
                 $this->getRequest()->getSession()->setFlash('notice', 'Block created');
