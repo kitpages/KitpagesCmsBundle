@@ -90,16 +90,17 @@ class CmsFileManager extends FileManager {
     public function urlListInBlockData($data, $publish) {
         $fileManager = $this->getFileManager();          
         $em = $this->getDoctrine()->getEntityManager();
-        $fieldList = $data['root'];
         $listMediaUrl = array();
-        foreach($fieldList as $field => $value) {
-            if (substr($field, '0', '6') == 'media_') {
-                $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                if ($file != null) {
-                    if ($publish) {
-                        $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
-                    } else {
-                        $listMediaUrl['url_'.$field] = "/file/render?path=".$fileManager->getOriginalAbsoluteFileName($file);
+        if (isset($data['root']) && count($data['root'])>0 ) {
+            foreach($data['root'] as $field => $value) {
+                if (substr($field, '0', '6') == 'media_') {
+                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                    if ($file != null) {
+                        if ($publish) {
+                            $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                        } else {
+                            $listMediaUrl['url_'.$field] = "/file/render?path=".$fileManager->getOriginalAbsoluteFileName($file);
+                        }
                     }
                 }
             }
