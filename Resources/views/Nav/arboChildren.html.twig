@@ -7,8 +7,8 @@
                         <span class="kit-cms-arbo-page-slug {% if page.menuTitle %}kit-cms-advanced{% endif %}">{{page.slug}}</span>
                     </a>
                     <ul class="kit-cms-arbo-actions kit-cms-menu">
-                    {% for name, url in page.actionList %}
-                        <li><a href="{{url}}">{{name}}</a></li>
+                    {% for action in page.actionList %}
+                        <li class="{{action.class|default()}}" ><a href="{{action.url}}">{{action.label}}</a></li>
                     {% endfor %}
                     </ul>
                     <div style="clear:both"></div>
