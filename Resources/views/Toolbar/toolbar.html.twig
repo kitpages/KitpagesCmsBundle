@@ -8,6 +8,17 @@
             <a href="{{ path('kitpages_cms_nav_publish', { 'kitpages_target' : target }) }}">Publish Navigation</a>
         </li>
         {% endif %}
+        <li>
+            <a class="kit-cms-advanced-mode-button">Advanced Mode</a>
+        </li>
+        <script>
+            $(".kit-cms-advanced-mode-button").click(function() {
+                $(".kit-cms-advanced").toggle();
+            });
+            $(document).ready(function() {
+                $(".kit-cms-advanced").hide();
+            });
+        </script>
     </ul>
     <ul class="kit-cms-toolbar-top-context-switch">
         <li {% if viewMode == 0 %}class="kit-cms-selected"{% endif %}>
