@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 use Kitpages\FileBundle\Model\FileManager;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
+use Kitpages\FileBundle\Entity\File;
 
 class CmsFileManager extends FileManager {
 
@@ -104,6 +105,24 @@ class CmsFileManager extends FileManager {
             }
         }
         return $listMediaUrl;
+    }
+    
+    public function afterBlockModify(Event $event)
+    {
+        $block = $event->getBlock();
+        $data = $block->getData();
+        $fieldList = $data['root'];
+        $em = $this->getDoctrine()->getEntityManager();
+        foreach($fieldList as $field => $value) {
+            if (substr($field, '0', '6') == 'media_') {
+                $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                if ($file != null) {
+                    $file->setStatus(File::STATUS_VALID);
+                    $em->persist($file);
+                    $em->flush();
+                }
+            }
+        }
     }
     
 }
