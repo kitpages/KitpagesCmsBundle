@@ -9,8 +9,31 @@
 {{ parent() }}
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/swfobject.js") }}"></script>
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/jquery.uploadify.v2.1.4.min.js") }}"></script>
+<script type="text/javascript" src="{{ asset ("bundles/kitpagescms/js/tiny_mce/tiny_mce.js") }}" ></script>
+<script language="javascript" type="text/javascript">
+tinyMCE.init({
+    mode : "textareas",
+    theme : "simple",
+    editor_selector : "kit-cms-rte-simple",
+    entity_encoding : '',
+    safari_warning: false
+});
+</script>
+
+<script language="javascript" type="text/javascript">
+tinyMCE.init({
+    mode : "textareas",
+    theme : "advanced",
+    theme_advanced_disable : "image,cleanup,help,styleselect,visualaid",
+    editor_selector : "kit-cms-rte-advanced",
+    entity_encoding : '',
+    safari_warning: false
+});
+</script>
 {% endblock %}
 
+{#
 {% block toolbar %}
 {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
 {% endblock toolbar %}
+#}

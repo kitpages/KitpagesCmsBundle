@@ -33,7 +33,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         
         //page language
         $pageLngEn = new Page();
-        $pageLngEn->setSlug('EN');
+        $pageLngEn->setSlug('en');
         $pageLngEn->setIsInNavigation(true);
         $pageLngEn->setLanguage('en'); 
         $pageLngEn->setParent($pageRoot);

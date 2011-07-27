@@ -1,14 +1,5 @@
-<div class="kit-cms-toolbar-main">
-    <ul class="kit-cms-toolbar-main-contextSwitch">
-        <li {% if viewMode == 0 %}class="kit-cms-selected"{% endif %}>
-            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 0, 'kitpages_target' : target }) }}">Production</a>
-        </li>
-        <li {% if viewMode == 1 %}class="kit-cms-selected"{% endif %}>
-            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 1, 'kitpages_target' : target }) }}">Preview</a>
-        </li>
-        <li {% if viewMode == 2 %}class="kit-cms-selected"{% endif %}>
-            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 2, 'kitpages_target' : target }) }}">Edit</a>
-        </li>
+<div class="kit-cms-toolbar-top kit-cms-toolbar-main">
+    <ul class="kit-cms-toolbar-top-actions">
         <li>
             <a href="{{ path('kitpages_cms_nav_arbo') }}">Tree</a>
         </li>
@@ -18,4 +9,16 @@
         </li>
         {% endif %}
     </ul>
+    <ul class="kit-cms-toolbar-top-context-switch">
+        <li {% if viewMode == 0 %}class="kit-cms-selected"{% endif %}>
+            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 0, 'kitpages_target' : target }) }}">Production</a>
+        </li>
+        <li {% if viewMode == 1 %}class="kit-cms-selected"{% endif %}>
+            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 1, 'kitpages_target' : target }) }}">Preview</a>
+        </li>
+        <li {% if viewMode == 2 %}class="kit-cms-selected"{% endif %}>
+            <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 2, 'kitpages_target' : target }) }}">Edit</a>
+        </li>
+    </ul>
+    <div style="clear:both;"></div>
 </div>
