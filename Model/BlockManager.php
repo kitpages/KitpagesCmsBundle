@@ -5,7 +5,7 @@ use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Event\BlockEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
-use Kitpages\FileBundle\Entity\File;
+
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
