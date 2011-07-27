@@ -140,24 +140,63 @@ class NavController extends Controller
         
             
             if ($page->getIsPendingDelete() == 1) {
-                $pageArbo['actionList'] = array(
-                    "publish All" => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
-                ); 
                 if ($pageParent->getIsPendingDelete() == 0) {
-                    $pageArbo['actionList']["undelete"] = $this->generateUrl('kitpages_cms_page_undelete', $paramUrl);
+                    $pageArbo['actionList'][] = array(
+                        'label' => 'undelete', 
+                        'url' => $this->generateUrl('kitpages_cms_page_undelete', $paramUrl),
+                    );
+                    $pageArbo['actionList'][] = array(
+                        'label' => 'publish All',
+                        'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild)
+                    );                     
+                } else {
+                    $pageArbo['actionList'][] = array(
+                        'label' => 'publish All',
+                        'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
+                        'class' => 'kit-cms-advanced'
+                    ); 
                 }
             } else {
                 
-                $pageArbo['actionList'] = array(
-                    "publish" => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
-                    "publish All" => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
-                    "up" => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
-                    "down" => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
-                    "add page" => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate),
-                    "add page technical" => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
-                    "add page link" => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate),
-                    "delete" => $this->generateUrl('kitpages_cms_page_delete', $paramUrl) 
-                );                
+                $pageArbo['actionList'][] = array(
+                    'label' => 'publish', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
+                    'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':''
+                );                     
+                $pageArbo['actionList'][] = array(
+                    'label' => 'publish All', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
+                    'class' => 'kit-cms-advanced'
+                );                     
+                $pageArbo['actionList'][] = array(
+                    'label' => 'up', 
+                    'url'  => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
+                    'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':''                    
+                );                     
+                $pageArbo['actionList'][] = array(
+                    'label' => 'down', 
+                    'url'  => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
+                    'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':''                    
+                );                     
+                $pageArbo['actionList'][] = array(
+                    'label' => 'add page', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate)
+                ); 
+                $pageArbo['actionList'][] = array(
+                    'label' => 'add page technical', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
+                    'class' => 'kit-cms-advanced'
+                ); 
+                $pageArbo['actionList'][] = array(
+                    'label' => 'add page link', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate)
+                ); 
+                $pageArbo['actionList'][] = array(
+                    'label' => 'delete', 
+                    'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
+                    'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':''
+                ); 
+               
             }
             
             

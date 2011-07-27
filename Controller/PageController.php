@@ -469,18 +469,21 @@ class PageController extends Controller
     }
 
     public function toolbarZone(Zone $zone, $htmlZone) {  
-        $listAction['addBlock'] = $this->get('router')->generate(
-            'kitpages_cms_block_create', 
-            array(
-                'zone_id' => $zone->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+        $actionList[] = array(
+            'label' => 'addBlock',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_create', 
+                array(
+                    'zone_id' => $zone->getId(),
+                    'position' => 0,
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
-
         );
         
         $dataRenderer = array(
             'title' => $zone->getSlug(),
-            'listAction' => $listAction,
+            'actionList' => $actionList,
             'htmlBlock' => $htmlZone
         );
         $resultingHtml = $this->renderView(

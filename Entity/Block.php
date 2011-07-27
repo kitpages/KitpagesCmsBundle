@@ -3,7 +3,7 @@
  * @Gedmo\Tree
  */
 namespace Kitpages\CmsBundle\Entity;
-
+use Gedmo\Sluggable\Util\Urlizer;
 /**
  * Kitpages\CmsBundle\Entity\Block
  */
@@ -365,5 +365,15 @@ class Block
     public function getDataMedia()
     {
         return $this->dataMedia;
+    }
+
+    public function prePersist()
+    {
+        $this->slug = Urlizer::transliterate($this->slug, '-'); 
+    }
+
+    public function preUpdate()
+    {
+        $this->slug = Urlizer::transliterate($this->slug, '-'); 
     }
 }

@@ -47,7 +47,11 @@ class BlockController extends Controller
         $builder->add('zone_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
-        ));         
+        ));  
+        $builder->add('position','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('position', null)
+        ));          
         $builder->add('template', 'choice',array(
             'choices' => $selectTemplateList,
             'required' => true
@@ -67,12 +71,17 @@ class BlockController extends Controller
 
                 $dataForm = $request->request->get('form');
                 $zone_id = $dataForm['zone_id'];
+                $position = $dataForm['position'];                
                 if (!empty($zone_id)) {
                     $zoneBlock = new ZoneBlock();
                     $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
                     $zoneBlock->setZone($zone);
                     $zoneBlock->setBlock($block);
                     $em->persist($zoneBlock);
+                    if ($position != '') {
+                        $em->flush();
+                        $zoneBlock->setPosition($position);  
+                    }
                 }
                 $em->flush();
                 $this->getRequest()->getSession()->setFlash('notice', 'Block created');
@@ -172,22 +181,26 @@ class BlockController extends Controller
     }
 
     public function toolbar(Block $block) {  
-        $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
-            'kitpages_cms_block_edit', 
-            array(
-                'id' => $block->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+        $dataRenderer['actionList'][] = array(
+            'label' => 'edit',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_edit', 
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
         );
-        if (!isset($actionList['publish']) || $actionList['publish']) {
-            $dataRenderer['listAction']['publish'] = $this->get('router')->generate(
+        $dataRenderer['actionList'][] = array(
+            'label' => 'publish',
+            'url' => $this->get('router')->generate(
                 'kitpages_cms_block_publish', 
                 array(
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            );
-        }
+            )
+        );
         
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
