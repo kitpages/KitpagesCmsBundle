@@ -5,6 +5,7 @@
 {{ form_row(form.data.root.title) }}
 <div>
     <label>Media 1</label>
+    {% if mediaList.url_media_1|default('') %}<img src="{{mediaList.url_media_1}}"/>{% endif %}
     {{ form_widget(form.data.root.media_1) }}
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_1'} %}
 </div>
@@ -14,7 +15,8 @@
 {{ form_widget(form.data.root.body, {'attr': {'class':'kit-cms-rte-simple'} } ) }}
 </div>
 <div>
-    <label>Media 1</label>
+    <label>Media 2</label>
+    {% if mediaList.url_media_2|default('') %}<img src="{{mediaList.url_media_2}}"/>{% endif %}
     {{ form_widget(form.data.root.media_2) }}
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_2'} %}
 </div>
