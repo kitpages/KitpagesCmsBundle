@@ -23,11 +23,6 @@ class Block
     private $blockType;
 
     /**
-     * @var boolean $isActive
-     */
-    private $isActive = true;
-
-    /**
      * @var boolean $isPublished
      */
     private $isPublished;
@@ -130,26 +125,6 @@ class Block
     public function getTemplate()
     {
         return $this->template;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean $isActive
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
     }
 
     /**

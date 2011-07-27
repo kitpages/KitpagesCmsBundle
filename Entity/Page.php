@@ -25,11 +25,6 @@ class Page
     private $layout;
 
     /**
-     * @var boolean $isActive
-     */
-    private $isActive = true;
-
-    /**
      * @var boolean $isPublished
      */
     private $isPublished = false;
@@ -109,26 +104,6 @@ class Page
     public function getLayout()
     {
         return $this->layout;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean $isActive
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
     }
 
     /**
@@ -806,4 +781,29 @@ class Page
         $this->setSlug('page_'.$this->getId());
     }    
     
+    /**
+     * @var boolean $isActive
+     */
+    private $isActive;
+
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
 }

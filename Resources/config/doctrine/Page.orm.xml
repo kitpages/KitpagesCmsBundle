@@ -11,7 +11,7 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
+        <field name="slug" column="slug" type="string" unique="true" nullable="false" length="250"/>
         <field name="language" column="language" type="string" nullable="true" length="250"/>   
         <field name="title" column="title" type="string" nullable="true" length="250" />
         <field name="urlTitle" column="url_title" type="string" nullable="true" length="250" />
@@ -19,7 +19,6 @@
         <field name="pageType" column="page_type" type="string" length="100" />
         <field name="layout" column="layout" type="string" length="250"  nullable="true" />
         
-        <field name="isActive" column="is_active" type="boolean"/>
         <field name="isPublished" column="is_published" type="boolean"/>
         <field name="isInNavigation" column="is_in_navigation" type="boolean"/>           
         <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>        
