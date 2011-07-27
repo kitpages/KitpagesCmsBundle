@@ -2,8 +2,8 @@
     <div class="kit-cms-zone-toolbar">
         <ul class="kit-cms-menu">
             <li>Zone</li>
-            {% for action, url in listAction %}
-            <li><a href='{{url}}' >{{action}}</a></li>
+            {% for action in actionList %}
+                <li class="{{action.class|default()}}" ><a href="{{action.url}}">{{action.label}}</a></li>
             {% endfor %}
         </ul>
         <div class="kit-cms-zone-container">

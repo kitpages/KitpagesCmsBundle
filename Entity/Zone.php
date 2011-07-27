@@ -1,7 +1,7 @@
 <?php
 
 namespace Kitpages\CmsBundle\Entity;
-
+use Gedmo\Sluggable\Util\Urlizer;
 /**
  * Kitpages\CmsBundle\Entity\Zone
  */
@@ -142,12 +142,12 @@ class Zone
 
     public function prePersist()
     {
-        // Add your code here
+        $this->slug = Urlizer::transliterate($this->slug, '-'); 
     }
 
     public function preUpdate()
     {
-        // Add your code here
+        $this->slug = Urlizer::transliterate($this->slug, '-'); 
     }
     /**
      * @var Kitpages\CmsBundle\Entity\ZonePublish

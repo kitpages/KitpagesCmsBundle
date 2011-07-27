@@ -2,7 +2,6 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Sluggable\Util\Urlizer;
 /**
  * Kitpages\CmsBundle\Entity\Page
@@ -257,20 +256,16 @@ class Page
     }
 
 
-    /**
-     * @ORM\prePersist
-     */
     public function prePersist()
     {
         $this->urlTitle = Urlizer::transliterate($this->title, '-');
+        $this->slug = Urlizer::transliterate($this->slug, '-');        
     }
 
-    /**
-     * @ORM\preUpdate
-     */
     public function preUpdate()
     {
         $this->urlTitle = Urlizer::transliterate($this->title, '-');
+        $this->slug = Urlizer::transliterate($this->slug, '-');         
     }
 
 

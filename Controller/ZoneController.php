@@ -54,26 +54,33 @@ class ZoneController extends Controller
         ));
     }
 
-    public function toolbar(Zone $zone, $htmlBlock) {  
-        $listAction['addBlock'] = $this->get('router')->generate(
-            'kitpages_cms_block_create', 
-            array(
-                'zone_id' => $zone->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+    public function toolbar(Zone $zone, $htmlBlock) {
+        $actionList = array();
+        $actionList[] = array(
+            'label' => 'addBlock',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_create', 
+                array(
+                    'zone_id' => $zone->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
-
         );
-        $listAction['publish'] = $this->get('router')->generate(
-            'kitpages_cms_zone_publish',
-            array(
-                'id' => $zone->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+        $actionList[] = array(
+            'label' => 'publish',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_zone_publish',
+                array(
+                    'id' => $zone->getId(),
+                    'position' => 0,
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
         );
         
         $dataRenderer = array(
             'title' => $zone->getSlug(),
-            'listAction' => $listAction,
+            'actionList' => $actionList,
             'htmlBlock' => $htmlBlock
         );
         $resultingHtml = $this->renderView(
@@ -84,18 +91,37 @@ class ZoneController extends Controller
     
     public function toolbarBlock(Zone $zone, Block $block)
     {
-        $dataRenderer['listAction']['edit'] = $this->get('router')->generate(
-            'kitpages_cms_block_edit', 
-            array(
-                'id' => $block->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+        $em = $this->getDoctrine()->getEntityManager();
+        $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block);
+        $dataRenderer['actionList'][] = array(
+            'label' => 'addBlock',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_create', 
+                array(
+                    'zone_id' => $zone->getId(),
+                    'position' => $zoneBlock->getPosition()+1,
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
+            )
+        );        
+        $dataRenderer['actionList'][] = array(
+            'label' => 'edit',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_edit', 
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
         );
-        $dataRenderer['listAction']['delete'] = $this->get('router')->generate(
-            'kitpages_cms_block_delete', 
-            array(
-                'id' => $block->getId(),
-                'kitpages_target' => $_SERVER['REQUEST_URI']
+        $dataRenderer['actionList'][] = array(
+            'label' => 'delete',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_delete', 
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
             )
         );
 
@@ -104,18 +130,24 @@ class ZoneController extends Controller
             'block_id' => $block->getId(),
             'kitpages_target' => $_SERVER["REQUEST_URI"]    
         );
-        $dataRenderer['listAction']['moveUp'] = $this->get('router')->generate(
-            'kitpages_cms_zoneblock_moveup', 
-            $dataUrl
+        $dataRenderer['actionList'][] = array(
+            'label' => 'moveUp',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_zoneblock_moveup', 
+                $dataUrl
+            )
         );
 
-        $dataRenderer['listAction']['moveDown'] = $this->get('router')->generate(
-            'kitpages_cms_zoneblock_movedown', 
-            $dataUrl
+        $dataRenderer['actionList'][] = array(
+            'label' => 'moveDown',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_zoneblock_movedown', 
+                $dataUrl
+            )
         );
         
         $resultingHtml = $this->renderView(
-            'KitpagesCmsBundle:Zone:toolbarBlock.html.twig', $dataRenderer
+            'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
         );  
         return $resultingHtml;
     } 
