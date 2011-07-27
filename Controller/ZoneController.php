@@ -166,8 +166,8 @@ class ZoneController extends Controller
             $zonePublish = $zone->getZonePublish();
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();
-                foreach($zonePublishData['blockList'] as $blockId){
-                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findByBlockAndRenderer($blockId, $renderer);
+                foreach($zonePublishData['blockPublishList'] as $blockPublishId){
+                    $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
                     $blockPublishData = $blockPublish->getData();
                     if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                         $resultingHtml .= $blockPublishData['html'];

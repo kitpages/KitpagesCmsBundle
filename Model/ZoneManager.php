@@ -103,18 +103,17 @@ class ZoneManager
             $zonePublishList = $query->getResult();
             if (count($zonePublishList) == 1) {
                 $zonePublish = $zonePublishList[0];
-                $em->remove($zonePublish);
-                $em->flush();
+                $this->deletePublished($zonePublish);
             }
 
             // create zone publish
-            $blockList = array();
-            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
-                $blockList[] = $block->getId();
+            $blockPublishList = array();
+            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZone($zone) as $blockPublish){
+                $blockPublishList[] = $blockPublish->getId();
             }
             $zonePublishNew = new ZonePublish();
             $zonePublishNew->initByZone($zone);
-            $zonePublishNew->setData(array("blockList"=>$blockList));
+            $zonePublishNew->setData(array("blockPublishList"=>$blockPublishList));
             $zone->setIsPublished(true);
             $zone->setZonePublish($zonePublishNew);
             $em->persist($zonePublishNew);
@@ -134,6 +133,18 @@ class ZoneManager
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZoneUnpublish, $event);
     }
+    public function deletePublished($zonePublish){
+        $data = $zonePublish->getData();
+        $em = $this->getDoctrine()->getEntityManager();        
+        foreach($data['blockPublishList'] as $blockPublishId) {
+            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
+            if ($blockPublish != null) {
+                $this->getBlockManager()->deletePublished($blockPublish);
+            }
+        }
+        $em->remove($zonePublish);
+        $em->flush();        
+    }    
     public function delete(Zone $zone)
     {
         // throw on event
@@ -169,7 +180,7 @@ class ZoneManager
                 $em->flush();
             }
             $this->reorderBlockList($zone);
-            $zone->setIsPublished(false);
+            $this->unpublish($zone);
             $em->flush();
         }
         $event = new ZoneEvent($zone);

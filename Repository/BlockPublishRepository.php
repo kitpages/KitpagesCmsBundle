@@ -19,5 +19,24 @@ class BlockPublishRepository extends EntityRepository
             return null;
         }
     }
-  
+
+    public function findByBlockAndZone($block, $zone)
+    {      
+        $listBlockPublish = $this->_em
+                         ->createQuery('SELECT bp FROM KitpagesCmsBundle:BlockPublish bp JOIN bp.block b JOIN b.zoneBlockList zb WHERE zb.zone = :zone AND bp.block = :block ')
+                         ->setParameter("block", $block)
+                         ->setParameter("zone", $zone)
+                         ->getResult();
+        return $listBlockPublish;
+    }
+ 
+    public function findByZone($zone)
+    {      
+        $listBlockPublish = $this->_em
+                         ->createQuery('SELECT bp FROM KitpagesCmsBundle:BlockPublish bp JOIN bp.block b JOIN b.zoneBlockList zb WHERE zb.zone = :zone ')
+                         ->setParameter("zone", $zone)
+                         ->getResult();
+        return $listBlockPublish;
+    }
+    
 }

@@ -16,6 +16,7 @@ use Symfony\Component\Form\HiddenField;
 
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
+use Kitpages\FileBundle\Entity\File;
 use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Model\CmsManager;
@@ -42,7 +43,7 @@ class BlockController extends Controller
 
         // build basic form
         $builder = $this->createFormBuilder($block);
-        $builder->add('slug', 'text');
+        $builder->add('slug', 'text', array('required' => false));
         $builder->add('zone_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
@@ -191,10 +192,12 @@ class BlockController extends Controller
         return $resultingHtml;
     } 
 
+    
     public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
+        $blockManager = $this->get('kitpages.cms.manager.block');
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
             if ($block == null) {
@@ -202,6 +205,7 @@ class BlockController extends Controller
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
+                
                 $resultingHtml = '';
                 if ($displayToolbar == true) {
                     $resultingHtml .= $this->toolbar($block);
@@ -209,10 +213,7 @@ class BlockController extends Controller
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml .= '<div class="kit-cms-block-container">'.
-                        $this->renderView(
-                            $dataRenderer[$renderer]['twig'],
-                            array('data' => $block->getData())
-                        ).
+                        $blockManager->render($dataRenderer[$renderer]['twig'], $block->getData(), false).
                         '</div>';
                 }
             }
@@ -225,7 +226,7 @@ class BlockController extends Controller
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 if (!is_null($block->getData())) {                
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                    $resultingHtml = $this->renderView($dataRenderer[$renderer]['twig'], array('data' => $block->getData()));
+                    $resultingHtml = $blockManager->render($dataRenderer[$renderer]['twig'], $block->getData(), false);
                 }
             }          
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
