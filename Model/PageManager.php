@@ -220,6 +220,49 @@ class PageManager
         }
     }
 
-
+    ////
+    // doctrine events
+    ////
+    public function prePersist(LifecycleEventArgs $event)
+    {
+        $entity = $event->getEntity();
+        if ($entity instanceof Page) {
+            $pageSlug = $entity->getSlug();
+            if(empty($pageSlug)) {
+                $entity->setSlug('page_ID');
+            }
+        }
+    }
+    public function postPersist(LifecycleEventArgs $event)
+    {    
+        /* Event Page */
+        $entity = $event->getEntity();
+        if ($event->getEntity() instanceof Page) {
+            if($entity->getSlug() == 'page_ID') {
+                $entity->defaultSlug();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entity);
+                $em->flush();
+            }
+        }    
+    }
+    
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    {
+        $entity = $eventArgs->getEntity();
+        $em = $eventArgs->getEntityManager();
+        
+        /* Event Page */
+        if ($entity instanceof Page) {
+            $pageSlug = $entity->getSlug();
+            if(empty($pageSlug)) {
+                $entity->defaultSlug();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entity);
+                $em->flush();
+            }
+            
+        }
+    }  
     
 }

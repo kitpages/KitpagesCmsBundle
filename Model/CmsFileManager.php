@@ -94,13 +94,13 @@ class CmsFileManager extends FileManager {
         if (isset($data['root']) && count($data['root'])>0 ) {
             foreach($data['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
-                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                    if ($file != null) {
-                        if ($publish) {
+                    if ($publish) {
+                        $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
+                        if ($file != null) {                            
                             $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
-                        } else {
-                            $listMediaUrl['url_'.$field] = "/file/render?path=".$fileManager->getOriginalAbsoluteFileName($file);
                         }
+                    } else {
+                        $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($value);
                     }
                 }
             }

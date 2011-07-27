@@ -801,4 +801,9 @@ class Page
     {
         return $this->isInNavigation;
     }
+    
+    public function defaultSlug(){
+        $this->setSlug('page_'.$this->getId());
+    }    
+    
 }

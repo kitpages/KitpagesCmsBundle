@@ -55,14 +55,18 @@ class NavController extends Controller
                 'slug' => $navPublishChild->getSlug(),                
                 'title' => $navPublishChild->getTitle(),
                 'level' => $navPublishChild->getLevel(),   
-                'url' => $this->generateUrl(
-                        'kitpages_cms_page_view_lng',
-                        array(
-                            'id' => $navPublishChild->getId(),
-                            'lng' => $pagePublish->getLanguage(),
-                            'urlTitle' => $pagePublish->getUrlTitle()
-                        ))                 
+                'url' => ''                 
             );
+            if ($pagePublish->getPageType() != 'technical' ) {
+                $navigationElem['url'] = $this->generateUrl(
+                    'kitpages_cms_page_view_lng',
+                    array(
+                        'id' => $navPublishChild->getId(),
+                        'lng' => $pagePublish->getLanguage(),
+                        'urlTitle' => $pagePublish->getUrlTitle()
+                    )
+                );
+            }            
             $navigationElem['children'] = $this->navPublishChildren($navPublishChild);
             $listNavigationElem[] = $navigationElem;
         }
@@ -76,16 +80,20 @@ class NavController extends Controller
         foreach($pageList as $pageChild) {
             $navigationElem = array(
                 'slug' => $pageChild->getSlug(),                
-                'title' => $pageChild->getTitle(),
-                'level' => $pageChild->getLevel(),   
-                'url' => $this->generateUrl(
-                        'kitpages_cms_page_view_lng',
-                        array(
-                            'id' => $pageChild->getId(),
-                            'lng' => $pageChild->getLanguage(),
-                            'urlTitle' => $pageChild->getUrlTitle()
-                        ))                 
+                'title' => $pageChild->getMenuTitle(),
+                'level' => $pageChild->getLevel(),
+                'url' => ''
             );
+            if ($pageChild->getPageType() != 'technical' ) {
+                $navigationElem['url'] = $this->generateUrl(
+                    'kitpages_cms_page_view_lng',
+                    array(
+                        'id' => $pageChild->getId(),
+                        'lng' => $pageChild->getLanguage(),
+                        'urlTitle' => $pageChild->getUrlTitle()
+                    )
+                );
+            }
             $navigationElem['children'] = $this->navPageChildren($pageChild, $viewMode);
             $listNavigationElem[] = $navigationElem;
         }

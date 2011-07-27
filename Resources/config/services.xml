@@ -63,7 +63,9 @@
         </service>
         <service id="kitpages.cms.manager.page" class="%kitpages_cms.cms.pageManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.zone.after.unpublish" method="afterZoneUnpublish" />
-            
+            <tag name="doctrine.event_listener" event="prePersist" /> 
+            <tag name="doctrine.event_listener" event="postPersist" /> 
+            <tag name="doctrine.event_listener" event="preUpdate" />
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="templating"/>

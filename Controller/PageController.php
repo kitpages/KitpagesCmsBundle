@@ -33,7 +33,6 @@ class PageController extends Controller
    
     public function viewAction(Page $page, $lng, $urlTitle)
     {
-        
        
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');

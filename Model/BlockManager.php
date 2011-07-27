@@ -131,7 +131,6 @@ class BlockManager
             $em->refresh($block);
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 $blockData = $block->getData();
-                echo var_dump($blockData);
                 if (!is_null($blockData) && isset($blockData['root'])) {             
                     foreach($listRenderer as $nameRenderer => $renderer) {
                         

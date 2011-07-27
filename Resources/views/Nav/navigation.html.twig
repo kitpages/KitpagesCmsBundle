@@ -1,7 +1,7 @@
 <ul {% if root %} class='kit-cms-navigation-{{navigationLabel}}' {% endif %} >
     {% for navigationElem in navigation %}
         <li class="kit-cms-navigation-{{navigationLabel}}-level{{navigationElem.url}} kit-cms-navigation-{{navigationLabel}}-slug-{{navigationElem.slug}}">
-            <a href="{{navigationElem.url}}" >{{navigationElem.title}}</a>
+            {% if navigationElem.url == '' %}{{navigationElem.title}}{% else %}<a href="{{navigationElem.url}}" >{{navigationElem.title}}</a>{% endif %}
             {% include 'KitpagesCmsBundle:Nav:navigation.html.twig' with {'navigation': navigationElem.children, 'navigationLabel':navigationLabel, 'root':false } %}
         </li>
     {% endfor %}
