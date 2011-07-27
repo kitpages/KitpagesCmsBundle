@@ -1,15 +1,18 @@
-    <ul>
+    <ul class="kit-cms-arbo-node-container">
         {% for page in arbo %}
-            <li>
-                <a href="{{page.url}}" >{{page.menuTitle}} ({{page.slug}})</a>
-                <div class='kit-cms-arbo-actions'><ul>
-                {% for name, url in page.actionList %}
-                    <li><a href="{{url}}">{{name}}</a></li>
-                    
-
-                {% endfor %}
-                </ul></div>
-
+            <li class="kit-cms-arbo-node ">
+                <div class="kit-cms-arbo-line">
+                    <a href="{{page.url}}">
+                        <span class="kit-cms-arbo-page-title">{{page.menuTitle}}</span>
+                        <span class="kit-cms-arbo-page-slug {% if page.menuTitle %}kit-cms-advanced{% endif %}">{{page.slug}}</span>
+                    </a>
+                    <ul class="kit-cms-arbo-actions kit-cms-menu">
+                    {% for name, url in page.actionList %}
+                        <li><a href="{{url}}">{{name}}</a></li>
+                    {% endfor %}
+                    </ul>
+                    <div style="clear:both"></div>
+                </div>
                 {% include 'KitpagesCmsBundle:Nav:arboChildren.html.twig' with {'arbo': page.children } %}
             </li>
         {% endfor %}

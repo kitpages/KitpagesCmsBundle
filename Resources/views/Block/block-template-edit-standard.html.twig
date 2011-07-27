@@ -9,8 +9,10 @@
 {{ form_errors(form.data.root.body) }}
 {{ form_widget(form.data.root.body, {'attr': {'class':'kit-cms-rte-simple'} } ) }}
 </div>
+<div>
+    <label>Media</label>
 {{ form_widget(form.data.root.media) }}
 {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media'} %}
-
+</div>
 {% endblock editData %}
 

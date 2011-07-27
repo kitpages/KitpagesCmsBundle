@@ -2,7 +2,7 @@
 {% block body %}
 <h1>Edit page</h1>
 
-<form action="{{ path('kitpages_cms_page_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
+<form class="kit-cms-form" action="{{ path('kitpages_cms_page_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
   
@@ -16,6 +16,6 @@
     {% block editData %}{% endblock %}
 
     {{ form_rest(form) }}
-    <input type="submit" />
+    <input type="submit"/>
 </form>
 {% endblock body %}

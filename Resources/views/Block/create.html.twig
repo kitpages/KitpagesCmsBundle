@@ -3,7 +3,7 @@
 {% block body %}
 <h1>Create block</h1>
 
-<form action="{{ path('kitpages_cms_block_create', { 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
+<form class="kit-cms-form" action="{{ path('kitpages_cms_block_create', { 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     <input type="submit" />

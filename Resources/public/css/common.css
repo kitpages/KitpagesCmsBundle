@@ -3,6 +3,59 @@
     display: none!important;
 }
 
+.kit-cms-odd {
+    background-color: #E0E0E0;
+}
+.kit-cms-even {
+    background-color: #FFF;
+}
+.kit-cms-advanced {
+    display:none;
+}
+
+.kit-cms-form {
+    display: table;
+    border: 1px solid #D0D0D0;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.kit-cms-form > div {
+    display: table-row;
+    margin: 2px;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+.kit-cms-form label {
+    display: table-cell;
+    width: 200px;
+    text-align: right;
+    vertical-align: middle;
+    padding: 2px 5px;
+    border-spacing: 2px;
+    border-collapse: separate;
+    margin: 2px;
+}
+.kit-cms-form > div > input {
+    display: table-cell;
+    border-spacing: 2px;
+    border-collapse: separate;
+    margin: 2px;
+}
+.kit-cms-form > input[type="submit"] {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    margin-left: 50%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.kit-cms-rte-simple {
+    width: 500px;
+    height: 250px;
+}
+
 /*
  * Toolbar
  */
@@ -20,27 +73,24 @@
     width: 100%;
 }
 
-.kit-cms-toolbar-main {
-    display: table-row;
+.kit-cms-toolbar-top {
+    display: block;
     height: 42px;
     background-image: url('common/bg-toolbar.jpg');
     background-repeat: repeat-x;
     width: 100%;
 }
 
-.kit-cms-toolbar-main > ul {
-    display: table-cell;
-    width: 100%;
-    vertical-align: middle;
+.kit-cms-toolbar-top > ul {
+    display: block;
 }
-.kit-cms-toolbar-main > ul > li {
+.kit-cms-toolbar-top > ul > li {
     display: inline-block;
 }
-.kit-cms-toolbar-main > ul > li > a {
+.kit-cms-toolbar-top > ul > li > a {
     display: block;
-    width: 100px;
-    margin: 0px 10px;
-    padding: 3px 0px;
+    margin: 7px 10px;
+    padding: 3px 10px;
     background-color: #F0F0F0;
     border: 1px solid #CCCCCC;
     border-radius: 5px;
@@ -49,28 +99,27 @@
     color: #000;
 }
 
-.kit-cms-toolbar-main > ul > li > a:hover {
+.kit-cms-toolbar-top > ul > li > a:hover {
     background-color: #BB092D;
     color: #FFF;
 }
-.kit-cms-toolbar-main > ul > li.kit-cms-selected > a {
+.kit-cms-toolbar-top > ul > li.kit-cms-selected > a {
     background-color: #BB092D;
     color: #FFF;
 }
 
-.kit-cms-toolbar-main ul.kit-cms-tooblar-main-contextSwitch {
-    text-align: right;
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-top-context-switch {
+    float: right;
+}
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-top-actions {
+    float: left;
+}
+
+.kit-cms-toolbar-page-form {
+    background-color: #F8F8F8;
 }
 
 
-.kit-cms-toolbar-page {
-    display: table-row;    
-    background-image: url('common/bg-toolbar.jpg');
-    width: 100%;
-}
-.kit-cms-toolbar-page .button-form a{
-    padding-left:15px;
-}
 .kit-cms-expand{
     background-image: url(common/moins.gif);
     background-repeat:  no-repeat;
@@ -122,7 +171,7 @@
 /*
  * zone or block menu
  */
-.kit-cms .kit-cms-menu {
+.kit-cms-menu {
     height: 30px;
     background-color: #E3E3E3;
     border-top-left-radius: 5px;
@@ -169,9 +218,61 @@
 /*
  *  arbo
  */
- .kit-cms-arbo-actions {
- }
-.kit-cms-arbo-actions ul li{
-     display:inline-block;
-     
- }
+.kit-cms-arbo {
+}
+.kit-cms-arbo > .kit-cms-arbo-node-container:first-child {
+    margin: 0px;
+}
+.kit-cms-arbo > .kit-cms-arbo-node-container:first-child > .kit-cms-arbo-node:first-child > .kit-cms-arbo-line:first-child {
+    border-top: 1px solid #D0D0D0;
+}
+.kit-cms-arbo-node-container {
+    margin-left: 20px;
+    list-style: none;
+}
+.kit-cms-arbo-line {
+    background-color: #F0F0F0;
+    border-bottom: 1px solid #D0D0D0;
+    border-left: 1px solid #D0D0D0;
+    border-right: 1px solid #D0D0D0;
+}
+.kit-cms-arbo-line:hover {
+    background-color: #FFFF80;
+}
+.kit-cms-arbo-line > a {
+    display: block;
+    color: #313131;
+    text-decoration: none;
+    float: left;
+    padding-left: 3px;
+}
+.kit-cms-arbo-page-title {
+}
+.kit-cms-arbo-page-slug {
+    font-weight: bold;
+}
+.kit-cms-arbo-page-slug:before {
+    content: "(";
+}
+.kit-cms-arbo-page-slug:after {
+    content: ")";
+}
+.kit-cms-arbo-actions {
+    display: block;
+    float:right;
+}
+
+.kit-cms-arbo-actions.kit-cms-menu {
+    height: auto;
+    background-color: transparent;
+    border-radius: none;
+    border: none;
+}
+.kit-cms-arbo-actions.kit-cms-menu > li {
+    top: 0px;
+}
+.kit-cms-arbo-actions.kit-cms-menu > li > a {
+    margin: 2px 2px;
+    border-radius: 3px;
+    border: 0px;
+}
