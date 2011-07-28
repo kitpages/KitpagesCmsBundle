@@ -94,6 +94,17 @@ class ZoneController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block);
         $dataRenderer['actionList'][] = array(
+            'label' => 'edit',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_edit', 
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
+            ),
+            'icon' => 'icon/edit.png'
+        );
+        $dataRenderer['actionList'][] = array(
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_create', 
@@ -102,18 +113,9 @@ class ZoneController extends Controller
                     'position' => $zoneBlock->getPosition()+1,
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/add.png'
         );        
-        $dataRenderer['actionList'][] = array(
-            'label' => 'edit',
-            'url' => $this->get('router')->generate(
-                'kitpages_cms_block_edit', 
-                array(
-                    'id' => $block->getId(),
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
-                )
-            )
-        );
         $dataRenderer['actionList'][] = array(
             'label' => 'delete',
             'url' => $this->get('router')->generate(
@@ -122,7 +124,9 @@ class ZoneController extends Controller
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/delete.png',
+            'class' => 'kit-cms-delete-button'
         );
 
         $dataUrl = array(
@@ -135,7 +139,8 @@ class ZoneController extends Controller
             'url' => $this->get('router')->generate(
                 'kitpages_cms_zoneblock_moveup', 
                 $dataUrl
-            )
+            ),
+            'icon' => 'icon/arrow-up.png'
         );
 
         $dataRenderer['actionList'][] = array(
@@ -143,7 +148,8 @@ class ZoneController extends Controller
             'url' => $this->get('router')->generate(
                 'kitpages_cms_zoneblock_movedown', 
                 $dataUrl
-            )
+            ),
+            'icon' => 'icon/arrow-down.png'
         );
         
         $resultingHtml = $this->renderView(
@@ -153,12 +159,12 @@ class ZoneController extends Controller
     } 
     
     
-    public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
+    public function widgetAction($slug, $renderer = 'default', $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
-        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $label));
+        $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
         
         if ($zone == null) {
-            return new Response('Please create a zone with the label "'.htmlspecialchars($label).'"');
+            return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
         }
         
         $context = $this->get('kitpages.cms.controller.context');
@@ -169,7 +175,7 @@ class ZoneController extends Controller
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
                     array(
-                        "label" => $block->getSlug(),
+                        "slug" => $block->getSlug(),
                         "renderer" =>$renderer,
                         'displayToolbar' => false
                     ),
@@ -186,7 +192,7 @@ class ZoneController extends Controller
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
                     array(
-                        "label" => $block->getSlug(),
+                        "slug" => $block->getSlug(),
                         "renderer" =>$renderer
                     ),
                     array()

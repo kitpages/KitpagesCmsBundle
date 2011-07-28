@@ -13,6 +13,7 @@
 {% endblock  footerNavigation %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/kitpagescms/css/common.css') }}"  media="screen" />
 {% endblock stylesheets %}
 
@@ -21,7 +22,20 @@
     {% if is_granted('ROLE_ADMIN') %}
         <div class="kit-cms kit-cms-toolbar">
         {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
+        {% if (viewMode is defined) and (viewMode == 2) %}
+            {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':page} %}
+        {% endif %}
         </div>
+        <script>
+            $(document).ready(function() {
+                $(".kit-cms-delete-button > a").click(function(e) {
+                    var response = confirm("Do you confirm your delete action ?");
+                    if (response) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        </script>
     {% endif %}
 {% endblock toolbar %}
 

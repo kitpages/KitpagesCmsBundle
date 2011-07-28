@@ -191,7 +191,8 @@ class BlockController extends Controller
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/edit.png'
         );
         $dataRenderer['actionList'][] = array(
             'label' => 'publish',
@@ -211,15 +212,15 @@ class BlockController extends Controller
     } 
 
     
-    public function widgetAction($label, $renderer = 'default', $displayToolbar = true) {
+    public function widgetAction($slug, $renderer = 'default', $displayToolbar = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $blockManager = $this->get('kitpages.cms.manager.block');
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
+            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $slug));
             if ($block == null) {
-                return new Response('Please create a block with the label "'.htmlspecialchars($label).'"');
+                return new Response('Please create a block with the slug "'.htmlspecialchars($slug).'"');
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
@@ -236,9 +237,9 @@ class BlockController extends Controller
                 }
             }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
-            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $label));
+            $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $slug));
             if ($block == null) {
-                return new Response('Please create a block with the label "'.htmlspecialchars($label).'"');
+                return new Response('Please create a block with the slug "'.htmlspecialchars($slug).'"');
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
@@ -248,14 +249,14 @@ class BlockController extends Controller
                 }
             }          
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
-            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $label, 'renderer' => $renderer));
+            $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug, 'renderer' => $renderer));
             if (!is_null($blockPublish)) {
                 $data = $blockPublish->getData();
                 if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                     $resultingHtml = $data['html'];
                 }
             } else {
-                return new Response('The block with the label "'.htmlspecialchars($label).'" is not published');
+                return new Response('The block with the slug "'.htmlspecialchars($slug).'" is not published');
             }
         }
         return new Response($resultingHtml);
