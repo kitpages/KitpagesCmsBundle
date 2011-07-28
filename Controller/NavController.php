@@ -27,45 +27,56 @@ class NavController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }  
     
-    public function widgetAction($slug, $currentPageSlug, $startDepth = null, $endDepth = null) {
+    public function widgetAction($slug, $currentPageSlug, $startDepth = null, $endDepth = null, $filterByCurrentPage = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $navigation = array();
         $selectPageSlugList = array();
+        if ($startDepth == 1) {
+           $filterByCurrentPage = false; 
+        }
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
+            $currentPage = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($currentPageSlug);            
+            if ($filterByCurrentPage && $currentPage != null) {
+                $page = $em->getRepository('KitpagesCmsBundle:Page')->childOfPageWithForParentOtherPage($page, $currentPage, $startDepth-1);
+                $startDepth = 1;
+            }
             $startLevel = $page->getLevel() + $startDepth;            
             $endLevel = $page->getLevel() + $endDepth;
             $navigation = $this->navPageChildren($page, $context->getViewMode(), $startDepth, $endLevel);
             
-            $currentPage = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($currentPageSlug);
             if ($currentPage != null) {
                 $selectParentPageList = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($currentPage, $startLevel, $endLevel);
                 foreach($selectParentPageList as $selectParentPage) {
                     $selectPageSlugList[] = $selectParentPage->getSlug();
                 }
             }
-            if ($page->getLevel() <  $startLevel || $page->getLevel() >  $endLevel) {
-                $currentPageSlug = '';
-            }
+//            if ($page->getLevel() <  $startLevel || $page->getLevel() >  $endLevel) {
+//                $currentPageSlug = '';
+//            }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slug);
             if ($navPublish != null) {
+                $currentNavPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($currentPageSlug);
+                if ($filterByCurrentPage && $currentNavPublish != null) {
+                    $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->childOfPageWithForParentOtherPage($navPublish, $currentNavPublish, $startDepth-1);
+                    $startDepth = 1;
+                }                
                 $startLevel = $navPublish->getLevel() + $startDepth;            
                 $endLevel = $navPublish->getLevel() + $endDepth;
                 $navigation = $this->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
 
-                $currentNavPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($currentPageSlug);
                 if ($currentNavPublish != null) {
                     $selectParentNavPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($currentNavPublish, $startLevel, $endLevel);
                     foreach($selectParentNavPublishList as $selectParentNavPublish) {
                         $selectPageSlugList[] = $selectParentNavPublish->getSlug();
                     }
                 }
-                if ($navPublish->getLevel() <  $startLevel || $navPublish->getLevel() >  $endLevel) {
-                    $currentPageSlug = '';
-                }
+//                if ($navPublish->getLevel() <  $startLevel || $navPublish->getLevel() >  $endLevel) {
+//                    $currentPageSlug = '';
+//                }
             }
         }
         return $this->render('KitpagesCmsBundle:Nav:navigation.html.twig', array('currentPageSlug' => $currentPageSlug, 'selectPageSlugList' => $selectPageSlugList, 'navigation' => $navigation, 'navigationLabel' => $slug, 'root' => true));
