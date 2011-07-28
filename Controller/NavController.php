@@ -27,7 +27,7 @@ class NavController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }  
     
-    public function widgetAction($slug, $currentPageSlug, $startDepth = null, $endDepth = null, $filterByCurrentPage = true) {
+    public function widgetAction($slug, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
