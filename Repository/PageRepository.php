@@ -51,7 +51,7 @@ class PageRepository extends NestedTreeRepository
     public function childOfPageWithForParentOtherPage(Page $pageParent, Page $pageChild, $depth)
     {   
         $listPage = $this->_em
-            ->createQuery('SELECT p FROM KitpagesCmsBundle:Page p WHERE p.right > :rightChild AND p.left < :leftChild AND p.right < :rightParent AND p.left > :leftParent AND p.level = :level')
+            ->createQuery('SELECT p FROM KitpagesCmsBundle:Page p WHERE p.right >= :rightChild AND p.left <= :leftChild AND p.right <= :rightParent AND p.left >= :leftParent AND p.level = :level')
             ->setParameter("level", $pageParent->getLevel()+$depth)
             ->setParameter("rightChild", $pageChild->getRight())
             ->setParameter("leftChild", $pageChild->getLeft())

@@ -72,7 +72,7 @@ class NavPublishRepository extends NestedTreeRepository
     public function childOfPageWithForParentOtherPage(NavPublish $navPublishParent, NavPublish $navPublishChild, $depth)
     {   
         $listPage = $this->_em
-            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right > :rightChild AND np.left < :leftChild AND np.right < :rightParent AND np.left > :leftParent AND np.level = :level')
+            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right >= :rightChild AND np.left <= :leftChild AND np.right <= :rightParent AND np.left >= :leftParent AND np.level = :level')
             ->setParameter("level", $navPublishParent->getLevel()+$depth)
             ->setParameter("rightChild", $navPublishChild->getRight())
             ->setParameter("leftChild", $navPublishChild->getLeft())
