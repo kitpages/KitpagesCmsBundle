@@ -245,7 +245,8 @@ class NavController extends Controller
                 $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_technical', $paramUrl);
             } elseif($page->getPageType() == 'link') {
                 $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
-                $pageArbo['actionList']['link'] = $page->getLinkUrl();
+                //$pageArbo['actionList']['link'] = $page->getLinkUrl();
+                $pageArbo['menuTitle'] .= ' ['.$page->getLinkUrl().']'; 
             }
             $pageArbo['children'] = $this->arboChildren($page);
             $pageListRenderer[] = $pageArbo;
