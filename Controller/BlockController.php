@@ -48,7 +48,8 @@ class BlockController extends Controller
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
         ));  
-        $builder->add('position','text',array(
+        $builder->add('position','hidden',array(
+            'required' => false,
             'property_path' => false,
             'data' => $this->get('request')->query->get('position', null)
         ));          
