@@ -44,5 +44,30 @@ class NavPublishRepository extends NestedTreeRepository
                 ->getResult();
 
     }
+    
+    public function childrenOfDepth(NavPublish $navPublish, $depth)
+    {   
+        $navPublishList = $this->_em
+            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right < :right AND np.left > :left AND np.level = :level')
+            ->setParameter("level", $navPublish->getLevel()+$depth)
+            ->setParameter("right", $navPublish->getRight())
+            ->setParameter("left", $navPublish->getLeft())
+            ->getResult();        
+        return $navPublishList;
+     }
+     
+
+    public function parentBetweenTwoDepth(NavPublish $navPublish, $startLevel, $endLevel)
+    {   
+        $navPublishList = $this->_em
+            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right > :right AND np.left < :left AND np.level >= :levelMin AND np.level <= :levelMax')
+            ->setParameter("right", $navPublish->getRight())
+            ->setParameter("left", $navPublish->getLeft())
+            ->setParameter("levelMin", $startLevel)
+            ->setParameter("levelMax", $endLevel)
+            ->getResult();        
+        return $navPublishList;
+    }        
+    
      
 }
