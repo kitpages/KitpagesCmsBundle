@@ -15,7 +15,7 @@ $(document).ready(function(){
         $('.kit-cms-navigation-{{navigationLabel}}-slug-{{currentPageSlug}}').addClass('kit-cms-current');
     {% endif %}
     {% for selectPageSlug in selectPageSlugList %}
-        $('.kit-cms-navigation-{{navigationLabel}}-slug-{{selectPageSlug}}').parents('li').addClass('kit-cms-select');
+        $('.kit-cms-navigation-{{navigationLabel}}-slug-{{selectPageSlug}}').addClass('kit-cms-select');
     {% endfor %}
 });
 </script>
