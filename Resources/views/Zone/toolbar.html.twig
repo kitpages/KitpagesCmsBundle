@@ -3,7 +3,13 @@
         <ul class="kit-cms-menu">
             <li>Zone</li>
             {% for action in actionList %}
-                <li class="{{action.class|default()}}" ><a href="{{action.url}}">{{action.label}}</a></li>
+                <li class="{{action.class|default()}}" >
+                    {% if action.icon is defined %}
+                        <a href="{{action.url}}" title="{{action.label}}"><img src="{{asset("bundles/kitpagescms/" ~ action.icon)}}"></a>
+                    {% else %}
+                        <a href="{{action.url}}">{{action.label}}</a>
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
         <div class="kit-cms-zone-container">

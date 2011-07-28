@@ -95,7 +95,7 @@ class PageController extends Controller
         $resultingHtml = $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Zone:widget", 
                     array(
-                        "label" => $zone->getSlug(),
+                        "slug" => $zone->getSlug(),
                         "renderer" =>$layout['zone_list'][$location_in_page]['render'],
                         'displayToolbar' => false
                     ),
