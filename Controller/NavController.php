@@ -27,7 +27,7 @@ class NavController extends Controller
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }  
     
-    public function widgetAction($slug, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
+    public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
@@ -43,14 +43,16 @@ class NavController extends Controller
                 $page = $em->getRepository('KitpagesCmsBundle:Page')->childOfPageWithForParentOtherPage($page, $currentPage, $startDepth-1);
                 $startDepth = 1;
             }
-            $startLevel = $page->getLevel() + $startDepth;            
-            $endLevel = $page->getLevel() + $endDepth;
-            $navigation = $this->navPageChildren($page, $context->getViewMode(), $startDepth, $endLevel);
-            
-            if ($currentPage != null) {
-                $selectParentPageList = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($currentPage, $startLevel, $endLevel);
-                foreach($selectParentPageList as $selectParentPage) {
-                    $selectPageSlugList[] = $selectParentPage->getSlug();
+            if ($page != null) {
+                $startLevel = $page->getLevel() + $startDepth;            
+                $endLevel = $page->getLevel() + $endDepth;
+                $navigation = $this->navPageChildren($page, $context->getViewMode(), $startDepth, $endLevel);
+
+                if ($currentPage != null) {
+                    $selectParentPageList = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($currentPage, $startLevel, $endLevel);
+                    foreach($selectParentPageList as $selectParentPage) {
+                        $selectPageSlugList[] = $selectParentPage->getSlug();
+                    }
                 }
             }
 //            if ($page->getLevel() <  $startLevel || $page->getLevel() >  $endLevel) {
@@ -79,7 +81,17 @@ class NavController extends Controller
 //                }
             }
         }
-        return $this->render('KitpagesCmsBundle:Nav:navigation.html.twig', array('currentPageSlug' => $currentPageSlug, 'selectPageSlugList' => $selectPageSlugList, 'navigation' => $navigation, 'navigationLabel' => $slug, 'root' => true));
+        return $this->render(
+            'KitpagesCmsBundle:Nav:navigation.html.twig',
+            array(
+                'currentPageSlug' => $currentPageSlug,
+                'selectPageSlugList' => $selectPageSlugList,
+                'navigation' => $navigation,
+                'navigationSlug' => $slug,
+                'navigationCssClass' => $cssClass,
+                'root' => true
+            )
+        );
     }
 
     public function navPublishChildren($navPublish, $viewMode, $currentDepth, $endLevel){

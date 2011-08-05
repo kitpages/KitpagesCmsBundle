@@ -68,6 +68,7 @@
 .kit-cms-toolbar {
     display: table;
     width: 100%;
+    z-index: 1000;
 }
 
 .kit-cms-toolbar-top {

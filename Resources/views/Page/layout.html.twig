@@ -1,15 +1,32 @@
 {% extends cms.layout %}
 
+{% block siteNavigation %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug':cms.currentLanguage,
+        'cssClass': "kit-cms-navigation-top",
+        'currentPageSlug':page.slug|default(''),
+        'startDepth':1 ,
+        'endDepth':1} 
+    %}
+{% endblock  siteNavigation %}
+
 {% block mainNavigation %}
-    {% render 'KitpagesCmsBundle:Nav:widget' with {'slug':'main', 'currentPageSlug':page.slug|default(''), 'startDepth':1 , 'endDepth':1} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug':cms.currentLanguage,
+        'cssClass': "kit-cms-navigation-main",
+        'currentPageSlug':page.slug|default(''),
+        'startDepth':2 ,
+        'endDepth':2} 
+    %}
+
 {% endblock  mainNavigation %}
 
-{% block secondNavigation %}
-    {% render 'KitpagesCmsBundle:Nav:widget' with {'slug':'main', 'currentPageSlug':page.slug|default(''), 'startDepth':2 , 'endDepth':4} %}
-{% endblock  secondNavigation %}
-
 {% block footerNavigation %}
-    {% render 'KitpagesCmsBundle:Nav:widget' with {'slug':'footer', 'currentPageSlug':page.slug|default('')} %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug':'footer',
+        'cssClass': "kitpages-cms-navigation-footer",
+        'currentPageSlug':page.slug|default('')}
+    %}
 {% endblock  footerNavigation %}
 
 {% block stylesheets %}

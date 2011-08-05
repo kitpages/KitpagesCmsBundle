@@ -80,7 +80,7 @@ class PageController extends Controller
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$pageLayout);
         $cmsManager->setLayout($layout['twig']);
         
-        return $this->render('KitpagesCmsBundle:page:layout_page.html.twig', array('viewMode' => $context->getViewMode(), 'page' => $page));        
+        return $this->render('KitpagesCmsBundle:page:layout.html.twig', array('viewMode' => $context->getViewMode(), 'page' => $page));        
     }
 
     public function widgetZoneAction($location_in_page, Page $page) {

@@ -20,5 +20,10 @@
     {{ form_widget(form.data.root.media_2) }}
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_2'} %}
 </div>
+<div>
+{{ form_label(form.data.root.displaySeparator) }}
+{{ form_errors(form.data.root.displaySeparator) }}
+{{ form_widget(form.data.root.displaySeparator) }}
+</div>
 {% endblock editData %}
 

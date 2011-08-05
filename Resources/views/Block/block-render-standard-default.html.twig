@@ -1,9 +1,11 @@
 {% autoescape false %}
 <div class="kit-cms-block-standard">
-    <h1>{{data.root.title}}</h1>
-    <div>{{data.root.body}}</div>
+    {% if data.root.title|default('') %}<h2>{{data.root.title}}</h2>{% endif %}
+    {% if data.root.body|default('') %}<div>{{data.root.body}}</div>{%endif%}
     {% if data.root.media_1|default('') %}<img src="{{data.root.url_media_1}}"/>{% endif %}
     {% if data.root.media_2|default('') %}<img src="{{data.root.url_media_2}}"/>{% endif %}
     {#{% if data.root.media_3|default('') %}<img src="{{data.root.url_media_3}}.thumb.jpg"/>{% endif %}#}
+    
+    {% if data.root.displaySeparator|default('NO') == "YES" %}<div class="app-separator"></div>{% endif %}
 </div>
 {% endautoescape %}

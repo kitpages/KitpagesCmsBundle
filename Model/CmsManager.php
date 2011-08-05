@@ -20,6 +20,7 @@ class CmsManager
   
     protected $doctrine = null;
     protected $layout = null;
+    protected $currentLanguage = 'fr';
     
     public function __construct(
         Registry $doctrine,
@@ -63,6 +64,14 @@ class CmsManager
         $this->layout = $layout;
     }
     
+    public function getCurrentLanguage()
+    {
+        return $this->currentLanguage;
+    }
+    public function setCurrentLanguage($lang)
+    {
+        $this->currentLnaguage = $lang;
+    }
    
     
   
