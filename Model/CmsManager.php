@@ -70,7 +70,7 @@ class CmsManager
     }
     public function setCurrentLanguage($lang)
     {
-        $this->currentLnaguage = $lang;
+        $this->currentLanguage = $lang;
     }
    
     

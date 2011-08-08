@@ -6,6 +6,8 @@ use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Event\BlockEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 
+use Kitpages\CmsBundle\Controller\Context;
+use Kitpages\CmsBundle\Renderer\TwigRenderer;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -97,7 +99,22 @@ class BlockManager
         $em->remove($blockPublish);
     }
     
-    public function render($templateTwig, $blockData, $publish, $listMediaUrl = null) {
+    /**
+     *
+     * @param type $templateTwig
+     * @param array $blockData
+     * @param boolean $viewMode
+     * @param array|null $listMediaUrl
+     * @return type 
+     */
+    public function render($renderer, $blockData, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
+        if (is_bool($viewMode)) {
+            throw new Exception("boolean viewMode, strange");
+        }
+        $publish = false;
+        if ($viewMode === Context::VIEW_MODE_PROD) {
+            $publish = true;
+        }
         $fileManager = $this->getFileManager();
         if (is_null($listMediaUrl)) {
             $listMediaUrl = $fileManager->urlListInBlockData($blockData, $publish);
@@ -106,11 +123,18 @@ class BlockManager
             $blockData['root'] = array();
         }
         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
-
-        return $this->getTemplating()->render(
-            $templateTwig,
-            array('data' => $blockData)
-        );  
+        
+        if ($renderer['type'] == 'twig') {
+            $instance = new TwigRenderer();
+            $instance->setTwig($this->getTemplating());
+            $instance->setTemplateName($renderer['twig']);
+            return $instance->render($blockData, $viewMode);
+        }
+        return null;
+//        return $this->getTemplating()->render(
+//            $templateTwig,
+//            array('data' => $blockData)
+//        );  
     }
     
     public function publish(Block $block, array $listRenderer)
@@ -142,8 +166,7 @@ class BlockManager
                         $listMediaUrl = $fileManager->urlListInBlockData($blockData, true);
                         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
                       
-                        $resultingHtml = $this->render($renderer['twig'], $blockData, true);
-                        
+                        $resultingHtml = $this->render($renderer, $blockData, Context::VIEW_MODE_PROD);
 
                         $blockPublish = new BlockPublish();
                         $blockPublish->initByBlock($block);

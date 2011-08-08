@@ -26,12 +26,7 @@ class ToolbarController extends Controller
         $context->setViewMode($viewMode);
         $request = Request::createFromGlobals();
         $parseUrl = parse_url($request->query->get('kitpages_target'));
-        if (isset($parseUrl['query'])) {
-            $stringContext = "&context=".$viewMode;
-        } else {
-            $stringContext = "?context=".$viewMode;
-        }
-        return new RedirectResponse($request->query->get('kitpages_target').$stringContext);
+        return new RedirectResponse($request->query->get('kitpages_target'));
     }    
     
 }

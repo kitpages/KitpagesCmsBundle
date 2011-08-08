@@ -5,9 +5,9 @@ use Symfony\Component\HttpFoundation\Session;
 
 class Context
 {
-    const VIEW_MODE_PROD = 0;
-    const VIEW_MODE_PREVIEW = 1;
-    const VIEW_MODE_EDIT = 2;  
+    const VIEW_MODE_PROD = 1;
+    const VIEW_MODE_PREVIEW = 2;
+    const VIEW_MODE_EDIT = 3;  
     private $_session = null;
     
     public function __construct(Session $session)
