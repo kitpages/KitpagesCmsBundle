@@ -9,9 +9,44 @@ class BlockTemplateEditStandardType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('title', 'text');
-        $builder->add('body', 'textarea', array('required' => false));
-        $builder->add('media_1', 'hidden');
-        $builder->add('media_2', 'hidden');
+        $builder->add(
+            'mainContent',
+            'textarea',
+            array(
+                'required' => false,
+                'attr' => array(
+                    "class" => "kit-cms-rte-simple"
+                )
+            )
+        );
+        $builder->add('media_mainImage', 'hidden');
+        
+        $builder->add(
+            'imagePosition',
+            'choice',
+            array(
+                'required' => false,
+                'choices'   => array(
+                    'left' => 'Left',
+                    'right' => 'Right',
+                    'top' => 'Top',
+                    'bottom' => 'Bottom',
+                ),
+                'label' => 'Image position'
+            )
+        );
+
+        $builder->add(
+            'subContent',
+            'textarea',
+            array(
+                'required' => false,
+                'attr' => array(
+                    "class" => "kit-cms-rte-simple"
+                )
+            )
+        );
+        
         $builder->add(
             'displaySeparator',
             'checkbox',

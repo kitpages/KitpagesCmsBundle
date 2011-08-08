@@ -14,9 +14,11 @@
         <script>
             $(".kit-cms-advanced-mode-button").click(function() {
                 $(".kit-cms-advanced").toggle();
+                $(".kit-cms-form .kit-cms-advanced").parent().toggle();
             });
             $(document).ready(function() {
                 $(".kit-cms-advanced").hide();
+                $(".kit-cms-form .kit-cms-advanced").parent().hide();
             });
         </script>
     </ul>

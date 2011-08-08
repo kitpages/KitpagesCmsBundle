@@ -64,7 +64,8 @@ class ZoneController extends Controller
                     'zone_id' => $zone->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/add.png'
         );
         $actionList[] = array(
             'label' => 'publish',
@@ -75,7 +76,8 @@ class ZoneController extends Controller
                     'position' => 0,
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/publish.png'
         );
         
         $dataRenderer = array(

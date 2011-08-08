@@ -31,7 +31,7 @@ class PageController extends Controller
         return $this->render('KitpagesCmsBundle:Page:toolbar.html.twig', $dataRender);
     }   
    
-    public function viewAction(Page $page, $lng, $urlTitle)
+    public function viewAction(Page $page, $lang, $urlTitle)
     {
        
         $em = $this->getDoctrine()->getEntityManager();
@@ -65,12 +65,12 @@ class PageController extends Controller
             return $this->redirect ($page->getLinkUrl(), 301);
         }
         
-        if ($pageLanguage != $lng || $pageUrlTitle != $urlTitle) {
+        if ($pageLanguage != $lang || $pageUrlTitle != $urlTitle) {
             return $this->redirect ($this->generateUrl(
-                        'kitpages_cms_page_view_lng',
+                        'kitpages_cms_page_view_lang',
                         array(
                             'id' => $pageId,
-                            'lng' => $pageLanguage,
+                            'lang' => $pageLanguage,
                             'urlTitle' => $pageUrlTitle
                         )
                     ), 301); 
@@ -311,17 +311,55 @@ class PageController extends Controller
             $parentId = $pageParent->getId();
         }
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('title', 'text');
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
-        $builder->add('menuTitle', 'text', array('required' => false)); 
-        $builder->add('parent_id','text',array(
-            'attr' => array('class'=>'kit-cms-advanced'),
-            'property_path' => false,
-            'data' => $parentId
-        ));         
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+        $builder->add(
+            'title',
+            'text',
+            array(
+                'label' => "Title of the page",
+                'attr' => array("size" => 80)
+            )
+        );
+        $builder->add(
+            'isInNavigation',
+            'checkbox',
+            array(
+                'label' => "Display in navigation ?",
+                'required' => false
+            )
+        );           
+        $builder->add(
+            'menuTitle',
+            'text',
+            array(
+                'label' => 'Page name in the navigation',
+                'required' => false
+            )
+        ); 
+        $builder->add(
+            'parent_id',
+            'text',
+            array(
+                'label' => 'Id of the parent page',
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'property_path' => false,
+                'data' => $parentId
+            )
+        );         
   
-        $builder->add('language', 'text');
+        $builder->add(
+            'language',
+            'text',
+            array(
+                'label' => "Page language"
+            )
+        );
 
         // build custom form
         $className = $layout['class_data'];
@@ -478,7 +516,8 @@ class PageController extends Controller
                     'position' => 0,
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'icon' => 'icon/add.png'
         );
         
         $dataRenderer = array(

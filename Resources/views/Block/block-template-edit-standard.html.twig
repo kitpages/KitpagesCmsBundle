@@ -2,28 +2,37 @@
 
 {% block editData %}
 
-{{ form_row(form.data.root.title) }}
+{{ form_row(
+    form.data.root.title,
+    {'help' : "Title of the block"}
+) }}
+
 <div>
-    <label>Media 1</label>
-    {% if mediaList.url_media_1|default('') %}<img src="{{mediaList.url_media_1}}"/>{% endif %}
-    {{ form_widget(form.data.root.media_1) }}
-    {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_1'} %}
+    <label>Image</label>
+    {% if mediaList.url_media_mainImage|default('') %}<img src="{{mediaList.url_media_mainImage}}"/>{% endif %}
+    {{ form_widget(form.data.root.media_mainImage) }}
+    {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_mainImage'} %}
 </div>
-<div>
-{{ form_label(form.data.root.body) }}
-{{ form_errors(form.data.root.body) }}
-{{ form_widget(form.data.root.body, {'attr': {'class':'kit-cms-rte-simple'} } ) }}
-</div>
-<div>
-    <label>Media 2</label>
-    {% if mediaList.url_media_2|default('') %}<img src="{{mediaList.url_media_2}}"/>{% endif %}
-    {{ form_widget(form.data.root.media_2) }}
-    {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_2'} %}
-</div>
-<div>
-{{ form_label(form.data.root.displaySeparator) }}
-{{ form_errors(form.data.root.displaySeparator) }}
-{{ form_widget(form.data.root.displaySeparator) }}
-</div>
+
+{{ form_row(
+    form.data.root.imagePosition,
+    {'help' : "Indicates where to place the image"}
+) }}
+
+{{ form_row(
+    form.data.root.mainContent,
+    {'help' : "Content displayed around the image"}
+) }}
+
+{{ form_row(
+    form.data.root.subContent,
+    {'help' : "content displayed under the image"}
+) }}
+
+{{ form_row(
+    form.data.root.displaySeparator,
+    {'help' : "do you want to display a line under your content ?"}
+) }}
+
 {% endblock editData %}
 

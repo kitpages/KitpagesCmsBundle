@@ -10,45 +10,52 @@
     background-color: #FFF;
 }
 
+.kit-cms h1 {
+    font-size: 2.5em;
+}
+.kit-cms h2 {
+    font-size: 1.8em;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #DDD;
+    margin-bottom: 5px;
+}
+.kit-cms h3 {
+    font-size: 1.4em;
+}
+.kit-cms-toolbar-extra-form {
+    padding: 20px;
+}
 .kit-cms-form {
-    display: table;
+    display: block;
     border: 1px solid #D0D0D0;
-    margin-bottom: 20px;
-    width: 100%;
+    padding: 10px;
+    width: 800px;
 }
 .kit-cms-form > div {
-    display: table-row;
-    margin: 2px;
-    border-collapse: separate;
-    border-spacing: 2px;
+    display: block;
+    padding: 4px;
+    border: 1px dotted #F0F0F0;
+    background-color: #F8F8F8;
+    margin-bottom: 10px;
 }
 .kit-cms-form label {
-    display: table-cell;
-    width: 200px;
-    text-align: right;
+    display: block;
     vertical-align: middle;
-    padding: 2px 5px;
-    border-spacing: 2px;
-    border-collapse: separate;
-    margin: 2px;
 }
 .kit-cms-form > div > input {
-    display: table-cell;
-    border-spacing: 2px;
-    border-collapse: separate;
-    margin: 2px;
+    display: block;
 }
 .kit-cms-form > input[type="submit"] {
     display: block;
     padding: 10px;
-    text-align: center;
-    width: 100%;
-    margin-left: 50%;
-    margin-top: 10px;
     margin-bottom: 10px;
 }
+.kit-cms-form-help {
+    font-size: 0.9em;
+    color: #808080;
+}
 
-.kit-cms-rte-simple {
+textarea.kit-cms-rte-simple {
     width: 500px;
     height: 250px;
 }
@@ -114,7 +121,7 @@
 }
 
 .kit-cms-toolbar-page-form {
-    background-color: #F8F8F8;
+    background-color: #FFFFFF;
 }
 
 

@@ -2,7 +2,14 @@
 
 {% block editData %}
 
-{{ form_row(form.data.root.backgroundColor) }}
+{{ form_row(
+    form.data.root.backgroundColor,
+    {'help': 'Ex: #FF0000'} 
+) }}
+{{ form_row(
+    form.data.root.author,
+    {'help': 'Ex: John Smith'} 
+) }}
 
 {% endblock editData %}
 

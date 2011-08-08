@@ -1,0 +1,14 @@
+{% block field_row %}
+{% spaceless %}
+    <div>
+        {{ form_label(form, label|default(null)) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        {% if help is defined %}
+            <div class="kit-cms-form-help">
+                {{ help|raw }}
+            </div>
+        {% endif %}
+    </div>
+{% endspaceless %}
+{% endblock field_row %}

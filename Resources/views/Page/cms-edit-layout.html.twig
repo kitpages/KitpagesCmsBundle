@@ -37,10 +37,5 @@ tinyMCE.init({
 {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
 {% endblock toolbar %}
 #}
-{% form_theme form _self %}
-{% block form_widget %}
-{% spaceless %}
-    {{ block('field_rows') }}
-    {{ form_rest(form) }}
-{% endspaceless %}
-{% endblock form_widget %}
+{% form_theme form "KitpagesCmsBundle:Form:fields.html.twig" %}
+

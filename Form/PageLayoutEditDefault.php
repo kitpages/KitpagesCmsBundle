@@ -11,8 +11,12 @@ class PageLayoutEditDefault extends AbstractType
         $builder->add(
             'backgroundColor',
             'text', 
-            array('required' => false)
+            array(
+                'label' => "Background color",
+                'required' => false
+            )
         );
+        
         $builder->add(
             'author',
             'text', 

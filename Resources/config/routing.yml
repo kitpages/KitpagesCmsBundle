@@ -130,6 +130,14 @@ kitpages_cms_page_undelete:
     requirements:
         id: \d+
 
+kitpages_cms_page_view_lang:
+    pattern:  /{lang}/cms/{id}/{urlTitle}
+    defaults: { _controller: KitpagesCmsBundle:Page:view, lang: fr }
+    requirements:
+        id: \d+ 
+        lang:  en|fr
+
+
 ###
 # Nav
 ###

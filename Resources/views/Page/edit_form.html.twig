@@ -1,15 +1,38 @@
-<h1>Edit page</h1>
+{% form_theme form "KitpagesCmsBundle:Form:fields.html.twig" %}
 
-<form class="kit-cms-form" action="{{ path('kitpages_cms_page_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
 
-    {{ form_errors(form) }}
-  
-    {{ form_row(form.slug) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.language) }}
+<form class="kit-cms kit-cms-form" action="{{ path('kitpages_cms_page_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
+
+    <h2>Edit page</h2>
     
+    {{ form_errors(form) }}
+    
+    <h3>Main values</h3>
+    {{ form_row(
+        form.slug,
+        {'help': "Don't change this value until you know what your are doing"}
+    ) }}
+    {{ form_row(
+        form.title,
+        {'help': "Main title of your page. It is also used in the URL of the page."}
+    ) }}
+    {{ form_row(
+        form.menuTitle,
+        {'help': "Name of the page in the navigation"}
+    ) }}
+    {{ form_row(
+        form.language,
+        {'help': "Ex: fr , en , ..."}
+    ) }}
+    {{ form_row(
+        form.isInNavigation,
+        {'help': "Ex: indicates if the page appears in the navigation."}
+    ) }}
+    
+    <h3>Content values</h3>
     {% block editData %}{% endblock %}
 
     {{ form_rest(form) }}
     <input type="submit" />
 </form>
+

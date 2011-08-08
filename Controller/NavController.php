@@ -38,35 +38,39 @@ class NavController extends Controller
         }
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
-            $currentPage = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($currentPageSlug);            
-            if ($filterByCurrentPage && $currentPage != null) {
-                $page = $em->getRepository('KitpagesCmsBundle:Page')->childOfPageWithForParentOtherPage($page, $currentPage, $startDepth-1);
-                $startDepth = 1;
-            }
-            if ($page != null) {
-                $startLevel = $page->getLevel() + $startDepth;            
-                $endLevel = $page->getLevel() + $endDepth;
-                $navigation = $this->navPageChildren($page, $context->getViewMode(), $startDepth, $endLevel);
+            $currentPage = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($currentPageSlug);
+            if ( (!$filterByCurrentPage) || ($currentPage != null) ) {
+                if ($filterByCurrentPage && $currentPage != null) {
+                    $page = $em->getRepository('KitpagesCmsBundle:Page')->childOfPageWithForParentOtherPage($page, $currentPage, $startDepth-1);
+                    $startDepth = 1;
+                }
+                if ($page != null) {
+                    $startLevel = $page->getLevel() + $startDepth;
+                    $endLevel = $page->getLevel() + $endDepth;
+                    $navigation = $this->navPageChildren($page, $context->getViewMode(), $startDepth, $endLevel);
 
-                if ($currentPage != null) {
-                    $selectParentPageList = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($currentPage, $startLevel, $endLevel);
-                    foreach($selectParentPageList as $selectParentPage) {
-                        $selectPageSlugList[] = $selectParentPage->getSlug();
+                    if ($currentPage != null) {
+                        $selectParentPageList = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($currentPage, $startLevel, $endLevel);
+                        foreach($selectParentPageList as $selectParentPage) {
+                            $selectPageSlugList[] = $selectParentPage->getSlug();
+                        }
                     }
                 }
             }
-//            if ($page->getLevel() <  $startLevel || $page->getLevel() >  $endLevel) {
-//                $currentPageSlug = '';
-//            }
-        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+        }
+
+        elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slug);
-            if ($navPublish != null) {
-                $currentNavPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($currentPageSlug);
+            $currentNavPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($currentPageSlug);
+            if (
+                ($navPublish != null) &&
+                ( (!$filterByCurrentPage) || ($currentNavPublish != null) )
+            ) {
                 if ($filterByCurrentPage && $currentNavPublish != null) {
                     $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->childOfPageWithForParentOtherPage($navPublish, $currentNavPublish, $startDepth-1);
                     $startDepth = 1;
                 }                
-                $startLevel = $navPublish->getLevel() + $startDepth;            
+                $startLevel = $navPublish->getLevel() + $startDepth;
                 $endLevel = $navPublish->getLevel() + $endDepth;
                 $navigation = $this->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
 
@@ -76,11 +80,9 @@ class NavController extends Controller
                         $selectPageSlugList[] = $selectParentNavPublish->getSlug();
                     }
                 }
-//                if ($navPublish->getLevel() <  $startLevel || $navPublish->getLevel() >  $endLevel) {
-//                    $currentPageSlug = '';
-//                }
             }
         }
+        
         return $this->render(
             'KitpagesCmsBundle:Nav:navigation.html.twig',
             array(
@@ -108,10 +110,10 @@ class NavController extends Controller
             );
             if ($pagePublish->getPageType() != 'technical' ) {
                 $navigationElem['url'] = $this->generateUrl(
-                    'kitpages_cms_page_view_lng',
+                    'kitpages_cms_page_view_lang',
                     array(
                         'id' => $navPublishChild->getId(),
-                        'lng' => $pagePublish->getLanguage(),
+                        'lang' => $pagePublish->getLanguage(),
                         'urlTitle' => $pagePublish->getUrlTitle()
                     )
                 );
@@ -138,10 +140,10 @@ class NavController extends Controller
             );
             if ($pageChild->getPageType() != 'technical' ) {
                 $navigationElem['url'] = $this->generateUrl(
-                    'kitpages_cms_page_view_lng',
+                    'kitpages_cms_page_view_lang',
                     array(
                         'id' => $pageChild->getId(),
-                        'lng' => $pageChild->getLanguage(),
+                        'lang' => $pageChild->getLanguage(),
                         'urlTitle' => $pageChild->getUrlTitle()
                     )
                 );
@@ -257,10 +259,10 @@ class NavController extends Controller
             
             if ($page->getPageType() == 'edito') {
                 $pageArbo['url'] = $this->generateUrl(
-                            'kitpages_cms_page_view_lng',
+                            'kitpages_cms_page_view_lang',
                             array(
                                 'id' => $page->getId(),
-                                'lng' => $page->getLanguage(),
+                                'lang' => $page->getLanguage(),
                                 'urlTitle' => $page->getUrlTitle()
                             )
                         );

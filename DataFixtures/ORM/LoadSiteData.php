@@ -32,13 +32,13 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         $em->flush();
         
         //page language
-        $pageLngEn = new Page();
-        $pageLngEn->setSlug('en');
-        $pageLngEn->setIsInNavigation(true);
-        $pageLngEn->setLanguage('en'); 
-        $pageLngEn->setParent($pageRoot);
-        $pageLngEn->setPageType('technical');   
-        $em->persist($pageLngEn);
+        $pageLangEn = new Page();
+        $pageLangEn->setSlug('en');
+        $pageLangEn->setIsInNavigation(true);
+        $pageLangEn->setLanguage('en'); 
+        $pageLangEn->setParent($pageRoot);
+        $pageLangEn->setPageType('technical');   
+        $em->persist($pageLangEn);
         $em->flush();
         
         //pages navigation
@@ -46,7 +46,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         $pageNavMainEn->setSlug('main');
         $pageNavMainEn->setIsInNavigation(true);
         $pageNavMainEn->setLanguage('en'); 
-        $pageNavMainEn->setParent($pageLngEn);
+        $pageNavMainEn->setParent($pageLangEn);
         $pageNavMainEn->setPageType('technical');   
         $em->persist($pageNavMainEn);
         $em->flush();
@@ -55,7 +55,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         $pageNavFooterEn->setSlug('footer');
         $pageNavFooterEn->setIsInNavigation(true);
         $pageNavFooterEn->setLanguage('en'); 
-        $pageNavFooterEn->setParent($pageLngEn);
+        $pageNavFooterEn->setParent($pageLangEn);
         $pageNavFooterEn->setPageType('technical');   
         $em->persist($pageNavFooterEn);
         $em->flush();
