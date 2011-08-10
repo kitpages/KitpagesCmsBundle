@@ -24,7 +24,12 @@ class Context
     
     public function getViewMode()
     {
-        return $this->getSession()->get('kitpages_cms_context_view_mode');
+        $viewMode = $this->getSession()->get('kitpages_cms_context_view_mode');
+        if (!$viewMode) {
+            $this->getSession()->set('kitpages_cms_context_view_mode', self::VIEW_MODE_PROD);
+            $viewMode = self::VIEW_MODE_PROD;
+        }
+        return $viewMode;
     }
     public function setViewMode($viewMode)
     {

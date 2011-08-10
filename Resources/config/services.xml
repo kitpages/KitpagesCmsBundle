@@ -73,6 +73,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="templating"/>
             <argument type="service" id="kitpages.cms.manager.page"/>
+            <argument type="service" id="kitpages.simple_cache"/>
             <argument type="service" id="logger"/>
         </service>
         <service id="kitpages.cms.model.cmsManager" class="%kitpages_cms.cms.cmsManager%">

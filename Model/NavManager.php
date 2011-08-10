@@ -7,6 +7,7 @@ use Kitpages\CmsBundle\Entity\PagePublish;
 use Kitpages\CmsBundle\Entity\NavPublish;
 use Kitpages\CmsBundle\Event\NavEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
+use Kitpages\SimpleCacheBundle\Model\CacheManager;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -27,6 +28,7 @@ class NavManager
     protected $doctrine = null;
     protected $templating = null;
     protected $pageManager = null;
+    protected $cacheManager = null;
     protected $logger = null;
     
     public function __construct(
@@ -34,13 +36,15 @@ class NavManager
         EventDispatcher $dispatcher,
         $templating,
         PageManager $pageManager,
+        CacheManager $cacheManager,
         LoggerInterface $logger
     )
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->templating = $templating;
-        $this->pageManager = $pageManager;        
+        $this->pageManager = $pageManager;
+        $this->cacheManager = $cacheManager;
         $this->logger = $logger;
     }      
 
@@ -110,7 +114,7 @@ class NavManager
         $event = new NavEvent();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavPublish, $event);
         if (! $event->isDefaultPrevented()) {
-            
+            $this->cacheManager->clear('kit-cms-navigation-%');
             $em = $this->getDoctrine()->getEntityManager();
             $query = $em->createQuery('DELETE Kitpages\CmsBundle\Entity\NavPublish np');
             $resultDelete = $query->getResult();
@@ -135,7 +139,6 @@ class NavManager
 
             $em->flush();
         }
-        $event = new NavEvent();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavPublish, $event);
     }
 

@@ -15,7 +15,6 @@ class NavPublishRepository extends NestedTreeRepository
 {
     public function findByNoPagePublish()
     {
-
         $listNavPublish = $this->_em
             ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p LEFT JOIN p.pagePublish pb WHERE pb.id is null')
             ->getResult();

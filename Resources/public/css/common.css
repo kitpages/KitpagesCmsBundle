@@ -50,6 +50,10 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.kit-cms-form label.kit-cms-advanced {
+    background-color: #FFEEEE;
+}
 .kit-cms-form-help {
     font-size: 0.9em;
     color: #808080;

@@ -3,11 +3,14 @@
         <li>
             <a href="{{ path('kitpages_cms_nav_arbo') }}">Tree</a>
         </li>
-        {% if isNavPublished == false %}
+        
         <li>
-            <a href="{{ path('kitpages_cms_nav_publish', { 'kitpages_target' : target }) }}">Publish Navigation</a>
+            <a href="{{ path('kitpages_cms_nav_publish', { 'kitpages_target' : target }) }}">
+                {% if isNavPublished == false %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}"/>{%endif%}
+                Publish Navigation
+            </a>
         </li>
-        {% endif %}
+
         <li>
             <a class="kit-cms-advanced-mode-button">Advanced Mode</a>
         </li>
@@ -15,6 +18,7 @@
             $(".kit-cms-advanced-mode-button").click(function() {
                 $(".kit-cms-advanced").toggle();
                 $(".kit-cms-form .kit-cms-advanced").parent().toggle();
+                $(this).toggleClass('kit-cms-advanced-mode-button-selected');
             });
             $(document).ready(function() {
                 $(".kit-cms-advanced").hide();

@@ -72,7 +72,22 @@ class NavController extends Controller
                 }                
                 $startLevel = $navPublish->getLevel() + $startDepth;
                 $endLevel = $navPublish->getLevel() + $endDepth;
-                $navigation = $this->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
+                
+                // calculate page
+                $cacheManager = $this->get('kitpages.simple_cache');
+                $filterString = 'notfiltered';
+                if ($filterByCurrentPage) {
+                    $filterString = 'filtered';
+                }
+                $viewMode = $context->getViewMode();
+                $myThis = $this;
+                $navigation = $cacheManager->get(
+                    'kit-cms-navigation-'.$context->getViewMode()."-$slug-$filterString-$startDepth-$endDepth",
+                    function() use ($myThis, $navPublish, $viewMode, $startDepth, $endLevel) {
+                        return $myThis->navPublishChildren($navPublish, $viewMode, $startDepth, $endLevel);
+                    }
+                );
+                //$navigation = $this->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
 
                 if ($currentNavPublish != null) {
                     $selectParentNavPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($currentNavPublish, $startLevel, $endLevel);
