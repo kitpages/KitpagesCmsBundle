@@ -9,7 +9,6 @@
 
 <div>
     <label>Image</label>
-    {% if mediaList.url_media_mainImage|default('') %}<img src="{{mediaList.url_media_mainImage}}"/>{% endif %}
     {{ form_widget(form.data.root.media_mainImage) }}
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_mainImage'} %}
 </div>

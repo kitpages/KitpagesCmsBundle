@@ -124,6 +124,11 @@ textarea.kit-cms-rte-simple {
     float: left;
 }
 
+.kit-cms-toolbar-top > ul > li > a.kit-cms-advanced-mode-button-selected {
+    background-color: #BB092D;
+    color: #FFF;    
+}
+
 .kit-cms-toolbar-page-form {
     background-color: #FFFFFF;
 }
