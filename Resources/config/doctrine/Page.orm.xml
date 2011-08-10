@@ -15,6 +15,7 @@
         <field name="language" column="language" type="string" nullable="true" length="250"/>   
         <field name="title" column="title" type="string" nullable="true" length="250" />
         <field name="urlTitle" column="url_title" type="string" nullable="true" length="250" />
+        <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250" unique="true"/>
         <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250" />  
         <field name="pageType" column="page_type" type="string" length="100" />
         <field name="layout" column="layout" type="string" length="250"  nullable="true" />

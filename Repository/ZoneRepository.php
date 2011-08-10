@@ -16,7 +16,13 @@ class ZoneRepository extends EntityRepository
     public function findByPageAndLocation($page, $location) {
         
         $zone = $this->_em
-            ->createQuery('SELECT z FROM KitpagesCmsBundle:Zone z JOIN z.pageZoneList pz WHERE pz.page = :page AND pz.locationInPage = :location')
+            ->createQuery("
+                SELECT z
+                FROM KitpagesCmsBundle:Zone z
+                JOIN z.pageZoneList pz
+                WHERE pz.page = :page
+                  AND pz.locationInPage = :location
+            ")
             ->setParameter("page", $page)
             ->setParameter("location", $location)
             ->getResult();   

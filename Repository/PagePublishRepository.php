@@ -16,5 +16,25 @@ class PagePublishRepository extends EntityRepository
         } else {
             return null;
         }
-     }  
+    }
+     
+    public function findByForcedUrl($url)
+    {
+        $query = $this->_em->createQuery("
+                SELECT p
+                FROM KitpagesCmsBundle:PagePublish p
+                WHERE p.forcedUrl = :forcedUrl
+            ")
+            ->setParameter("forcedUrl", $url);
+        $pagePublishList = $query->getResult();
+        $cnt = count($pagePublishList);
+        if ($cnt === 1) {
+            return $pagePublishList[0];
+        }
+        if ($cnt === 0) {
+            return null;
+        }
+        throw new Exception("Two pagePublish have the same forced URL");
+     }
+
 }

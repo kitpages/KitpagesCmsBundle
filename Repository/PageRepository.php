@@ -7,13 +7,31 @@ class PageRepository extends NestedTreeRepository
 {
    
     public function findByZone($zone)
-    {   
-
+    {
         $listPage = $this->_em
             ->createQuery('SELECT p FROM KitpagesCmsBundle:Page p JOIN p.pageZoneList pz WHERE pz.zone = :zone')
             ->setParameter("zone", $zone)
             ->getResult();        
         return $listPage;
+    }
+    
+    public function findByForcedUrl($url)
+    {
+        $query = $this->_em->createQuery("
+                SELECT p
+                FROM KitpagesCmsBundle:Page p
+                WHERE p.forcedUrl = :forcedUrl
+            ")
+            ->setParameter("forcedUrl", $url);
+        $pageList = $query->getResult();
+        $cnt = count($pageList);
+        if ($cnt === 1) {
+            return $pageList[0];
+        }
+        if ($cnt === 0) {
+            return null;
+        }
+        throw new Exception("Two pages have the same forced URL");
      }
 
     public function childrenOfDepth(Page $page, $depth)
@@ -39,7 +57,14 @@ class PageRepository extends NestedTreeRepository
     public function parentBetweenTwoDepth(Page $page, $startLevel, $endLevel)
     {   
         $listPage = $this->_em
-            ->createQuery('SELECT p FROM KitpagesCmsBundle:Page p WHERE p.right > :right AND p.left < :left AND p.level >= :levelMin AND p.level <= :levelMax')
+            ->createQuery("
+                SELECT p
+                FROM KitpagesCmsBundle:Page p
+                WHERE p.right > :right
+                  AND p.left < :left
+                  AND p.level >= :levelMin
+                  AND p.level <= :levelMax
+              ")
             ->setParameter("right", $page->getRight())
             ->setParameter("left", $page->getLeft())
             ->setParameter("levelMin", $startLevel)

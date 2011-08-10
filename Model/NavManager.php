@@ -114,12 +114,17 @@ class NavManager
             $em = $this->getDoctrine()->getEntityManager();
             $query = $em->createQuery('DELETE Kitpages\CmsBundle\Entity\NavPublish np');
             $resultDelete = $query->getResult();
-            $query = $em->getConnection()->executeUpdate("INSERT INTO cms_nav_publish (id, parent_id, page_id, lft, rgt, lvl, root, title, slug) SELECT id, parent_id, id, lft, rgt, lvl, root, menu_title, slug FROM cms_page order by lft");
+            $query = $em->getConnection()->executeUpdate("
+                INSERT INTO cms_nav_publish
+                (id, parent_id, page_id, lft, rgt, lvl, root, title, slug, forced_url)
+                SELECT id, parent_id, id, lft, rgt, lvl, root, menu_title, slug, forced_url
+                FROM cms_page order by lft
+            ");
 
             $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->findByPageIsNotInNavigation();
             foreach($navPublishList as $navPublish) {
                 $em->getRepository('KitpagesCmsBundle:NavPublish')->removeWithChildren($navPublish);
-            } 
+            }
 
             $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->findByNoPagePublish();
             foreach($navPublishList as $navPublish) {

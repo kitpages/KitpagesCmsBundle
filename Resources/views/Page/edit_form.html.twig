@@ -13,6 +13,10 @@
         {'help': "Don't change this value until you know what your are doing"}
     ) }}
     {{ form_row(
+        form.forcedUrl,
+        {'help': "If you want to force a different custom URL for this page<br/>Ex: fr/my-company (without '/' at the beginning)"}
+    ) }}
+    {{ form_row(
         form.title,
         {'help': "Main title of your page. It is also used in the URL of the page."}
     ) }}

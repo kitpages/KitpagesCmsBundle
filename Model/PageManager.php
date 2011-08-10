@@ -220,6 +220,7 @@ class PageManager
         }
     }
 
+
     ////
     // doctrine events
     ////

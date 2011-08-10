@@ -101,22 +101,30 @@ class NavController extends Controller
         $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->childrenOfDepth($navPublish, $currentDepth);
         $listNavigationElem = array();
         foreach($navPublishList as $navPublishChild) {
-            $pagePublish = $navPublishChild->getPage()->getPagePublish();
+            $page = $navPublishChild->getPage();
+            $pagePublish = $page->getPagePublish();
             $navigationElem = array(
                 'slug' => $navPublishChild->getSlug(),                
                 'title' => $navPublishChild->getTitle(),
                 'level' => $navPublishChild->getLevel(),   
                 'url' => ''                 
             );
-            if ($pagePublish->getPageType() != 'technical' ) {
-                $navigationElem['url'] = $this->generateUrl(
-                    'kitpages_cms_page_view_lang',
-                    array(
-                        'id' => $navPublishChild->getId(),
-                        'lang' => $pagePublish->getLanguage(),
-                        'urlTitle' => $pagePublish->getUrlTitle()
-                    )
-                );
+            if ($pagePublish->getPageType() == 'link' ) {
+                $navigationElem['url'] = $page->getLinkUrl();
+            } 
+            if ($pagePublish->getPageType() == 'edito' ) {
+                if ($pagePublish->getForcedUrl()) {
+                    $navigationElem['url'] = $this->getRequest()->getBaseUrl().$pagePublish->getForcedUrl();
+                } else {
+                    $navigationElem['url'] = $this->generateUrl(
+                        'kitpages_cms_page_view_lang',
+                        array(
+                            'id' => $navPublishChild->getId(),
+                            'lang' => $pagePublish->getLanguage(),
+                            'urlTitle' => $pagePublish->getUrlTitle()
+                        )
+                    );
+                }
             } 
             $navigationElem['children'] = array();
             if ($navPublishChild->getLevel() < $endLevel) {            
@@ -138,15 +146,22 @@ class NavController extends Controller
                 'level' => $pageChild->getLevel(),
                 'url' => ''
             );
-            if ($pageChild->getPageType() != 'technical' ) {
-                $navigationElem['url'] = $this->generateUrl(
-                    'kitpages_cms_page_view_lang',
-                    array(
-                        'id' => $pageChild->getId(),
-                        'lang' => $pageChild->getLanguage(),
-                        'urlTitle' => $pageChild->getUrlTitle()
-                    )
-                );
+            if ($pageChild->getPageType() == 'link' ) {
+                $navigationElem['url'] = $pageChild->getLinkUrl();
+            }
+            if ($pageChild->getPageType() == 'edito' ) {
+                if ($pageChild->getForcedUrl()) {
+                    $navigationElem['url'] = $this->getRequest()->getBaseUrl().$pageChild->getForcedUrl();
+                } else {
+                    $navigationElem['url'] = $this->generateUrl(
+                        'kitpages_cms_page_view_lang',
+                        array(
+                            'id' => $pageChild->getId(),
+                            'lang' => $pageChild->getLanguage(),
+                            'urlTitle' => $pageChild->getUrlTitle()
+                        )
+                    );
+                }
             }
             $navigationElem['children'] = array();
             if ($pageChild->getLevel() < $endLevel) {

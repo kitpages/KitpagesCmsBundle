@@ -275,4 +275,29 @@ class NavPublish
     {
         return $this->parent;
     }
+    /**
+     * @var string $forcedUrl
+     */
+    private $forcedUrl;
+
+
+    /**
+     * Set forcedUrl
+     *
+     * @param string $forcedUrl
+     */
+    public function setForcedUrl($forcedUrl)
+    {
+        $this->forcedUrl = $forcedUrl;
+    }
+
+    /**
+     * Get forcedUrl
+     *
+     * @return string 
+     */
+    public function getForcedUrl()
+    {
+        return $this->forcedUrl;
+    }
 }

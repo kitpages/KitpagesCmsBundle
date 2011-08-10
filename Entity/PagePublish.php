@@ -196,7 +196,8 @@ class PagePublish
         $this->setPageType($page->getPageType());
         $this->setLayout($page->getLayout());      
         $this->setLanguage($page->getLanguage());          
-        $this->setUrlTitle($page->getUrlTitle());        
+        $this->setUrlTitle($page->getUrlTitle());   
+        $this->setForcedUrl($page->getForcedUrl());
         $this->setPage($page);
     }
     
@@ -274,5 +275,30 @@ class PagePublish
     public function getLayout()
     {
         return $this->layout;
+    }
+    /**
+     * @var string $forcedUrl
+     */
+    private $forcedUrl;
+
+
+    /**
+     * Set forcedUrl
+     *
+     * @param string $forcedUrl
+     */
+    public function setForcedUrl($forcedUrl)
+    {
+        $this->forcedUrl = $forcedUrl;
+    }
+
+    /**
+     * Get forcedUrl
+     *
+     * @return string 
+     */
+    public function getForcedUrl()
+    {
+        return $this->forcedUrl;
     }
 }

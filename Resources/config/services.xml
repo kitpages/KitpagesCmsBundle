@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="kitpages_cms.cms.context">Kitpages\CmsBundle\Controller\Context</parameter>
+        <parameter key="kitpages_cms.pageListener.class">Kitpages\CmsBundle\EventListener\PageListener</parameter>
         <parameter key="kitpages_cms.cms.navManager">Kitpages\CmsBundle\Model\NavManager</parameter>   
         <parameter key="kitpages_cms.cms.pageManager">Kitpages\CmsBundle\Model\PageManager</parameter>        
         <parameter key="kitpages_cms.cms.zoneManager">Kitpages\CmsBundle\Model\ZoneManager</parameter>
@@ -27,14 +28,6 @@
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterBlockModify" />            
         </service>          
         <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
-<!--
-            <tag name="kernel.event_listener" event="kitpages.cms.block.on.publish" method="onPublish" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.after.publish" method="afterPublish" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterModify" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.on.delete" method="onDelete" />
-            <tag name="kernel.event_listener" event="kitpages.cms.block.after.delete" method="afterDelete" />
--->
-
             <tag name="doctrine.event_listener" event="prePersist" /> 
             <tag name="doctrine.event_listener" event="postPersist" /> 
             <tag name="doctrine.event_listener" event="preUpdate" />
@@ -83,9 +76,16 @@
             <argument type="service" id="logger"/>
         </service>
         <service id="kitpages.cms.model.cmsManager" class="%kitpages_cms.cms.cmsManager%">
-            <tag name="kernel.event_listener" event="core.controller" method="onCoreController" />
+            <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController" />
             <argument type="service" id="doctrine"/>
             <argument>%kitpages_cms.page.default_layout%</argument>
+            <argument type="service" id="logger"/>
+        </service>
+        <service id="kitpages_cms.pageListener" class="%kitpages_cms.pageListener.class%">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="100" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="kitpages.cms.controller.context"/>
+            <argument type="service" id="router"/>
             <argument type="service" id="logger"/>
         </service>
     </services>

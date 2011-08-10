@@ -33,7 +33,6 @@ class PageController extends Controller
    
     public function viewAction(Page $page, $lang, $urlTitle)
     {
-       
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $pageId = $page->getId();
@@ -41,6 +40,7 @@ class PageController extends Controller
         $pageLanguage = $page->getLanguage();
         $pageUrlTitle = $page->getUrlTitle();
         $pageLayout = $page->getLayout();
+        $forcedUrl = $page->getForcedUrl();
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
@@ -54,7 +54,7 @@ class PageController extends Controller
             $pageLanguage = $pagePublish->getLanguage();
             $pageUrlTitle = $pagePublish->getUrlTitle();
             $pageLayout = $pagePublish->getLayout();
-
+            $forcedUrl = $pagePublish->getForcedUrl();
         }
         
         if ($pageType == "technical") {
@@ -65,22 +65,37 @@ class PageController extends Controller
             return $this->redirect ($page->getLinkUrl(), 301);
         }
         
-        if ($pageLanguage != $lang || $pageUrlTitle != $urlTitle) {
-            return $this->redirect ($this->generateUrl(
-                        'kitpages_cms_page_view_lang',
-                        array(
-                            'id' => $pageId,
-                            'lang' => $pageLanguage,
-                            'urlTitle' => $pageUrlTitle
-                        )
-                    ), 301); 
+        if ($forcedUrl && ($forcedUrl != $this->getRequest()->getPathInfo() ) ) {
+            return $this->redirect(
+                $this->getRequest()->getBaseUrl().$forcedUrl
+            );
+        }
+        
+        if ( ($pageLanguage != $lang) || ($pageUrlTitle != $urlTitle) ) {
+            return $this->redirect (
+                $this->generateUrl(
+                    'kitpages_cms_page_view_lang',
+                    array(
+                        'id' => $pageId,
+                        'lang' => $pageLanguage,
+                        'urlTitle' => $pageUrlTitle
+                    )
+                ),
+                301
+            );
         }
      
         $cmsManager = $this->get('kitpages.cms.model.cmsManager');
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$pageLayout);
         $cmsManager->setLayout($layout['twig']);
         
-        return $this->render('KitpagesCmsBundle:page:layout.html.twig', array('viewMode' => $context->getViewMode(), 'page' => $page));        
+        return $this->render(
+            'KitpagesCmsBundle:page:layout.html.twig',
+            array(
+                'viewMode' => $context->getViewMode(),
+                'page' => $page
+            )
+        );        
     }
 
     public function widgetZoneAction($location_in_page, Page $page) {
@@ -93,13 +108,13 @@ class PageController extends Controller
         
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = $this->get('templating.helper.actions')->render(
-                    "KitpagesCmsBundle:Zone:widget", 
-                    array(
-                        "slug" => $zone->getSlug(),
-                        "renderer" =>$layout['zone_list'][$location_in_page]['render'],
-                        'displayToolbar' => false
-                    ),
-                    array()
+            "KitpagesCmsBundle:Zone:widget", 
+            array(
+                "slug" => $zone->getSlug(),
+                "renderer" =>$layout['zone_list'][$location_in_page]['render'],
+                'displayToolbar' => false
+            ),
+            array()
         );
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $resultingHtml = $this->toolbarZone($zone, $resultingHtml);
@@ -319,11 +334,23 @@ class PageController extends Controller
             )
         );
         $builder->add(
+            'forcedUrl',
+            'text',
+            array(
+                'label' => 'Forced Url',
+                'required' => false,
+                'attr' => array(
+                    'class'=>'kit-cms-advanced',
+                    'size' => '100'
+                )
+            )
+        );
+        $builder->add(
             'title',
             'text',
             array(
                 'label' => "Title of the page",
-                'attr' => array("size" => 80)
+                'attr' => array("size" => '100')
             )
         );
         $builder->add(

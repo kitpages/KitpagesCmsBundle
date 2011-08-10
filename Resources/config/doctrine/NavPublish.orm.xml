@@ -11,6 +11,7 @@
         </id>
         <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
         <field name="title" column="title" type="string" nullable="true" length="250"/>
+        <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250"/>
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="left" column="lft" type="integer">

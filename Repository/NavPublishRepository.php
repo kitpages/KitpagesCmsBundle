@@ -14,17 +14,16 @@ use Kitpages\CmsBundle\Entity\NavPublish;
 class NavPublishRepository extends NestedTreeRepository
 {
     public function findByNoPagePublish()
-    {   
+    {
 
         $listNavPublish = $this->_em
             ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p LEFT JOIN p.pagePublish pb WHERE pb.id is null')
-            ->getResult();        
+            ->getResult();
         return $listNavPublish;
-     }   
+     }
  
     public function findByPageIsNotInNavigation()
-    {   
-
+    {
         $listNavPublish = $this->_em
             ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p WHERE p.isInNavigation = 0')
             ->getResult();        
@@ -35,13 +34,15 @@ class NavPublishRepository extends NestedTreeRepository
     {
 
         // remove the node from database
-        $dql = "DELETE KitpagesCmsBundle:NavPublish np";
-        $dql .= " WHERE np.left >= :left AND np.right <= :right";
+        $dql = "
+            DELETE KitpagesCmsBundle:NavPublish np
+            WHERE np.left >= :left AND np.right <= :right
+        ";
         $this->_em
-                ->createQuery($dql)
-                ->setParameter("left", $navPublish->getLeft())
-                ->setParameter("right", $navPublish->getRight())
-                ->getResult();
+            ->createQuery($dql)
+            ->setParameter("left", $navPublish->getLeft())
+            ->setParameter("right", $navPublish->getRight())
+            ->getResult();
 
     }
     
