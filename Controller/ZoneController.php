@@ -45,12 +45,17 @@ class ZoneController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $em->persist($zone);
                 $em->flush();
-
+                $target = $request->query->get('kitpages_target', null);
+                if ($target) {
+                    return $this->redirect($target);
+                }
                 return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
             }
         }
         return $this->render('KitpagesCmsBundle:Zone:create.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
+            
         ));
     }
 
@@ -165,13 +170,22 @@ class ZoneController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
         
-        if ($zone == null) {
-            return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
-        }
         
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+            if ($zone == null) {
+                return new Response(
+                    'Please '.
+                    '<a href="'.
+                    $this->generateUrl(
+                        "kitpages_cms_zone_create",
+                        array("kitpages_target"=>$_SERVER["REQUEST_URI"])
+                    ).
+                    '">create a zone</a> with the slug "'. $slug.'"'
+                );
+            }
+
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block);
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
@@ -189,7 +203,11 @@ class ZoneController extends Controller
             }
         }
         
-        elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+        if ($zone == null) {
+            return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
+        }
+
+        if ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 

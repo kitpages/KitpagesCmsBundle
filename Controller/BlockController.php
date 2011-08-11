@@ -220,7 +220,15 @@ class BlockController extends Controller
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $slug));
             if ($block == null) {
-                return new Response('Please create a block with the slug "'.htmlspecialchars($slug).'"');
+                return new Response(
+                    'Please '.
+                    '<a href="'.
+                    $this->generateUrl(
+                        "kitpages_cms_block_create",
+                        array("kitpages_target"=>$_SERVER["REQUEST_URI"])
+                    ).
+                    '">create a block</a> with the slug "'. $slug.'"'
+                );
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
