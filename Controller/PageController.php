@@ -90,7 +90,7 @@ class PageController extends Controller
         $cmsManager->setLayout($layout['twig']);
         
         return $this->render(
-            'KitpagesCmsBundle:page:layout.html.twig',
+            'KitpagesCmsBundle:Page:layout.html.twig',
             array(
                 'viewMode' => $context->getViewMode(),
                 'page' => $page
