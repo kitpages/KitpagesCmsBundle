@@ -378,13 +378,14 @@ class PageController extends Controller
                 'property_path' => false,
                 'data' => $parentId
             )
-        );         
-  
+        );
+
         $builder->add(
             'language',
             'text',
             array(
-                'label' => "Page language"
+                'label' => "Page language",
+                'attr' => array('class'=>'kit-cms-advanced')
             )
         );
 
@@ -443,6 +444,15 @@ class PageController extends Controller
         }        
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
+        $builder->add(
+            'language',
+            'text',
+            array(
+                'label' => "Page language",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
          $builder->add('parent_id','text',array(
@@ -497,6 +507,15 @@ class PageController extends Controller
         $builder->add('title', 'text'); 
         $builder->add('isInNavigation', 'checkbox', array('required' => false));           
         $builder->add('menuTitle', 'text', array('required' => false)); 
+        $builder->add(
+            'language',
+            'text',
+            array(
+                'label' => "Page language",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+
         $builder->add('linkUrl', 'text');    
         $builder->add('parent_id','text',array(
             'property_path' => false,
