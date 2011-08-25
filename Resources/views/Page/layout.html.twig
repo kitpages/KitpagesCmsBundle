@@ -2,7 +2,7 @@
 
 {% block siteNavigation %}
     {% render 'KitpagesCmsBundle:Nav:widget' with {
-        'slug':cms.currentLanguage,
+        'slug':'site',
         'cssClass': "kit-cms-navigation-top",
         'currentPageSlug':page.slug|default(''),
         'startDepth':1 ,
@@ -12,7 +12,7 @@
 
 {% block mainNavigation %}
     {% render 'KitpagesCmsBundle:Nav:widget' with {
-        'slug':cms.currentLanguage,
+        'slug':'main',
         'cssClass': "kit-cms-navigation-main",
         'currentPageSlug':page.slug|default(''),
         'startDepth':2 ,
