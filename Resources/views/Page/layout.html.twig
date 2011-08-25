@@ -4,7 +4,7 @@
     {% render 'KitpagesCmsBundle:Nav:widget' with {
         'slug':'site',
         'cssClass': "kit-cms-navigation-top",
-        'currentPageSlug':page.slug|default(''),
+        'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':1 ,
         'endDepth':1} 
     %}
@@ -14,7 +14,7 @@
     {% render 'KitpagesCmsBundle:Nav:widget' with {
         'slug':'main',
         'cssClass': "kit-cms-navigation-main",
-        'currentPageSlug':page.slug|default(''),
+        'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':2 ,
         'endDepth':2} 
     %}
@@ -25,7 +25,7 @@
     {% render 'KitpagesCmsBundle:Nav:widget' with {
         'slug':'footer',
         'cssClass': "kitpages-cms-navigation-footer",
-        'currentPageSlug':page.slug|default('')}
+        'currentPageSlug':kitCmsPage.slug|default('')}
     %}
 {% endblock  footerNavigation %}
 
@@ -40,7 +40,7 @@
         <div class="kit-cms kit-cms-toolbar">
         {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
         {% if (viewMode is defined) and ( (viewMode == 2) or (viewMode == 3) ) %}
-            {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':page} %}
+            {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':kitCmsPage} %}
         {% endif %}
         </div>
         <script>

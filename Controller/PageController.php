@@ -25,7 +25,7 @@ class PageController extends Controller
         $context = $this->get('kitpages.cms.controller.context');
         $dataRender = array(
             'viewMode' => $context->getViewMode(),
-            'page' => $page,
+            'kitCmsPage' => $page,
             'target' => $_SERVER["REQUEST_URI"]
         );
         return $this->render('KitpagesCmsBundle:Page:toolbar.html.twig', $dataRender);
@@ -93,7 +93,7 @@ class PageController extends Controller
             'KitpagesCmsBundle:Page:layout.html.twig',
             array(
                 'viewMode' => $context->getViewMode(),
-                'page' => $page
+                'kitCmsPage' => $page
             )
         );        
     }
