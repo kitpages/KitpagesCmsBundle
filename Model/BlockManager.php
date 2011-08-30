@@ -107,7 +107,9 @@ class BlockManager
      * @param array|null $listMediaUrl
      * @return type 
      */
-    public function render($renderer, $blockData, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
+    public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
+        $blockData = $block->getData();
+        $blockData['block']['slug'] = $block->getSlug();
         if (is_bool($viewMode)) {
             throw new Exception("boolean viewMode, strange");
         }
@@ -198,56 +200,6 @@ class BlockManager
     ////
     // doctrine events
     ////
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $entity = $event->getEntity();
-        if ($entity instanceof Block) {
-            $blockSlug = $entity->getSlug();
-            if(empty($blockSlug)) {
-                $entity->setSlug('block_ID');
-            }
-        }
-    }
-    public function postPersist(LifecycleEventArgs $event)
-    {    
-        /* Event BLOCK */
-        $entity = $event->getEntity();
-        if ($event->getEntity() instanceof Block) {
-            if($entity->getSlug() == 'block_ID') {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-        }    
-    }
-    
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-//        $uom = $em->getUnitOfWork();
-        
-        /* Event BLOCK */
-        if ($entity instanceof Block) {
-            $blockSlug = $entity->getSlug();
-            if(empty($blockSlug)) {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-            
-//            if ($eventArgs->hasChangedField('data')) {
-//                $entity->setRealUpdatedAt(new \DateTime());
-//                $entity->setIsPublished(false);
-//                if ($entity->getIsPublished() == 1) {
-//                    $entity->setUnpublishedAt(new \DateTime());
-//                }
-//                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
-//            }
-           
-        }
-    }         
+  
     
 }

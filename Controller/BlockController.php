@@ -250,7 +250,7 @@ class BlockController extends Controller
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml .= '<div class="kit-cms-block-container">'.
-                        $blockManager->render($dataRenderer[$renderer], $block->getData(), $context->getViewMode()).
+                        $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode()).
                         '</div>';
                 }
             }
@@ -263,7 +263,7 @@ class BlockController extends Controller
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 if (!is_null($block->getData())) {                
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
-                    $resultingHtml = $blockManager->render($dataRenderer[$renderer], $block->getData(), $context->getViewMode());
+                    $resultingHtml = $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode());
                 }
             }          
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {

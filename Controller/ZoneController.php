@@ -28,15 +28,16 @@ class ZoneController extends Controller
     
     public function createAction()
     {
+        $request = $this->get('request');        
         $zone = new Zone();
-
+        $zone->setSlug($request->query->get('kitpagesZoneSlugDefault', null));
         // build basic form
         $builder = $this->createFormBuilder($zone);
         $builder->add('slug', 'text');
         // get form
         $form = $builder->getForm();
         
-        $request = $this->get('request');
+
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
@@ -55,7 +56,6 @@ class ZoneController extends Controller
         return $this->render('KitpagesCmsBundle:Zone:create.html.twig', array(
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
-            
         ));
     }
 
@@ -166,13 +166,17 @@ class ZoneController extends Controller
     } 
     
     
-    public function widgetAction($slug, $renderer = 'default', $displayToolbar = true) {
+    public function widgetAction($slug, $renderer = 'default', 
+            $displayToolbar = true, $displayPagerBegin = false, $displayPagerEnd = false, $zoneSize = 10, $zonePage = 1, $zonePagerUrlTemplate = '',
+            $nbBlockDisplay = null, $blockOrder = 'asc'
+            ) {
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
         
         
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
+        $paginatorHtml = '';
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             if ($zone == null) {
                 return new Response(
@@ -180,20 +184,42 @@ class ZoneController extends Controller
                     '<a href="'.
                     $this->generateUrl(
                         "kitpages_cms_zone_create",
-                        array("kitpages_target"=>$_SERVER["REQUEST_URI"])
+                        array(
+                            "kitpages_target"=>$_SERVER["REQUEST_URI"],
+                            "kitpagesZoneSlugDefault"=>$slug
+                        )
                     ).
                     '">create a zone</a> with the slug "'. $slug.'"'
                 );
             }
+            // PAGER
+            if ($displayPagerBegin || $displayPagerEnd) {
+                $adapter = $this->get('knp_paginator.adapter');
+                $adapter->setQuery($em->getRepository('KitpagesCmsBundle:Block')->queryFindByZone($zone, $blockOrder, $nbBlockDisplay));
+                $adapter->setDistinct(true);
+                $paginator = new \Zend\Paginator\Paginator($adapter);                
+                $paginator->setCurrentPageNumber($zonePage);
+                $paginator->setItemCountPerPage($zoneSize);
 
-            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+                $paginatorHtml .= $this->renderView("KitpagesCmsBundle:Zone:pager.html.twig", array(
+                    'paginator' =>$paginator, 'kitCmsPagerTemplate' => $zonePagerUrlTemplate
+                ));
+                if ($displayPagerBegin) {
+                    $resultingHtml .= $paginatorHtml;
+                }
+                $blockList = $paginator;
+            } else {
+                $blockList = $em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone, $blockOrder, $nbBlockDisplay);
+            }
+
+            foreach($blockList as $block){
                 $resultingHtml .= $this->toolbarBlock($zone, $block);
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
                     array(
                         "slug" => $block->getSlug(),
                         "renderer" =>$renderer,
-                        'displayToolbar' => false
+                        "displayToolbar" => false
                     ),
                     array()
                 );
@@ -201,14 +227,31 @@ class ZoneController extends Controller
             if ($displayToolbar) {
                 $resultingHtml = $this->toolbar($zone, $resultingHtml);
             }
-        }
-        
-        if ($zone == null) {
-            return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
-        }
-
-        if ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
-            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+            
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+            if ($zone == null) {
+                return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
+            }
+            
+            // PAGER
+            if ($displayPagerBegin || $displayPagerEnd) {
+                $adapter = $this->get('knp_paginator.adapter');
+                $adapter->setQuery($em->getRepository('KitpagesCmsBundle:Block')->queryFindByZone($zone, $blockOrder, $nbBlockDisplay));
+                $adapter->setDistinct(true);
+                $paginator = new \Zend\Paginator\Paginator($adapter);                
+                $paginator->setCurrentPageNumber($zonePage);
+                $paginator->setItemCountPerPage($zoneSize);
+                $paginatorHtml .= $this->renderView($zonePagerUrlTemplate, array(
+                    'paginator' =>$paginator
+                ));
+                if ($displayPagerBegin) {
+                    $resultingHtml .= $paginatorHtml;
+                }
+                $blockList = $paginator;
+            } else {
+                $blockList = $em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone, $blockOrder, $nbBlockDisplay);
+            }            
+            foreach($blockList as $block){
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget", 
                     array(
@@ -219,12 +262,31 @@ class ZoneController extends Controller
                 );
             }
         }
-        
         elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $zonePublish = $zone->getZonePublish();
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();
-                foreach($zonePublishData['blockPublishList'] as $blockPublishId){
+                if ($blockOrder == 'desc') {
+                    $blockList = $zonePublishData['blockPublishList'][$renderer];
+                } else {
+                    $blockList = $zonePublishData['blockPublishList'][$renderer];
+                }
+                //$blockList = $nbBlockDisplay;
+                // PAGER
+                if ($displayPagerBegin || $displayPagerEnd) {
+                    $paginator = \Zend\Paginator\Paginator::factory($blockList);
+                    $paginator->setCurrentPageNumber($zonePage);
+                    $paginator->setItemCountPerPage($zoneSize);
+                    $paginatorHtml .= $this->renderView($zonePagerUrlTemplate, array(
+                        'paginator' =>$paginator
+                    ));
+                    if ($displayPagerBegin) {
+                        $resultingHtml .= $paginatorHtml;
+                    }
+                    $blockList = $paginator;
+                }                 
+                
+                foreach($blockList as $blockPublishId){
                     $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
                     $blockPublishData = $blockPublish->getData();
                     if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
@@ -236,6 +298,12 @@ class ZoneController extends Controller
                 return new Response('This zone is not published');
             }
         } 
+        
+        if ($displayPagerEnd) {
+            $resultingHtml .= $paginatorHtml;
+        }
+
+        
         return new Response($resultingHtml);
     }
 

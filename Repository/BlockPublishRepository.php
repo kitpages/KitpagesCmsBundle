@@ -57,5 +57,23 @@ class BlockPublishRepository extends EntityRepository
             ->getResult();
         return $listBlockPublish;
     }
+
+    public function findByZoneAndRenderer($zone, $renderer)
+    {      
+        $listBlockPublish = $this->_em
+            ->createQuery("
+                SELECT bp
+                FROM KitpagesCmsBundle:BlockPublish bp
+                JOIN bp.block b
+                JOIN b.zoneBlockList zb
+                WHERE zb.zone = :zone
+                AND bp.renderer = :renderer                
+                ORDER BY zb.position ASC
+            ")
+            ->setParameter("zone", $zone)
+            ->setParameter("renderer", $renderer)                
+            ->getResult();
+        return $listBlockPublish;
+    }
     
 }

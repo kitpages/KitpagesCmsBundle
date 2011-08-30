@@ -1,0 +1,10 @@
+{% autoescape false %}
+<div class="app-block-standard">
+    
+    <h2>News {% if data.root.title|default('') %}{{data.root.title}}{% endif %}</h2>
+    {% if data.root.date|default('') %}date:{{data.root.date}}{% endif %}<br />
+    
+    {% if data.root.content|default('') %}<div>{{data.root.content}}</div>{%endif%}
+    
+</div>
+{% endautoescape %}

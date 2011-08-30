@@ -27,21 +27,18 @@ class PageManager
     ////
     protected $dispatcher = null;
     protected $doctrine = null;
-    protected $templating = null;
     protected $zoneManager = null;
     protected $logger = null;
     
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
-        $templating,
         ZoneManager $zoneManager,
         LoggerInterface $logger
     )
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
-        $this->templating = $templating;
         $this->zoneManager = $zoneManager;        
         $this->logger = $logger;
     }      
@@ -52,13 +49,6 @@ class PageManager
     public function getDispatcher() {
         return $this->dispatcher;
     }  
-    
-    /**
-     * @return $templating
-     */
-    public function getTemplating() {
-        return $this->templating;
-    }    
     
     /**
      * @return Registry $doctrine
@@ -221,49 +211,6 @@ class PageManager
     }
 
 
-    ////
-    // doctrine events
-    ////
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $entity = $event->getEntity();
-        if ($entity instanceof Page) {
-            $pageSlug = $entity->getSlug();
-            if(empty($pageSlug)) {
-                $entity->setSlug('page_ID');
-            }
-        }
-    }
-    public function postPersist(LifecycleEventArgs $event)
-    {    
-        /* Event Page */
-        $entity = $event->getEntity();
-        if ($event->getEntity() instanceof Page) {
-            if($entity->getSlug() == 'page_ID') {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-        }    
-    }
-    
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        
-        /* Event Page */
-        if ($entity instanceof Page) {
-            $pageSlug = $entity->getSlug();
-            if(empty($pageSlug)) {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-            
-        }
-    }  
+ 
     
 }

@@ -26,7 +26,6 @@ class NavManager
     ////
     protected $dispatcher = null;
     protected $doctrine = null;
-    protected $templating = null;
     protected $pageManager = null;
     protected $cacheManager = null;
     protected $logger = null;
@@ -34,7 +33,6 @@ class NavManager
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
-        $templating,
         PageManager $pageManager,
         CacheManager $cacheManager,
         LoggerInterface $logger
@@ -42,7 +40,6 @@ class NavManager
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
-        $this->templating = $templating;
         $this->pageManager = $pageManager;
         $this->cacheManager = $cacheManager;
         $this->logger = $logger;
@@ -54,13 +51,6 @@ class NavManager
     public function getDispatcher() {
         return $this->dispatcher;
     }  
-    
-    /**
-     * @return $templating
-     */
-    public function getTemplating() {
-        return $this->templating;
-    }    
     
     /**
      * @return Registry $doctrine
@@ -164,33 +154,6 @@ class NavManager
             $this->unpublish();
         }
     }
-    ////
-    // doctrine events
-    ////
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $entity = $event->getEntity();
-        if ($entity instanceof Page) {
-            if($entity->getIsInNavigation() == 1) {
-                $this->unpublish();
-            }
-        }
-    }
-    
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        
-        /* Event PAGE */
-        if ($entity instanceof Page) {
-            if($eventArgs->hasChangedField('isInNavigation') 
-                || (!$eventArgs->hasChangedField('isInNavigation') && $entity->getIsInNavigation() == 1 && $eventArgs->hasChangedField('menuTitle'))
-                || (!$eventArgs->hasChangedField('isInNavigation') && $entity->getIsInNavigation() == 1 && $eventArgs->hasChangedField('parent'))) {
-                $this->unpublish();
-            }
-     
-        }
-    }   
+  
     
 }

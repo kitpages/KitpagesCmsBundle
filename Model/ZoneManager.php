@@ -25,21 +25,18 @@ class ZoneManager
     ////
     protected $dispatcher = null;
     protected $doctrine = null;
-    protected $templating = null;
     protected $blockManager = null;
     protected $logger = null;
     
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
-        $templating,
         $blockManager,
         LoggerInterface $logger
     )
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
-        $this->templating = $templating;
         $this->blockManager = $blockManager;
         $this->logger = $logger;
     }      
@@ -50,13 +47,6 @@ class ZoneManager
     public function getDispatcher() {
         return $this->dispatcher;
     }  
-    
-    /**
-     * @return $templating
-     */
-    public function getTemplating() {
-        return $this->templating;
-    }    
     
     /**
      * @return Registry $doctrine
@@ -109,7 +99,7 @@ class ZoneManager
             // create zone publish
             $blockPublishList = array();
             foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZone($zone) as $blockPublish){
-                $blockPublishList[] = $blockPublish->getId();
+                $blockPublishList[$blockPublish->getRenderer()][] = $blockPublish->getId();
             }
             $zonePublishNew = new ZonePublish();
             $zonePublishNew->initByZone($zone);
@@ -255,59 +245,6 @@ class ZoneManager
         $em->flush();
     }
     
-    ////
-    // doctrine events
-    ////
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $entity = $event->getEntity();
-        if ($entity instanceof Zone) {
-            $zoneSlug = $entity->getSlug();
-            if(empty($zoneSlug)) {
-                $entity->setSlug('zone_ID');
-            }
-        }
-    }
-    public function postPersist(LifecycleEventArgs $event)
-    {    
-        /* Event Zone */
-        $entity = $event->getEntity();
-        if ($event->getEntity() instanceof Zone) {
-            if($entity->getSlug() == 'zone_ID') {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-        }    
-    }
-    
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
-    {
-        $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-//        $uom = $em->getUnitOfWork();
-        
-        /* Event Zone */
-        if ($entity instanceof Zone) {
-            $zoneSlug = $entity->getSlug();
-            if(empty($zoneSlug)) {
-                $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
-            }
-            
-//            if (($eventArgs->hasChangedField('data')
-//                || $eventArgs->hasChangedField('template'))
-//                && $entity->getIsPublished() == 1
-//            ) {
-//                $entity->setIsPublished(false);
-//                $entity->setUnpublishedAt(new \DateTime());
-//                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
-//            }
-            
-        }
-    }   
+  
     
 }

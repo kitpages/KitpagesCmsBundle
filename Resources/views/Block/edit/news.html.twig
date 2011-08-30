@@ -1,0 +1,21 @@
+{% extends 'KitpagesCmsBundle:Block:edit.html.twig' %}
+
+{% block editData %}
+
+{{ form_row(
+    form.data.root.title,
+    {'help' : "Title of the news"}
+) }}
+
+{{ form_row(
+    form.data.root.date,
+    {'help' : "10-05-2010"}
+) }}
+
+{{ form_row(
+    form.data.root.content,
+    {'help' : "Content"}
+) }}
+
+{% endblock editData %}
+

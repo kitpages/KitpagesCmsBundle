@@ -30,7 +30,7 @@ class PageController extends Controller
         );
         return $this->render('KitpagesCmsBundle:Page:toolbar.html.twig', $dataRender);
     }   
-   
+
     public function viewAction(Page $page, $lang, $urlTitle)
     {
         $em = $this->getDoctrine()->getEntityManager();
