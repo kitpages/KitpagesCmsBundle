@@ -168,7 +168,7 @@ class BlockManager
                         $listMediaUrl = $fileManager->urlListInBlockData($blockData, true);
                         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
                       
-                        $resultingHtml = $this->render($renderer, $blockData, Context::VIEW_MODE_PROD);
+                        $resultingHtml = $this->render($renderer, $block, Context::VIEW_MODE_PROD);
 
                         $blockPublish = new BlockPublish();
                         $blockPublish->initByBlock($block);

@@ -20,15 +20,16 @@ use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
+use Kitpages\CmsBundle\Model\Paginator;
 use Kitpages\CmsBundle\Controller\Context;
 
 class ZoneController extends Controller
 {
-    
-    
+
+
     public function createAction()
     {
-        $request = $this->get('request');        
+        $request = $this->get('request');
         $zone = new Zone();
         $zone->setSlug($request->query->get('kitpagesZoneSlugDefault', null));
         // build basic form
@@ -36,7 +37,7 @@ class ZoneController extends Controller
         $builder->add('slug', 'text');
         // get form
         $form = $builder->getForm();
-        
+
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -64,7 +65,7 @@ class ZoneController extends Controller
         $actionList[] = array(
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_create', 
+                'kitpages_cms_block_create',
                 array(
                     'zone_id' => $zone->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
@@ -84,7 +85,7 @@ class ZoneController extends Controller
             ),
             'icon' => 'icon/publish.png'
         );
-        
+
         $dataRenderer = array(
             'title' => $zone->getSlug(),
             'actionList' => $actionList,
@@ -92,10 +93,10 @@ class ZoneController extends Controller
         );
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer
-        );  
+        );
         return $resultingHtml;
-    } 
-    
+    }
+
     public function toolbarBlock(Zone $zone, Block $block)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -103,7 +104,7 @@ class ZoneController extends Controller
         $dataRenderer['actionList'][] = array(
             'label' => 'edit',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_edit', 
+                'kitpages_cms_block_edit',
                 array(
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
@@ -114,7 +115,7 @@ class ZoneController extends Controller
         $dataRenderer['actionList'][] = array(
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_create', 
+                'kitpages_cms_block_create',
                 array(
                     'zone_id' => $zone->getId(),
                     'position' => $zoneBlock->getPosition()+1,
@@ -122,11 +123,11 @@ class ZoneController extends Controller
                 )
             ),
             'icon' => 'icon/add.png'
-        );        
+        );
         $dataRenderer['actionList'][] = array(
             'label' => 'delete',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_delete', 
+                'kitpages_cms_block_delete',
                 array(
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
@@ -137,14 +138,14 @@ class ZoneController extends Controller
         );
 
         $dataUrl = array(
-            'id' => $zone->getId(), 
+            'id' => $zone->getId(),
             'block_id' => $block->getId(),
-            'kitpages_target' => $_SERVER["REQUEST_URI"]    
+            'kitpages_target' => $_SERVER["REQUEST_URI"]
         );
         $dataRenderer['actionList'][] = array(
             'label' => 'moveUp',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_zoneblock_moveup', 
+                'kitpages_cms_zoneblock_moveup',
                 $dataUrl
             ),
             'icon' => 'icon/arrow-up.png'
@@ -153,30 +154,36 @@ class ZoneController extends Controller
         $dataRenderer['actionList'][] = array(
             'label' => 'moveDown',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_zoneblock_movedown', 
+                'kitpages_cms_zoneblock_movedown',
                 $dataUrl
             ),
             'icon' => 'icon/arrow-down.png'
         );
-        
+
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
-        );  
+        );
         return $resultingHtml;
-    } 
-    
-    
-    public function widgetAction($slug, $renderer = 'default', 
-            $displayToolbar = true, $displayPagerBegin = false, $displayPagerEnd = false, $zoneSize = 10, $zonePage = 1, $zonePagerUrlTemplate = '',
-            $nbBlockDisplay = null, $blockOrder = 'asc'
-            ) {
+    }
+
+
+    public function widgetAction(
+        $slug,
+        $renderer = 'default',
+        $displayToolbar = true,
+        $blockDisplayCount = null,
+        $paginator = null,
+        $reverseOrder = false
+    )
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
-        
-        
+
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $paginatorHtml = '';
+
+        // exit when no zone
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             if ($zone == null) {
                 return new Response(
@@ -192,126 +199,115 @@ class ZoneController extends Controller
                     '">create a zone</a> with the slug "'. $slug.'"'
                 );
             }
-            // PAGER
-            if ($displayPagerBegin || $displayPagerEnd) {
-                $adapter = $this->get('knp_paginator.adapter');
-                $adapter->setQuery($em->getRepository('KitpagesCmsBundle:Block')->queryFindByZone($zone, $blockOrder, $nbBlockDisplay));
-                $adapter->setDistinct(true);
-                $paginator = new \Zend\Paginator\Paginator($adapter);                
-                $paginator->setCurrentPageNumber($zonePage);
-                $paginator->setItemCountPerPage($zoneSize);
-
-                $paginatorHtml .= $this->renderView("KitpagesCmsBundle:Zone:pager.html.twig", array(
-                    'paginator' =>$paginator, 'kitCmsPagerTemplate' => $zonePagerUrlTemplate
-                ));
-                if ($displayPagerBegin) {
-                    $resultingHtml .= $paginatorHtml;
-                }
-                $blockList = $paginator;
-            } else {
-                $blockList = $em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone, $blockOrder, $nbBlockDisplay);
-            }
-
-            foreach($blockList as $block){
-                $resultingHtml .= $this->toolbarBlock($zone, $block);
-                $resultingHtml .= $this->get('templating.helper.actions')->render(
-                    "KitpagesCmsBundle:Block:widget", 
-                    array(
-                        "slug" => $block->getSlug(),
-                        "renderer" =>$renderer,
-                        "displayToolbar" => false
-                    ),
-                    array()
-                );
-            }
-            if ($displayToolbar) {
-                $resultingHtml = $this->toolbar($zone, $resultingHtml);
-            }
-            
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             if ($zone == null) {
                 return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
             }
-            
+        }
+        // display block order
+        $blockOrder = 'asc';
+        if ($reverseOrder) {
+            $blockOrder = 'desc';
+        }
+        // get blockList
+        if (
+            ($context->getViewMode() == Context::VIEW_MODE_EDIT) ||
+            ($context->getViewMode() == Context::VIEW_MODE_PREVIEW)
+        ) {
             // PAGER
-            if ($displayPagerBegin || $displayPagerEnd) {
-                $adapter = $this->get('knp_paginator.adapter');
-                $adapter->setQuery($em->getRepository('KitpagesCmsBundle:Block')->queryFindByZone($zone, $blockOrder, $nbBlockDisplay));
-                $adapter->setDistinct(true);
-                $paginator = new \Zend\Paginator\Paginator($adapter);                
-                $paginator->setCurrentPageNumber($zonePage);
-                $paginator->setItemCountPerPage($zoneSize);
-                $paginatorHtml .= $this->renderView($zonePagerUrlTemplate, array(
-                    'paginator' =>$paginator
-                ));
-                if ($displayPagerBegin) {
-                    $resultingHtml .= $paginatorHtml;
-                }
-                $blockList = $paginator;
+            if (!is_null($paginator)) {
+                $blockRepository = $em->getRepository('KitpagesCmsBundle:Block');
+                $totalBlockCount = $blockRepository->getBlockCountByZone($zone);
+                $paginator->setTotalItemCount($totalBlockCount);
+                $blockList = $blockRepository->findByZone(
+                    $zone,
+                    $blockOrder,
+                    $paginator->getItemCountPerPage(),
+                    $paginator->getSqlLimitOffset()
+                );
+
+                $paginatorHtml .= $this->renderView(
+                    "KitpagesCmsBundle:Zone:pager.html.twig",
+                    array(
+                        'paginator' =>$paginator
+                    )
+                );
             } else {
-                $blockList = $em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone, $blockOrder, $nbBlockDisplay);
-            }            
+                $blockList = $em
+                    ->getRepository('KitpagesCmsBundle:Block')
+                    ->findByZone($zone, $blockOrder, $blockDisplayCount);
+            }
+
+            $tmpDisplayToobar = false;
             foreach($blockList as $block){
+                $tmpDisplayToobar = true;
+                if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
+                    $resultingHtml .= $this->toolbarBlock($zone, $block);
+                    $tmpDisplayToobar = false;
+                }
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
-                    "KitpagesCmsBundle:Block:widget", 
+                    "KitpagesCmsBundle:Block:widget",
                     array(
                         "slug" => $block->getSlug(),
-                        "renderer" =>$renderer
+                        "renderer" =>$renderer,
+                        "displayToolbar" => $tmpDisplayToobar
                     ),
                     array()
                 );
             }
+            if ($displayToolbar && ($tmpDisplayToobar === false)) {
+                $resultingHtml = $this->toolbar($zone, $resultingHtml);
+            }
+
         }
         elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $zonePublish = $zone->getZonePublish();
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();
-                if ($blockOrder == 'desc') {
-                    $blockList = $zonePublishData['blockPublishList'][$renderer];
-                } else {
-                    $blockList = $zonePublishData['blockPublishList'][$renderer];
+                $blockList = $zonePublishData['blockPublishList'][$renderer];
+                if ($reverseOrder) {
+                    $blockList = array_reverse($blockList);
                 }
-                //$blockList = $nbBlockDisplay;
+                if (!is_null($blockDisplayCount)) {
+                    $blockList = array_slice($blockList, 0, $blockDisplayCount);
+                }
+
                 // PAGER
-                if ($displayPagerBegin || $displayPagerEnd) {
-                    $paginator = \Zend\Paginator\Paginator::factory($blockList);
-                    $paginator->setCurrentPageNumber($zonePage);
-                    $paginator->setItemCountPerPage($zoneSize);
-                    $paginatorHtml .= $this->renderView($zonePagerUrlTemplate, array(
-                        'paginator' =>$paginator
-                    ));
-                    if ($displayPagerBegin) {
-                        $resultingHtml .= $paginatorHtml;
-                    }
-                    $blockList = $paginator;
-                }                 
-                
+                if (!is_null($paginator)) {
+                    $paginator->setTotalItemCount(count($blockList));
+                    $paginatorHtml .= $this->renderView(
+                        "KitpagesCmsBundle:Zone:pager.html.twig",
+                        array(
+                            'paginator' =>$paginator
+                        )
+                    );
+                }
+
                 foreach($blockList as $blockPublishId){
                     $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
                     $blockPublishData = $blockPublish->getData();
                     if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                         $resultingHtml .= $blockPublishData['html'];
                     }
-                }   
+                }
             }
             else {
                 return new Response('This zone is not published');
             }
-        } 
-        
-        if ($displayPagerEnd) {
+        }
+
+        if (!is_null($paginator)) {
             $resultingHtml .= $paginatorHtml;
         }
 
-        
         return new Response($resultingHtml);
     }
 
-    
+
     public function publishAction(Zone $zone)
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');
-        $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');        
+        $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
         $zoneManager->publish($zone, $dataRenderer);
         $this->getRequest()->getSession()->setFlash('notice', 'Zone published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
@@ -334,5 +330,5 @@ class ZoneController extends Controller
         $zoneManager->moveDownBlock($zone, $block_id);
         $this->getRequest()->getSession()->setFlash('notice', 'Block moved down');
         return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
-    }    
+    }
 }

@@ -8,7 +8,7 @@
                     </a>
                     <ul class="kit-cms-arbo-actions kit-cms-menu">
                     {% for kitCmsArboPageAction in kitCmsArboPage.actionList %}
-                        <li class="{{action.class|default()}}" >
+                        <li class="{{kitCmsArboPageAction.class|default()}}" >
                         {% if kitCmsArboPageAction.icon is defined %}
                             <a href="{{kitCmsArboPageAction.url}}" title="{{kitCmsArboPageAction.label}}"><img src="{{asset("bundles/kitpagescms/" ~ kitCmsArboPageAction.icon)}}"></a>
                         {% else %}

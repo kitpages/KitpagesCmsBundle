@@ -83,6 +83,8 @@
             <argument type="service" id="logger"/>
         </service>
         <service id="kitpages_cms.doctrineListener" class="%kitpages_cms.doctrineListener.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="event_dispatcher"/>
             <tag name="doctrine.event_listener" event="prePersist" /> 
             <tag name="doctrine.event_listener" event="postPersist" /> 
             <tag name="doctrine.event_listener" event="preUpdate" />

@@ -2,7 +2,7 @@
 
 {% block siteNavigation %}
     {% render 'KitpagesCmsBundle:Nav:widget' with {
-        'slug':'site',
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-main',
         'cssClass': "kit-cms-navigation-top",
         'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':1 ,
@@ -12,7 +12,7 @@
 
 {% block mainNavigation %}
     {% render 'KitpagesCmsBundle:Nav:widget' with {
-        'slug':'main',
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-main',
         'cssClass': "kit-cms-navigation-main",
         'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':2 ,
@@ -23,7 +23,7 @@
 
 {% block footerNavigation %}
     {% render 'KitpagesCmsBundle:Nav:widget' with {
-        'slug':'footer',
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-footer',
         'cssClass': "kitpages-cms-navigation-footer",
         'currentPageSlug':kitCmsPage.slug|default('')}
     %}

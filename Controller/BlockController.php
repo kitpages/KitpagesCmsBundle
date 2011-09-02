@@ -250,6 +250,7 @@ class BlockController extends Controller
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml .= '<div class="kit-cms-block-container">'.
+//                        print_r($dataRenderer, true).
                         $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode()).
                         '</div>';
                 }

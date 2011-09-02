@@ -6,6 +6,9 @@ use Kitpages\CmsBundle\Entity\Site;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\Block;
 
+use Kitpages\CmsBundle\Event\NavEvent;
+use Kitpages\CmsBundle\KitpagesCmsEvents;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -16,6 +19,35 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class DoctrineListener {
+    
+    ////
+    // dependency injection
+    ////
+    protected $doctrine = null;
+    protected $dispatcher = null;
+    
+    public function __construct(
+        Registry $doctrine,
+        EventDispatcher $dispatcher
+    )
+    {
+        $this->doctrine = $doctrine;
+        $this->dispatcher = $dispatcher;
+    }
+    /**
+     * @return EventDispatcher $dispatcher
+     */
+    public function getDispatcher() {
+        return $this->dispatcher;
+    }  
+
+    /**
+     * @return Registry $doctrine
+     */
+    public function getDoctrine() {
+        return $this->doctrine;
+    }    
+
 
     ////
     // doctrine events
@@ -43,9 +75,9 @@ class DoctrineListener {
         }
         if ($entity instanceof Page) {
             if($entity->getIsInNavigation() == 1) {
-                $this->unpublish();
+                $this->unpublishNav();
             }
-        }        
+        }
     }
     public function postPersist(LifecycleEventArgs $event)
     {    
@@ -131,12 +163,22 @@ class DoctrineListener {
             if($eventArgs->hasChangedField('isInNavigation') 
                 || (!$eventArgs->hasChangedField('isInNavigation') && $entity->getIsInNavigation() == 1 && $eventArgs->hasChangedField('menuTitle'))
                 || (!$eventArgs->hasChangedField('isInNavigation') && $entity->getIsInNavigation() == 1 && $eventArgs->hasChangedField('parent'))) {
-                $this->unpublish();
+                $this->unpublishNav();
             }
      
         }
         
     }
        
-    
+    public function unpublishNav()
+    {
+        $event = new NavEvent();
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavPublish, $event);
+        if (! $event->isDefaultPrevented()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
+//            $em->flush();
+        }
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavPublish, $event);
+    }
 }

@@ -38,6 +38,7 @@ class NavController extends Controller
         }
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
+            $this->get('logger')->info('slug = '.$slug);
             $currentPage = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($currentPageSlug);
             if ( (!$filterByCurrentPage) || ($currentPage != null) ) {
                 if ($filterByCurrentPage && $currentPage != null) {

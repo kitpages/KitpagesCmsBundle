@@ -139,9 +139,8 @@ class NavManager
         if (! $event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
-//            $em->flush();
-        }        
-        $event = new NavEvent();
+            $em->flush();
+        }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavPublish, $event);        
     }
     ////
