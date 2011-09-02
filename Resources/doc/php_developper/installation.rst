@@ -9,7 +9,7 @@ Download all the source code
     wget http://symfony.com/download?v=Symfony_Standard_2.0.0.tgz
     tar zxvf Symfony_Standard_2.0.0.tgz
     cd Symfony
-    
+
 
 Editer les deps et ajouter les lignes suivantes :
 .. code-block
@@ -34,15 +34,31 @@ Editer les deps et ajouter les lignes suivantes :
         git=git@git.kitpages.fr:file-bundle.git
         target=Kitpages/FileBundle
 
+    [DoctrineExtensions]
+        git=http://github.com/l3pp4rd/DoctrineExtensions.git
+        target=/gedmo-doctrine-extensions
+
+    [DoctrineExtensionsBundle]
+        git=http://github.com/stof/StofDoctrineExtensionsBundle.git
+        target=/bundles/Stof/DoctrineExtensionsBundle
+
+    [DoctrineFixturesBundle]
+        git=http://github.com/symfony/DoctrineFixturesBundle.git
+        target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+
+    [DataFixturesBundle]
+        git=http://github.com/doctrine/data-fixtures.git
+        target=/bundles/DataFixtures/DataFixturesBundle
+
 Lancer l'update
 .. code-block
 
-    ./bin/vendors update
+    ./bin/vendors install --reinstall
 
 
 Change configuration
 --------------------
-In the app/appKernel.php add
+In the app/AppKernel.php add
 .. code-block
 
     new Kitpages\CmsBundle\KitpagesCmsBundle(),
@@ -69,11 +85,94 @@ Edit app/config/parameters.ini, put your confs and add a new conf
     base_url          = http://www.kitpages.fr
 
 
+Edit the app/config/config.yml
+
+in twig section add the following
+.. code-block
+    twig:
+        debug:            %kernel.debug%
+        strict_variables: %kernel.debug%
+        globals:
+            cms:
+                type: service
+                id: kitpages.cms.model.cmsManager
+
+add the following sections
+.. code-block
+    stof_doctrine_extensions:
+        default_locale: en_US
+        orm:
+            default:
+                timestampable: true # not needed: listeners are enabled by default
+                sortable: true
+                sluggable: true
+                tree: true
+
+    kitpages_cms:
+        block:
+            template:
+                template_list:
+                    standard:
+                        class: "\Kitpages\CmsBundle\Form\BlockTemplateEditStandardType"
+                        name: "Standard"
+                        twig: "KitpagesCmsBundle:Block:edit/standard.html.twig"
+                    news:
+                        class: "\Kitpages\CmsBundle\Form\BlockTemplateEditNewsType"
+                        name: "News"
+                        twig: "KitpagesCmsBundle:Block:edit/news.html.twig"
+            renderer:
+                standard:
+                    default:
+                        type: "twig"
+                        twig: "KitpagesCmsBundle:Block:render/standard-default.html.twig"
+                news:
+                    default:
+                        type: "twig"
+                        twig: "KitpagesCmsBundle:Block:render/news-default.html.twig"
+                    short:
+                        type: "twig"
+                        twig: "KitpagesCmsBundle:Block:render/news-short.html.twig"
+        page:
+            layout_list:
+                default:
+                    twig: "KitpagesCmsBundle:Page:_exampleLayout.html.twig"
+                    class_data: "\Kitpages\CmsBundle\Form\PageLayoutEditDefault"
+                    twig_data: "KitpagesCmsBundle:Page:page-layout-edit-default.html.twig"
+                    zone_list:
+                        column:
+                            render: "default"
+                        main:
+                            render: "default"
+                with_col_right:
+                    twig: "AppSiteBundle:Page:with_col_right.html.twig"
+                    class_data: "\Kitpages\CmsBundle\Form\PageLayoutEditWithColRight"
+                    twig_data: "KitpagesCmsBundle:Page:page-layout-edit-with_col_right.html.twig"
+                    zone_list:
+                        column:
+                            render: "default"
+                        main:
+                            render: "default"
+            default_twig: "::base.html.twig"
+
+    kitpages_file:
+        data_dir: %kernel.root_dir%/data/bundle/kitpagesfile
+        public_prefix: data/bundle/kitpagesfile
+        base_url: %base_url%
+
+    services:
+        twig.extension.text:
+            class: Twig_Extensions_Extension_Text
+            tags:
+                - { name: twig.extension }
+
+
+
 Create database if needed and update db
 .. code-block
 
     ./app/console doctrine:database:create
     ./app/console doctrine:schema:update --force
+    ./app/console doctrine:fixtures:load
 
 Routing
 -------
@@ -98,12 +197,4 @@ Routing
             id: \d+
             lang:  en|fr
 
-
-Routes
-------
-.. code-block:: yaml
-
-    kitpages_cms:
-        resource: "@KitpagesCmsBundle/Resources/config/routing.yml"
-        prefix: "cms"
 
