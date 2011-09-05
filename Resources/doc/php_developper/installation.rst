@@ -1,18 +1,27 @@
 KitpagesCmsBundle Installation
 ==============================
 
+There is two methods to install the Kitpages Cms Bundle :
+* the easy one is to use the the KitpagesCmsEdition. This is a symfony distribution with all the bundles and configurations included to have a ready to run CMS
+* the flexible (and complicated) one is to use the KitpagesCms as a bundle in an existing symfony2 project.
+
+This page describe the second way.
+
+
 Download all the source code
 ----------------------------
 
-.. code-block
+::
 
-    wget http://symfony.com/download?v=Symfony_Standard_2.0.0.tgz
-    tar zxvf Symfony_Standard_2.0.0.tgz
+    wget http://symfony.com/download?v=Symfony_Standard_2.0.1.tgz
+    tar zxvf Symfony_Standard_2.0.1.tgz
     cd Symfony
 
 
-Editer les deps et ajouter les lignes suivantes :
-.. code-block
+Editer les deps et ajouter les lignes suivantes
+-----------------------------------------------
+
+::
 
     [KitpagesSimpleCacheBundle]
         git=http://github.com/kitpages/KitpagesSimpleCacheBundle.git
@@ -51,15 +60,20 @@ Editer les deps et ajouter les lignes suivantes :
         target=/bundles/DataFixtures/DataFixturesBundle
 
 Lancer l'update
-.. code-block
+---------------
+
+::
 
     ./bin/vendors install --reinstall
 
 
 Change configuration
 --------------------
+
 In the app/AppKernel.php add
-.. code-block
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
 
     new Kitpages\CmsBundle\KitpagesCmsBundle(),
     new Kitpages\FileBundle\KitpagesFileBundle(),
@@ -71,7 +85,9 @@ In the app/AppKernel.php add
 
 
 In the app/autoload.php add the line
-.. code-block
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
 
     'Kitpages'         => __DIR__.'/../vendor',
     'Doctrine\\Common\\DataFixtures' => __DIR__.'/../vendor/bundles/DataFixtures/DataFixturesBundle/lib',
@@ -80,15 +96,20 @@ In the app/autoload.php add the line
 
 
 Edit app/config/parameters.ini, put your confs and add a new conf
-.. code-block
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
 
     base_url          = http://www.kitpages.fr
 
 
 Edit the app/config/config.yml
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 in twig section add the following
-.. code-block
+
+::
+
     twig:
         debug:            %kernel.debug%
         strict_variables: %kernel.debug%
@@ -98,7 +119,9 @@ in twig section add the following
                 id: kitpages.cms.model.cmsManager
 
 add the following sections
-.. code-block
+
+::
+
     stof_doctrine_extensions:
         default_locale: en_US
         orm:
@@ -143,15 +166,6 @@ add the following sections
                             render: "default"
                         main:
                             render: "default"
-                with_col_right:
-                    twig: "AppSiteBundle:Page:with_col_right.html.twig"
-                    class_data: "\Kitpages\CmsBundle\Form\PageLayoutEditWithColRight"
-                    twig_data: "KitpagesCmsBundle:Page:page-layout-edit-with_col_right.html.twig"
-                    zone_list:
-                        column:
-                            render: "default"
-                        main:
-                            render: "default"
             default_twig: "::base.html.twig"
 
     kitpages_file:
@@ -165,10 +179,10 @@ add the following sections
             tags:
                 - { name: twig.extension }
 
-
-
 Create database if needed and update db
-.. code-block
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
 
     ./app/console doctrine:database:create
     ./app/console doctrine:schema:update --force
@@ -176,7 +190,8 @@ Create database if needed and update db
 
 Routing
 -------
-.. code-block
+
+::
 
     KitpagesRedirectBundle:
         resource: "@KitpagesRedirectBundle/Resources/config/routing.yml"
