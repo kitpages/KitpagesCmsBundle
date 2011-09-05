@@ -264,6 +264,9 @@ class ZoneController extends Controller
             $zonePublish = $zone->getZonePublish();
             if ($zonePublish instanceof ZonePublish) {
                 $zonePublishData = $zonePublish->getData();
+                if (!isset($zonePublishData['blockPublishList'][$renderer])) {
+                    return new Response('This zone is not published');
+                }
                 $blockList = $zonePublishData['blockPublishList'][$renderer];
                 if ($reverseOrder) {
                     $blockList = array_reverse($blockList);
