@@ -18,8 +18,8 @@ Download all the source code
     cd Symfony
 
 
-Editer les deps et ajouter les lignes suivantes
------------------------------------------------
+Edit deps file
+--------------
 
 ::
 
@@ -59,8 +59,8 @@ Editer les deps et ajouter les lignes suivantes
         git=http://github.com/doctrine/data-fixtures.git
         target=/bundles/DataFixtures/DataFixturesBundle
 
-Lancer l'update
----------------
+run the vendors re-install
+--------------------------
 
 ::
 
@@ -229,3 +229,23 @@ Add at the very beginning of the body :
 
 Modify security.yml
 -------------------
+
+in the file app/conf/security.yml, you need to configure the firewall for every URL.
+You can for example change the line
+
+::
+
+    pattern:    ^/demo/secured/
+
+by
+
+::
+
+    pattern:    ^(/demo/secured/|/)
+
+Test the result
+===============
+
+* try the URL /cms/arbo
+* click on the "edit" button in the top toolbar
+* click on one of the home page to edit the page
