@@ -32,11 +32,11 @@ Editer les deps et ajouter les lignes suivantes
         target=Kitpages/RedirectBundle
 
     [KitpagesUtilBundle]
-        git=git@git.kitpages.fr:util-bundle.git
+        git=http://github.com/kitpages/KitpagesUtilBundle.git
         target=Kitpages/UtilBundle
 
     [KitpagesCmsBundle]
-        git=git@git.kitpages.fr:cmsbundle.git
+        git=http://github.com/kitpages/KitpagesCmsBundle.git
         target=Kitpages/CmsBundle
 
     [KitpagesFileBundle]
