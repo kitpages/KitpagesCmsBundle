@@ -31,7 +31,7 @@ Editer les deps et ajouter les lignes suivantes :
         target=Kitpages/CmsBundle
 
     [KitpagesFileBundle]
-        git=git@git.kitpages.fr:file-bundle.git
+        git=http://github.com/kitpages/KitpagesFileBundle.git
         target=Kitpages/FileBundle
 
     [DoctrineExtensions]
@@ -197,4 +197,6 @@ Routing
             id: \d+
             lang:  en|fr
 
+Modify base template
+--------------------
 
