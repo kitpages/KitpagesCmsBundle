@@ -70,7 +70,7 @@ textarea.kit-cms-rte-simple {
 .kit-cms {
 }
 .kit-cms a {
-    text-decoration: none;     
+    text-decoration: none;
 }
 .kit-cms ul {
     margin: 0px;
@@ -80,8 +80,13 @@ textarea.kit-cms-rte-simple {
     display: table;
     width: 100%;
     z-index: 1000;
+    font-family: Arial;
+    font-size: 12px;
 }
-
+.kit-cms-toolbar ul, .kit-cms-toolbar li {
+    margin: 0px;
+    padding: 0px;
+}
 .kit-cms-toolbar-top {
     display: block;
     height: 42px;
@@ -126,7 +131,7 @@ textarea.kit-cms-rte-simple {
 
 .kit-cms-toolbar-top > ul > li > a.kit-cms-advanced-mode-button-selected {
     background-color: #BB092D;
-    color: #FFF;    
+    color: #FFF;
 }
 
 .kit-cms-toolbar-page-form {
@@ -145,7 +150,7 @@ textarea.kit-cms-rte-simple {
     background-image: url(common/plus.gif);
     background-repeat:  no-repeat;
     background-position:0px 5px;
-    padding-left: 10px;    
+    padding-left: 10px;
 }
 
 .kit-cms-toolbar-page-action > ul {
@@ -215,7 +220,7 @@ textarea.kit-cms-rte-simple {
 
 .kit-cms-block-toolbar .kit-cms-menu > li {
     position: relative;
-    top: 0px;    
+    top: 0px;
 }
 .kit-cms-block-toolbar .kit-cms-menu > li > a {
     margin: 0px 2px;
