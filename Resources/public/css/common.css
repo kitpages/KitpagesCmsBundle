@@ -80,12 +80,15 @@ textarea.kit-cms-rte-simple {
     display: table;
     width: 100%;
     z-index: 1000;
-    font-family: Arial;
+    font-family: Verdana, Arial;
     font-size: 12px;
 }
 .kit-cms-toolbar ul, .kit-cms-toolbar li {
     margin: 0px;
     padding: 0px;
+}
+.kit-cms-toolbar img{
+    vertical-align: middle;
 }
 .kit-cms-toolbar-top {
     display: block;
