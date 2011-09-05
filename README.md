@@ -13,6 +13,7 @@ We are developping this CMS because the opensource CMS we found on the market we
 too complex for our clients.
 
 The goals of this CMS are :
+
 * a super easy to use CMS for non technical people
 * a CMS that can be integrated in an existing symfony2 project
 * editorial contents managed by the CMS can be added to a dynamic page
@@ -21,11 +22,12 @@ The goals of this CMS are :
 State of the project
 ====================
 In beta state.
-- a lot of documentation is missing
-- no unit test
-- only works on unix/linux hosting
 
-But we already use it for some client websites
+* a lot of documentation is missing
+* no unit test
+* only works on unix/linux hosting
+
+We are begining to use it at Kitpages for small websites.
 
 Features
 ========
