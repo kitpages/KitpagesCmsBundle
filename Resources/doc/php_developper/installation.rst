@@ -214,4 +214,18 @@ Routing
 
 Modify base template
 --------------------
+Add at the end of the header
 
+::
+
+    {% block kitpages_cms_javascripts %}{% endblock %}
+
+Add at the very beginning of the body :
+
+::
+
+    {% block kitpages_cms_toolbar %}{% endblock %}
+
+
+Modify security.yml
+-------------------

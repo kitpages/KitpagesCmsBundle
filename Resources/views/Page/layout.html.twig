@@ -6,7 +6,7 @@
         'cssClass': "kit-cms-navigation-top",
         'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':1 ,
-        'endDepth':1} 
+        'endDepth':1}
     %}
 {% endblock  siteNavigation %}
 
@@ -16,7 +16,7 @@
         'cssClass': "kit-cms-navigation-main",
         'currentPageSlug':kitCmsPage.slug|default(''),
         'startDepth':2 ,
-        'endDepth':2} 
+        'endDepth':2}
     %}
 
 {% endblock  mainNavigation %}
@@ -35,7 +35,7 @@
 {% endblock stylesheets %}
 
 
-{% block toolbar %}
+{% block kitpages_cms_toolbar %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="kit-cms kit-cms-toolbar">
         {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
@@ -54,5 +54,5 @@
             });
         </script>
     {% endif %}
-{% endblock toolbar %}
+{% endblock kitpages_cms_toolbar %}
 
