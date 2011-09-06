@@ -12,7 +12,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Kitpages\CmsBundle\Controller\Context;
 
 class PageListener {
-    
+
     ////
     // dependency injection
     ////
@@ -20,7 +20,7 @@ class PageListener {
     protected $context = null;
     protected $router = null;
     protected $logger = null;
-    
+
     public function __construct(
         Registry $doctrine,
         Context $context,
@@ -52,13 +52,13 @@ class PageListener {
      */
     public function getDoctrine() {
         return $this->doctrine;
-    }    
+    }
     /**
      * @return Context $context
      */
     public function getContext() {
         return $this->context;
-    }    
+    }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -70,11 +70,9 @@ class PageListener {
         $requestUri = $request->getRequestUri();
         $relativeRequestUri = str_replace($baseUrl, '', $requestUri);
         $relativeRequestUri = '/'.ltrim($relativeRequestUri, '/');
-        
+
         $viewMode = $this->getContext()->getViewMode();
-        
-        $this->getLogger()->debug("************ PageListener, relativeRequestUri=$relativeRequestUri, viewMode=$viewMode");
-        
+
         if ($viewMode == Context::VIEW_MODE_PROD) {
             $pagePublishRepo = $this->getDoctrine()->getEntityManager()->getRepository('KitpagesCmsBundle:PagePublish');
             $pagePublish = $pagePublishRepo->findByForcedUrl($relativeRequestUri);
@@ -108,7 +106,7 @@ class PageListener {
         }
 
     }
-    
+
     protected function fakeRouter($request, $language, $pageId, $urlTitle)
     {
         $url = $this->getRouter()->generate(
