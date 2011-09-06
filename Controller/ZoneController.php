@@ -203,6 +203,10 @@ class ZoneController extends Controller
             if ($zone == null) {
                 return new Response('Please create a zone with the slug "'.htmlspecialchars($slug).'"');
             }
+        } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+            if ($zone == null) {
+                return new Response('The zone with the slug "'.htmlspecialchars($slug).'" is missing');
+            }
         }
         // display block order
         $blockOrder = 'asc';
