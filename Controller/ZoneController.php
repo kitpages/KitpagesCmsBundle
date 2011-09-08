@@ -60,7 +60,7 @@ class ZoneController extends Controller
         ));
     }
 
-    public function toolbar(Zone $zone, $htmlBlock) {
+    public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null) {
         $actionList = array();
         $actionList[] = array(
             'label' => 'addBlock',
@@ -68,7 +68,8 @@ class ZoneController extends Controller
                 'kitpages_cms_block_create',
                 array(
                     'zone_id' => $zone->getId(),
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                    'kitpages_target' => $_SERVER['REQUEST_URI'],
+                    'authorized_block_template_list' => $authorizedBlockTemplateList
                 )
             ),
             'icon' => 'icon/add.png'
@@ -97,7 +98,7 @@ class ZoneController extends Controller
         return $resultingHtml;
     }
 
-    public function toolbarBlock(Zone $zone, Block $block)
+    public function toolbarBlock(Zone $zone, Block $block, $authorizedBlockTemplateList = null)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block);
@@ -107,7 +108,8 @@ class ZoneController extends Controller
                 'kitpages_cms_block_edit',
                 array(
                     'id' => $block->getId(),
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                    'kitpages_target' => $_SERVER['REQUEST_URI'],
+                    'authorized_block_template_list' => $authorizedBlockTemplateList
                 )
             ),
             'icon' => 'icon/edit.png'
@@ -119,7 +121,8 @@ class ZoneController extends Controller
                 array(
                     'zone_id' => $zone->getId(),
                     'position' => $zoneBlock->getPosition()+1,
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                    'kitpages_target' => $_SERVER['REQUEST_URI'],
+                    'authorized_block_template_list' => $authorizedBlockTemplateList
                 )
             ),
             'icon' => 'icon/add.png'
@@ -173,7 +176,8 @@ class ZoneController extends Controller
         $displayToolbar = true,
         $blockDisplayCount = null,
         $paginator = null,
-        $reverseOrder = false
+        $reverseOrder = false,
+        $authorizedBlockTemplateList = null
     )
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -246,7 +250,7 @@ class ZoneController extends Controller
             foreach($blockList as $block){
                 $tmpDisplayToobar = true;
                 if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-                    $resultingHtml .= $this->toolbarBlock($zone, $block);
+                    $resultingHtml .= $this->toolbarBlock($zone, $block, $authorizedBlockTemplateList);
                     $tmpDisplayToobar = false;
                 }
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
@@ -254,13 +258,14 @@ class ZoneController extends Controller
                     array(
                         "slug" => $block->getSlug(),
                         "renderer" =>$renderer,
-                        "displayToolbar" => $tmpDisplayToobar
+                        "displayToolbar" => $tmpDisplayToobar,
+                        "authorizedBlockTemplateList" => $authorizedBlockTemplateList
                     ),
                     array()
                 );
             }
             if ($displayToolbar && ($tmpDisplayToobar === false)) {
-                $resultingHtml = $this->toolbar($zone, $resultingHtml);
+                $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList);
             }
 
         }

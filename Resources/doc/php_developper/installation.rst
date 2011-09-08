@@ -158,14 +158,16 @@ add the following sections
         page:
             layout_list:
                 default:
-                    twig: "KitpagesCmsBundle:Page:_exampleLayout.html.twig"
-                    class_data: "\Kitpages\CmsBundle\Form\PageLayoutEditDefault"
-                    twig_data: "KitpagesCmsBundle:Page:page-layout-edit-default.html.twig"
+                    renderer_twig: "KitpagesCmsBundle:Page:_exampleLayout.html.twig"
+                    data_form_class: "\Kitpages\CmsBundle\Form\PageLayoutEditDefault"
+                    data_form_twig: "KitpagesCmsBundle:Page:page-layout-edit-default.html.twig"
                     zone_list:
                         column:
-                            render: "default"
+                            renderer: "default"
+                            authorized_block_template_list : ["standard"]
                         main:
-                            render: "default"
+                            renderer: "default"
+                            authorized_block_template_list : ["standard"]
             default_twig: "::base.html.twig"
 
     kitpages_file:

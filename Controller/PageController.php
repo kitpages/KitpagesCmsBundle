@@ -29,7 +29,7 @@ class PageController extends Controller
             'target' => $_SERVER["REQUEST_URI"]
         );
         return $this->render('KitpagesCmsBundle:Page:toolbar.html.twig', $dataRender);
-    }   
+    }
 
     public function viewAction(Page $page, $lang, $urlTitle)
     {
@@ -42,7 +42,7 @@ class PageController extends Controller
         $pageLayout = $page->getLayout();
         $forcedUrl = $page->getForcedUrl();
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            
+
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
 
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
@@ -56,7 +56,7 @@ class PageController extends Controller
             $pageLayout = $pagePublish->getLayout();
             $forcedUrl = $pagePublish->getForcedUrl();
         }
-        
+
         if ($pageType == "technical") {
             throw new NotFoundHttpException('The page does not exist.');
         }
@@ -64,13 +64,13 @@ class PageController extends Controller
         if ($pageType == "link") {
             return $this->redirect ($page->getLinkUrl(), 301);
         }
-        
+
         if ($forcedUrl && ($forcedUrl != $this->getRequest()->getPathInfo() ) ) {
             return $this->redirect(
                 $this->getRequest()->getBaseUrl().$forcedUrl
             );
         }
-        
+
         if ( ($pageLanguage != $lang) || ($pageUrlTitle != $urlTitle) ) {
             return $this->redirect (
                 $this->generateUrl(
@@ -84,18 +84,18 @@ class PageController extends Controller
                 301
             );
         }
-     
+
         $cmsManager = $this->get('kitpages.cms.model.cmsManager');
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$pageLayout);
-        $cmsManager->setLayout($layout['twig']);
-        
+        $cmsManager->setLayout($layout['renderer_twig']);
+
         return $this->render(
             'KitpagesCmsBundle:Page:layout.html.twig',
             array(
                 'viewMode' => $context->getViewMode(),
                 'kitCmsPage' => $page
             )
-        );        
+        );
     }
 
     public function widgetZoneAction($location_in_page, Page $page) {
@@ -105,23 +105,24 @@ class PageController extends Controller
         if ($zone == null) {
             return new Response('Please create a zone with the location "'.htmlspecialchars($location_in_page).'"');
         }
-        
+
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = $this->get('templating.helper.actions')->render(
-            "KitpagesCmsBundle:Zone:widget", 
+            "KitpagesCmsBundle:Zone:widget",
             array(
                 "slug" => $zone->getSlug(),
-                "renderer" =>$layout['zone_list'][$location_in_page]['render'],
-                'displayToolbar' => false
+                "renderer" =>$layout['zone_list'][$location_in_page]['renderer'],
+                'displayToolbar' => false,
+                'authorizedBlockTemplateList' => $layout['zone_list'][$location_in_page]['authorized_block_template_list']
             ),
             array()
         );
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            $resultingHtml = $this->toolbarZone($zone, $resultingHtml);
+            $resultingHtml = $this->toolbarZone($zone, $resultingHtml, $layout['zone_list'][$location_in_page]['authorized_block_template_list']);
         }
         return new Response($resultingHtml);
     }
-    
+
     public function createAction()
     {
         $page = new Page();
@@ -131,22 +132,22 @@ class PageController extends Controller
         foreach ($layoutList as $key => $layout) {
             $selectLayoutList[$key] = $key;
         }
-    
+
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('title', 'text');        
+        $builder->add('title', 'text');
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
-        ));         
+        ));
         $builder->add('layout', 'choice',array(
             'choices' => $selectLayoutList,
             'required' => true
-        ));       
+        ));
         // get form
         $form = $builder->getForm();
-        
+
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -157,12 +158,12 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
-               
+
                 $em->persist($page);
                 $em->flush();
                 $zoneList = $layout['zone_list'];
@@ -177,9 +178,9 @@ class PageController extends Controller
                     $pageZone->setZone($zone);
                     $pageZone->setLocationInPage($locationInPage);
                     $em->persist($pageZone);
-                    $em->flush();                    
+                    $em->flush();
                 }
-                
+
                 $this->getRequest()->getSession()->setFlash('notice', 'Page created');
                 return $this->redirect(
                     $this->generateUrl(
@@ -206,19 +207,19 @@ class PageController extends Controller
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
-        $builder->add('menuTitle', 'text', array('required' => false)); 
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));
+        $builder->add('menuTitle', 'text', array('required' => false));
         if (empty($parent_id)) {
             $builder->add('language', 'text');
         }
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $parent_id
-        ));         
-      
+        ));
+
         // get form
         $form = $builder->getForm();
-        
+
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -229,15 +230,15 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
-               
+
                 $em->persist($page);
                 $em->flush();
-                 
+
                 $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');
                 $target = $this->getRequest()->query->get('kitpages_target', null);
                 if ($target) {
@@ -252,28 +253,28 @@ class PageController extends Controller
     }
 
 
-    
+
     public function createLinkAction()
     {
         $page = new Page();
 
-   
+
         // build basic form
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('title', 'text'); 
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));         
-        $builder->add('menuTitle', 'text', array('required' => false));         
-        $builder->add('linkUrl', 'text'); 
+        $builder->add('title', 'text');
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));
+        $builder->add('menuTitle', 'text', array('required' => false));
+        $builder->add('linkUrl', 'text');
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
-        ));         
+        ));
 
-        
+
         // get form
         $form = $builder->getForm();
-        
+
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -284,15 +285,15 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
-               
+
                 $em->persist($page);
                 $em->flush();
-                 
+
                 $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');
                 $target = $this->getRequest()->query->get('kitpages_target', null);
                 if ($target) {
@@ -304,8 +305,8 @@ class PageController extends Controller
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
         ));
-    }    
-    
+    }
+
     public function editAction(Page $page, $inToolbar = false, $target = null)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -313,12 +314,12 @@ class PageController extends Controller
         if (is_null($target)) {
             $target = $request->query->get('kitpages_target', null);
         }
-        
+
         if (!$page->getData()) {
             $page->setData(array('root'=>null));
         }
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
-        
+
         // build basic form
         $pageParent = $page->getParent();
         $parentId = '';
@@ -360,7 +361,7 @@ class PageController extends Controller
                 'label' => "Display in navigation ?",
                 'required' => false
             )
-        );           
+        );
         $builder->add(
             'menuTitle',
             'text',
@@ -368,7 +369,7 @@ class PageController extends Controller
                 'label' => 'Page name in the navigation',
                 'required' => false
             )
-        ); 
+        );
         $builder->add(
             'parent_id',
             'text',
@@ -390,14 +391,14 @@ class PageController extends Controller
         );
 
         // build custom form
-        $className = $layout['class_data'];
+        $className = $layout['data_form_class'];
         $builder->add('data', 'collection', array(
            'type' => new $className(),
         ));
-        
+
         // get form
         $form = $builder->getForm();
-        
+
         // persist form if needed
         if ($request->getMethod() == 'POST') {
             $oldPageData = $page->getData();
@@ -407,10 +408,10 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setParent($pageParent);
-                }                
+                }
                 $em->flush();
                 $pageManager = $this->get('kitpages.cms.manager.page');
                 $pageManager->afterModify($page, $oldPageData);
@@ -422,26 +423,26 @@ class PageController extends Controller
             }
         }
         $view = $form->createView();
-        return $this->render($layout['twig_data'], array(
+        return $this->render($layout['data_form_twig'], array(
             'form' => $form->createView(),
             'id' => $page->getId(),
             'inToolbar' => $inToolbar,
             'kitpages_target' => $target
         ));
     }
-    
+
     public function editTechnicalAction(Page $page)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->getRequest();
         $target = $request->query->get('kitpages_target', null);
-      
+
         // build basic form
         $pageParent = $page->getParent();
-        $parentId = '';        
+        $parentId = '';
         if ($pageParent instanceof Page) {
             $parentId = $pageParent->getId();
-        }        
+        }
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
         $builder->add(
@@ -453,15 +454,15 @@ class PageController extends Controller
             )
         );
 
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
-        $builder->add('menuTitle', 'text', array('required' => false)); 
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));
+        $builder->add('menuTitle', 'text', array('required' => false));
          $builder->add('parent_id','text',array(
             'property_path' => false,
             'data' => $parentId
-        ));         
+        ));
         // get form
         $form = $builder->getForm();
-        
+
         // persist form if needed
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -470,10 +471,10 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setParent($pageParent);
-                }                         
+                }
                 $em->flush();
                 $this->getRequest()->getSession()->setFlash('notice', 'Page Technical modified');
                 if ($target) {
@@ -489,24 +490,24 @@ class PageController extends Controller
             'kitpages_target' => $target
         ));
     }
-  
+
     public function editLinkAction(Page $page)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->getRequest();
         $target = $request->query->get('kitpages_target', null);
-      
+
         // build basic form
         $pageParent = $page->getParent();
-        $parentId = '';        
+        $parentId = '';
         if ($pageParent instanceof Page) {
             $parentId = $pageParent->getId();
-        }             
+        }
         $builder = $this->createFormBuilder($page);
         $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('title', 'text'); 
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));           
-        $builder->add('menuTitle', 'text', array('required' => false)); 
+        $builder->add('title', 'text');
+        $builder->add('isInNavigation', 'checkbox', array('required' => false));
+        $builder->add('menuTitle', 'text', array('required' => false));
         $builder->add(
             'language',
             'text',
@@ -516,14 +517,14 @@ class PageController extends Controller
             )
         );
 
-        $builder->add('linkUrl', 'text');    
+        $builder->add('linkUrl', 'text');
         $builder->add('parent_id','text',array(
             'property_path' => false,
             'data' => $parentId
-        ));          
+        ));
         // get form
         $form = $builder->getForm();
-        
+
         // persist form if needed
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -532,10 +533,10 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
-                if (!empty($parent_id)) {                
+                if (!empty($parent_id)) {
                     $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
                     $page->setParent($pageParent);
-                }                         
+                }
                 $em->flush();
                 $this->getRequest()->getSession()->setFlash('notice', 'Page Link modified');
                 if ($target) {
@@ -552,20 +553,21 @@ class PageController extends Controller
         ));
     }
 
-    public function toolbarZone(Zone $zone, $htmlZone) {  
+    public function toolbarZone(Zone $zone, $htmlZone, $authorizedBlockTemplateList = null) {
         $actionList[] = array(
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_create', 
+                'kitpages_cms_block_create',
                 array(
                     'zone_id' => $zone->getId(),
                     'position' => 0,
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                    'kitpages_target' => $_SERVER['REQUEST_URI'],
+                    'authorized_block_template_list' => $authorizedBlockTemplateList
                 )
             ),
             'icon' => 'icon/add.png'
         );
-        
+
         $dataRenderer = array(
             'title' => $zone->getSlug(),
             'actionList' => $actionList,
@@ -573,26 +575,26 @@ class PageController extends Controller
         );
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer
-        );  
+        );
         return $resultingHtml;
     }
-    
+
     public function publish(Page $page, $childrenPublish)
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
-        $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');  
-        $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer'); 
+        $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
+        $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
         if ($childrenPublish) {
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
             foreach($pageChildren as $pageChild) {
                 $this->publish($pageChild, $childrenPublish);
             }
-        }   
+        }
         $pageManager->publish($page, $layoutList, $listRenderer);
-    }    
-    
+    }
+
     public function publishAction(Page $page)
     {
         $childrenPublish = $this->get('request')->query->get('children', false);
@@ -604,50 +606,50 @@ class PageController extends Controller
             return $this->redirect($target);
         }
         return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
-    }    
+    }
 
     public function delete(Page $page, $childrenDelete)
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenDelete) {
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
             foreach($pageChildren as $pageChild) {
                 $this->delete($pageChild, $childrenDelete);
             }
-        }   
+        }
         $pageManager->delete($page);
-    }  
+    }
 
     public function pendingDelete(Page $page, $childrenDelete)
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenDelete) {
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
             foreach($pageChildren as $pageChild) {
                 $this->pendingDelete($pageChild, $childrenDelete);
             }
-        }   
+        }
         $pageManager->pendingDelete($page);
-    }  
+    }
 
     public function unpendingDelete(Page $page, $childrenUndelete)
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenUndelete) {
-            
+
             $em = $this->getDoctrine()->getEntityManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
             foreach($pageChildren as $pageChild) {
                 $this->unpendingDelete($pageChild, $childrenUndelete);
             }
-        }   
+        }
         $pageManager->unpendingDelete($page);
-    } 
-    
+    }
+
     public function deleteAction(Page $page)
     {
         $childrenDelete = $this->get('request')->query->get('children', true);
@@ -658,7 +660,7 @@ class PageController extends Controller
             return $this->redirect($target);
         }
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
-    } 
+    }
 
     public function undeleteAction(Page $page)
     {
@@ -670,8 +672,8 @@ class PageController extends Controller
             return $this->redirect($target);
         }
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
-    } 
-    
+    }
+
 //    public function deleteAction(Page $page)
 //    {
 //        $childrenDelete = $this->get('request')->query->get('children', false);
@@ -682,6 +684,6 @@ class PageController extends Controller
 //            return $this->redirect($target);
 //        }
 //        return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
-//    } 
-    
+//    }
+
 }

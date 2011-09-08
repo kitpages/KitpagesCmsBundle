@@ -23,50 +23,55 @@ use Kitpages\CmsBundle\Model\CmsManager;
 
 class BlockController extends Controller
 {
-    
-   
+
+
     public function viewAction()
     {
         return $this->render('KitpagesCmsBundle:Block:view.html.twig');
     }
-    
+
     public function createAction()
     {
         $block = new Block();
         $request = $this->getRequest();
 
+        $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
+
         $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
         $selectTemplateList = array();
         foreach ($templateList as $key => $template) {
-            $selectTemplateList[$key] = $template['name'];
+            if( is_null($authorizedBlockTemplateList) || in_array($key, $authorizedBlockTemplateList) ) {
+                $selectTemplateList[$key] = $template['name'];
+            }
+            echo "key=$key; authorizedBlockTemplateList=".print_r($authorizedBlockTemplateList, true);
         }
         $block->setSlug($request->query->get('kitpagesBlockSlugDefault', null));
         // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add(
-            'slug', 
-            'text', 
+            'slug',
+            'text',
             array(
-                'required' => false, 
+                'required' => false,
                 'attr' => array('class'=>'kit-cms-advanced'),
             )
         );
         $builder->add('zone_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('zone_id')
-        ));  
+        ));
         $builder->add('position','hidden',array(
             'required' => false,
             'property_path' => false,
             'data' => $this->get('request')->query->get('position', null)
-        ));          
+        ));
         $builder->add('template', 'choice',array(
             'choices' => $selectTemplateList,
             'required' => true
         ));
         // get form
         $form = $builder->getForm();
-        
+
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -79,7 +84,7 @@ class BlockController extends Controller
 
                 $dataForm = $request->request->get('form');
                 $zone_id = $dataForm['zone_id'];
-                $position = $dataForm['position']; 
+                $position = $dataForm['position'];
                 if ($position == null) {
                     $position = 0;
                 }
@@ -90,7 +95,7 @@ class BlockController extends Controller
                     $zoneBlock->setBlock($block);
                     $em->persist($zoneBlock);
                     $em->flush();
-                    $zoneBlock->setPosition($position);  
+                    $zoneBlock->setPosition($position);
                 }
                 $em->flush();
                 $this->getRequest()->getSession()->setFlash('notice', 'Block created');
@@ -115,19 +120,21 @@ class BlockController extends Controller
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
         $blockManager->delete($block);
-        
+
         $this->getRequest()->getSession()->setFlash('notice', 'Block deleted');
-        
+
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
             return $this->redirect($target);
         }
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
-    
+
     public function editAction(Block $block)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
+        $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
 
         if (!$block->getData()) {
             $block->setData(array('root'=>null));
@@ -136,10 +143,12 @@ class BlockController extends Controller
         $templateList = $this->container->getParameter('kitpages_cms.block.template.template_list');
         $selectTemplateList = array();
         foreach ($templateList as $key => $template) {
-            $selectTemplateList[$key] = $template['name'];
+            if( is_null($authorizedBlockTemplateList) || in_array($key, $authorizedBlockTemplateList) ) {
+                $selectTemplateList[$key] = $template['name'];
+            }
         }
         $twigTemplate = $templateList[$block->getTemplate()]['twig'];
-        
+
         // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
@@ -154,10 +163,10 @@ class BlockController extends Controller
         $builder->add('data', 'collection', array(
            'type' => new $className(),
         ));
-        
+
         // get form
         $form = $builder->getForm();
-        
+
         // persist form if needed
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
@@ -180,7 +189,7 @@ class BlockController extends Controller
 
         $fileManager = $this->get('kitpages.cms.manager.file');
         $mediaUrlList = $fileManager->urlListInBlockData($block->getData(), false);
-        
+
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),
             'id' => $block->getId(),
@@ -189,14 +198,16 @@ class BlockController extends Controller
         ));
     }
 
-    public function toolbar(Block $block) {  
+    public function toolbar(Block $block, $authorizedBlockTemplateList) {
+
         $dataRenderer['actionList'][] = array(
             'label' => 'edit',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_edit', 
+                'kitpages_cms_block_edit',
                 array(
                     'id' => $block->getId(),
-                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                    'kitpages_target' => $_SERVER['REQUEST_URI'],
+                    'authorized_block_template_list' => $authorizedBlockTemplateList
                 )
             ),
             'icon' => 'icon/edit.png'
@@ -204,22 +215,28 @@ class BlockController extends Controller
         $dataRenderer['actionList'][] = array(
             'label' => 'publish',
             'url' => $this->get('router')->generate(
-                'kitpages_cms_block_publish', 
+                'kitpages_cms_block_publish',
                 array(
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
             )
         );
-        
+
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
-        );  
+        );
         return $resultingHtml;
-    } 
+    }
 
-    
-    public function widgetAction($slug, $renderer = 'default', $displayToolbar = true) {
+
+    public function widgetAction(
+        $slug,
+        $renderer = 'default',
+        $displayToolbar = true,
+        $authorizedBlockTemplateList = null
+    )
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
@@ -242,10 +259,10 @@ class BlockController extends Controller
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                
+
                 $resultingHtml = '';
                 if ($displayToolbar == true) {
-                    $resultingHtml .= $this->toolbar($block);
+                    $resultingHtml .= $this->toolbar($block, $authorizedBlockTemplateList);
                 }
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
@@ -262,11 +279,11 @@ class BlockController extends Controller
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                if (!is_null($block->getData())) {                
+                if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml = $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode());
                 }
-            }          
+            }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug, 'renderer' => $renderer));
             if (!is_null($blockPublish)) {
@@ -280,20 +297,20 @@ class BlockController extends Controller
         }
         return new Response($resultingHtml);
     }
-    
+
     public function editSuccessAction()
     {
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
     }
-    
+
     public function publishAction(Block $block)
     {
         $blockManager = $this->get('kitpages.cms.manager.block');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
         $blockManager->publish($block, $dataRenderer);
-        
+
         $this->getRequest()->getSession()->setFlash('notice', 'Block published');
-        
+
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
             return $this->redirect($target);

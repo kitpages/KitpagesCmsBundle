@@ -49,7 +49,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('block')
                     ->addDefaultsIfNotSet()
                     ->children()
-            
+
                         ->arrayNode('template')
                             ->addDefaultsIfNotSet()
                             ->children()
@@ -62,14 +62,14 @@ class Configuration implements ConfigurationInterface
                                             ->end()
                                             ->scalarNode('name')
                                                 ->cannotBeEmpty()
-                                            ->end()   
+                                            ->end()
                                             ->scalarNode('twig')
                                                 ->cannotBeEmpty()
                                             ->end()
                                         ->end()
                                     ->end()
-                
-                
+
+
 //                                    ->addDefaultsIfNotSet()
 //                                    ->children()
 //                                        ->arrayNode('standard')
@@ -93,12 +93,12 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
-            
+
                         ->arrayNode('renderer')
                             ->useAttributeAsKey('template_slug')
                                 ->prototype('array')
 
-                
+
                                     ->useAttributeAsKey('renderer_slug')
                                         ->prototype('array')
                                         ->children()
@@ -108,10 +108,10 @@ class Configuration implements ConfigurationInterface
                                             ->scalarNode('twig')
                                             ->end()
                                         ->end()
-                                    ->end()  
-                
+                                    ->end()
+
                                 ->end()
-                            ->end()                
+                            ->end()
 //                            ->addDefaultsIfNotSet()
 //                            ->children()
 //                                ->arrayNode('standard')
@@ -133,7 +133,7 @@ class Configuration implements ConfigurationInterface
 //                                ->end()
 //                            ->end()
                         ->end()
-            
+
                     ->end()
                 ->end()
             ->end();
@@ -157,27 +157,36 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('page')
                     ->addDefaultsIfNotSet()
                     ->children()
-            
+
                         ->arrayNode('layout_list')
                             ->useAttributeAsKey('layout')
                             ->prototype('array')
                                 ->addDefaultsIfNotSet()
                                 ->children()
-                                    ->scalarNode('twig')
+                                    ->scalarNode('renderer_twig')
                                         ->cannotBeEmpty()
-                                    ->end()   
-                                    ->scalarNode('class_data')
+                                    ->end()
+                                    ->scalarNode('data_form_class')
                                         ->cannotBeEmpty()
-                                    ->end()   
-                                    ->scalarNode('twig_data')
+                                    ->end()
+                                    ->scalarNode('data_form_twig')
                                         ->cannotBeEmpty()
-                                    ->end() 
+                                    ->end()
                                     ->arrayNode('zone_list')
                                         ->useAttributeAsKey('location_in_page')
                                             ->prototype('array')
                                             ->children()
-                                                ->scalarNode('render')
+                                                ->scalarNode('renderer')
                                                     ->cannotBeEmpty()
+                                                ->end()
+                                                ->arrayNode('authorized_block_template_list')
+                                                    ->isRequired()
+                                                    ->requiresAtLeastOneElement()
+                                                    ->beforeNormalization()
+                                                        ->ifTrue(function($v){ return !is_array($v); })
+                                                        ->then(function($v){ return array($v); })
+                                                    ->end()
+                                                    ->prototype('scalar')->end()
                                                 ->end()
                                             ->end()
                                         ->end()
@@ -185,14 +194,15 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+
                         ->scalarNode('default_twig')
                             ->cannotBeEmpty()
-                        ->end()   
+                        ->end()
                     ->end()
                 ->end()
             ->end();
     }
-    
+
     /**
      * Parses the kitpages_cms others sections
      * Example for yaml driver:
