@@ -133,6 +133,7 @@ class BlockController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
+        $request = $this->getRequest();
         $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
 
         if (!$block->getData()) {
