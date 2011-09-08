@@ -43,7 +43,6 @@ class BlockController extends Controller
             if( is_null($authorizedBlockTemplateList) || in_array($key, $authorizedBlockTemplateList) ) {
                 $selectTemplateList[$key] = $template['name'];
             }
-            echo "key=$key; authorizedBlockTemplateList=".print_r($authorizedBlockTemplateList, true);
         }
         $block->setSlug($request->query->get('kitpagesBlockSlugDefault', null));
         // build basic form
