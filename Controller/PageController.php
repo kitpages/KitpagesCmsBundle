@@ -24,7 +24,7 @@ class PageController extends Controller
     public function widgetToolbarAction(Page $page) {
         $context = $this->get('kitpages.cms.controller.context');
         $dataRender = array(
-            'viewMode' => $context->getViewMode(),
+            'kitCmsViewMode' => $context->getViewMode(),
             'kitCmsPage' => $page,
             'target' => $_SERVER["REQUEST_URI"]
         );
@@ -92,7 +92,7 @@ class PageController extends Controller
         return $this->render(
             'KitpagesCmsBundle:Page:layout.html.twig',
             array(
-                'viewMode' => $context->getViewMode(),
+                'kitCmsViewMode' => $context->getViewMode(),
                 'kitCmsPage' => $page
             )
         );

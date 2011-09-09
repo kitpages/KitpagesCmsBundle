@@ -3,7 +3,7 @@
         <li>
             <a href="{{ path('kitpages_cms_nav_arbo') }}">Tree</a>
         </li>
-        
+
         <li>
             <a href="{{ path('kitpages_cms_nav_publish', { 'kitpages_target' : target }) }}">
                 {% if isNavPublished == false %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}"/>{%endif%}
@@ -27,13 +27,13 @@
         </script>
     </ul>
     <ul class="kit-cms-toolbar-top-context-switch">
-        <li {% if viewMode == 1 %}class="kit-cms-selected"{% endif %}>
+        <li {% if kitCmsViewMode == 1 %}class="kit-cms-selected"{% endif %}>
             <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 1, 'kitpages_target' : target , 'context': 'production'}) }}">Production</a>
         </li>
-        <li {% if viewMode == 2 %}class="kit-cms-selected"{% endif %}>
+        <li {% if kitCmsViewMode == 2 %}class="kit-cms-selected"{% endif %}>
             <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 2, 'kitpages_target' : target, 'context': 'preview' }) }}">Preview</a>
         </li>
-        <li {% if viewMode == 3 %}class="kit-cms-selected"{% endif %}>
+        <li {% if kitCmsViewMode == 3 %}class="kit-cms-selected"{% endif %}>
             <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 3, 'kitpages_target' : target, 'context': 'edit' }) }}">Edit</a>
         </li>
     </ul>

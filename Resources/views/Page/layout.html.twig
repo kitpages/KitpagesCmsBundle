@@ -39,7 +39,7 @@
     {% if is_granted('ROLE_ADMIN') %}
         <div class="kit-cms kit-cms-toolbar">
         {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
-        {% if (viewMode is defined) and ( (viewMode == 2) or (viewMode == 3) ) %}
+        {% if (kitCmsViewMode is defined) and ( (kitCmsViewMode == 2) or (kitCmsViewMode == 3) ) %}
             {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':kitCmsPage} %}
         {% endif %}
         </div>

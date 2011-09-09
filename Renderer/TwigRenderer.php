@@ -4,19 +4,19 @@ namespace Kitpages\CmsBundle\Renderer;
 use Kitpages\CmsBundle\Controller\Context;
 
 class TwigRenderer {
-    
+
     protected $twig = null;
     protected $templateName = null;
     public function getTwig()
     {
         return $this->twig;
     }
-    
+
     public function setTwig($twig)
     {
         $this->twig = $twig;
     }
-    
+
     public function setTemplateName($name)
     {
         $this->templateName = $name;
@@ -31,11 +31,14 @@ class TwigRenderer {
     {
         return $this->twig->render(
             $this->getTemplateName(),
-            array('data' => $data)
+            array(
+                'data' => $data,
+                'kitCmsViewMode' => $viewMode
+            )
         );
     }
-    
-    
+
+
 }
 
 ?>
