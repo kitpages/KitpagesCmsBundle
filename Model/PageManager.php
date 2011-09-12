@@ -2,6 +2,7 @@
 namespace Kitpages\CmsBundle\Model;
 
 use Kitpages\CmsBundle\Entity\Page;
+use Kitpages\CmsBundle\Entity\PageZone;
 use Kitpages\CmsBundle\Entity\PagePublish;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\Block;
@@ -29,7 +30,7 @@ class PageManager
     protected $doctrine = null;
     protected $zoneManager = null;
     protected $logger = null;
-    
+
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
@@ -39,23 +40,23 @@ class PageManager
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
-        $this->zoneManager = $zoneManager;        
+        $this->zoneManager = $zoneManager;
         $this->logger = $logger;
-    }      
+    }
 
     /**
      * @return EventDispatcher $dispatcher
      */
     public function getDispatcher() {
         return $this->dispatcher;
-    }  
-    
+    }
+
     /**
      * @return Registry $doctrine
      */
     public function getDoctrine() {
         return $this->doctrine;
-    }    
+    }
 
     /**
      * @return $zoneManager
@@ -63,7 +64,7 @@ class PageManager
     public function getZoneManager() {
         return $this->zoneManager;
     }
-    
+
     /**
      * @return LoggerInterface
      */
@@ -80,8 +81,8 @@ class PageManager
     {
         // throw on event
         $event = new PageEvent($page);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);  
-        
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);
+
         // preventable action
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
@@ -91,13 +92,13 @@ class PageManager
         // throw after event
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePendingDelete, $event);
     }
-    
+
     public function pendingDelete(Page $page)
     {
         // throw on event
         $event = new PageEvent($page);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);  
-        
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePendingDelete, $event);
+
         // preventable action
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
@@ -107,7 +108,7 @@ class PageManager
         // throw after event
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePendingDelete, $event);
     }
-    
+
     public function delete(Page $page)
     {
         // throw on event
@@ -130,7 +131,7 @@ class PageManager
         // throw after event
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageDelete, $event);
     }
-    
+
     public function publish(Page $page, array $listLayout, array $listRenderer)
     {
         $event = new PageEvent($page, $listLayout);
@@ -190,27 +191,43 @@ class PageManager
 
     public function unpublish($page){
         $event = new PageEvent($page);
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPageUnpublish, $event);  
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPageUnpublish, $event);
         $em = $this->getDoctrine()->getEntityManager();
         $page->setIsPublished(false);
-        $em->flush();        
+        $em->flush();
         $event = new PageEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageUnpublish, $event);
     }
-    
+
+    public function createZoneInPage(Page $page, $locationInPage)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $zone = new Zone();
+        $zone->setSlug('');
+        $zone->setIsPublished(false);
+        $em->persist($zone);
+        $em->flush();
+        $pageZone = new PageZone();
+        $pageZone->setPage($page);
+        $pageZone->setZone($zone);
+        $pageZone->setLocationInPage($locationInPage);
+        $em->persist($pageZone);
+        $em->flush();
+    }
+
     ////
     // event listener
     ////
     public function afterZoneUnpublish(Event $event)
     {
         $zone = $event->getZone();
-        $em = $this->getDoctrine()->getEntityManager(); 
+        $em = $this->getDoctrine()->getEntityManager();
         foreach($em->getRepository('KitpagesCmsBundle:Page')->findByZone($zone) as $page) {
             $this->unpublish($page);
         }
     }
 
 
- 
-    
+
+
 }

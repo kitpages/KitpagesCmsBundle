@@ -103,7 +103,15 @@ class PageController extends Controller
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findByPageAndLocation($page, $location_in_page);
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
         if ($zone == null) {
-            return new Response('Please create a zone with the location "'.htmlspecialchars($location_in_page).'"');
+            $createZoneInPageUrl = $this->generateUrl(
+                "kitpages_cms_createZoneInPage",
+                array(
+                    'id' => $page->getId(),
+                    'locationInPage' => $location_in_page,
+                    'kitpages_target' => $_SERVER["REQUEST_URI"]
+                )
+            );
+            return new Response('Please <a href="'.$createZoneInPageUrl.'">create a zone</a> with the location "'.htmlspecialchars($location_in_page).'"');
         }
 
         $context = $this->get('kitpages.cms.controller.context');
@@ -125,6 +133,7 @@ class PageController extends Controller
 
     public function createAction()
     {
+        $pageManager = $this->get('kitpages.cms.manager.page');
         $page = new Page();
 
         $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
@@ -168,17 +177,7 @@ class PageController extends Controller
                 $em->flush();
                 $zoneList = $layout['zone_list'];
                 foreach($zoneList as $locationInPage => $render) {
-                    $zone = new Zone();
-                    $zone->setSlug('');
-                    $zone->setIsPublished(false);
-                    $em->persist($zone);
-                    $em->flush();
-                    $pageZone = new PageZone();
-                    $pageZone->setPage($page);
-                    $pageZone->setZone($zone);
-                    $pageZone->setLocationInPage($locationInPage);
-                    $em->persist($pageZone);
-                    $em->flush();
+                    $pageManager->createZoneInPage($page, $locationInPage);
                 }
 
                 $this->getRequest()->getSession()->setFlash('notice', 'Page created');
@@ -197,6 +196,15 @@ class PageController extends Controller
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
         ));
+    }
+
+    public function createZoneInPageAction(Page $page, $locationInPage)
+    {
+        $pageManager = $this->get('kitpages.cms.manager.page');
+        $pageManager->createZoneInPage($page, $locationInPage);
+        $this->getRequest()->getSession()->setFlash('notice', "Zone $locationInPage created");
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        return $this->redirect($target);
     }
 
     public function createTechnicalAction()

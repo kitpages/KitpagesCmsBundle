@@ -52,14 +52,14 @@ kitpages_cms_zoneblock_movedown:
     defaults: { _controller: KitpagesCmsBundle:Zone:moveDownBlock }
     requirements:
         id: \d+
-        
+
 kitpages_cms_zone_create:
     pattern:  /zone/create
-    defaults: { _controller: KitpagesCmsBundle:Zone:create }         
+    defaults: { _controller: KitpagesCmsBundle:Zone:create }
 
 kitpages_cms_zone_publish:
     pattern:  /zone/publish/{id}
-    defaults: { _controller: KitpagesCmsBundle:Zone:publish }    
+    defaults: { _controller: KitpagesCmsBundle:Zone:publish }
     requirements:
         id: \d+
 
@@ -77,34 +77,34 @@ kitpages_cms_admin_view_mode_change:
 ###
 kitpages_cms_page_create:
     pattern:  /page/create
-    defaults: { _controller: KitpagesCmsBundle:Page:create }        
+    defaults: { _controller: KitpagesCmsBundle:Page:create }
 
 kitpages_cms_page_create_technical:
     pattern:  /page/createTechnical
-    defaults: { _controller: KitpagesCmsBundle:Page:createTechnical } 
+    defaults: { _controller: KitpagesCmsBundle:Page:createTechnical }
 
 kitpages_cms_page_create_link:
     pattern:  /page/createLink
-    defaults: { _controller: KitpagesCmsBundle:Page:createLink } 
+    defaults: { _controller: KitpagesCmsBundle:Page:createLink }
 
 kitpages_cms_page_edit:
     pattern:  /page/edit/{id}
-    defaults: { _controller: KitpagesCmsBundle:Page:edit }  
+    defaults: { _controller: KitpagesCmsBundle:Page:edit }
     requirements:
         id: \d+
- 
+
 kitpages_cms_page_edit_technical:
     pattern:  /page/editTechnical/{id}
-    defaults: { _controller: KitpagesCmsBundle:Page:editTechnical }  
+    defaults: { _controller: KitpagesCmsBundle:Page:editTechnical }
     requirements:
-        id: \d+        
-   
+        id: \d+
+
 kitpages_cms_page_edit_link:
     pattern:  /page/editLink/{id}
-    defaults: { _controller: KitpagesCmsBundle:Page:editLink }  
+    defaults: { _controller: KitpagesCmsBundle:Page:editLink }
     requirements:
-        id: \d+ 
-        
+        id: \d+
+
 kitpages_cms_page_view:
     pattern:  /page/{id}
     defaults: { _controller: KitpagesCmsBundle:Page:view }
@@ -117,6 +117,13 @@ kitpages_cms_page_publish:
     defaults: { _controller: KitpagesCmsBundle:Page:publish }
     requirements:
         id: \d+
+
+kitpages_cms_createZoneInPage:
+    pattern:  /page/createZoneInPage/{id}/{locationInPage}
+    defaults: { _controller: KitpagesCmsBundle:Page:createZoneInPage }
+    requirements:
+        id: \d+
+        locationInPage: \w+
 
 kitpages_cms_page_delete:
     pattern:  /page/delete/{id}
@@ -134,7 +141,7 @@ kitpages_cms_page_view_lang:
     pattern:  /{lang}/cms/{id}/{urlTitle}
     defaults: { _controller: KitpagesCmsBundle:Page:view, lang: fr }
     requirements:
-        id: \d+ 
+        id: \d+
         lang:  en|fr
 
 ###
@@ -143,25 +150,25 @@ kitpages_cms_page_view_lang:
 kitpages_cms_nav_publish:
     pattern:  /nav/publish
     defaults: { _controller: KitpagesCmsBundle:Nav:publish }
-    
-    
+
+
 kitpages_cms_nav_arbo:
     pattern:  /arbo
     defaults: { _controller: KitpagesCmsBundle:Nav:arbo }
-    
+
 kitpages_cms_nav_moveup:
     pattern:  /nav/moveup/{id}
-    defaults: { _controller: KitpagesCmsBundle:Nav:moveUp }  
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveUp }
     requirements:
         id: \d+
-        
+
 kitpages_cms_nav_movedown:
     pattern:  /nav/movedown/{id}
-    defaults: { _controller: KitpagesCmsBundle:Nav:moveDown }  
+    defaults: { _controller: KitpagesCmsBundle:Nav:moveDown }
     requirements:
         id: \d+
-        
+
 ###
 # Media
 ###
-  
+
