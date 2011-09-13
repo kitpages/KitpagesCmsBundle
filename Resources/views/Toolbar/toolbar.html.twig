@@ -20,10 +20,12 @@
                 $(".kit-cms-form .kit-cms-advanced").parent().toggle();
                 $(this).toggleClass('kit-cms-advanced-mode-button-selected');
             });
+            {% if is_granted('ROLE_SUPERADMIN') is empty %}
             $(document).ready(function() {
                 $(".kit-cms-advanced").hide();
                 $(".kit-cms-form .kit-cms-advanced").parent().hide();
             });
+            {% endif %}
         </script>
     </ul>
     <ul class="kit-cms-toolbar-top-context-switch">
