@@ -42,7 +42,7 @@ class BlockTemplateEditStandardType extends AbstractType
             array(
                 'required' => false,
                 'attr' => array(
-                    "class" => "kit-cms-rte-advanced"
+                    "class" => "kit-cms-rte-simple"
                 )
             )
         );
