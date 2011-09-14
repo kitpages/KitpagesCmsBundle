@@ -15,12 +15,12 @@ class BlockTemplateEditStandardType extends AbstractType
             array(
                 'required' => false,
                 'attr' => array(
-                    "class" => "kit-cms-rte-simple"
+                    "class" => "kit-cms-rte-advanced"
                 )
             )
         );
         $builder->add('media_mainImage', 'hidden');
-        
+
         $builder->add(
             'imagePosition',
             'choice',
@@ -42,11 +42,11 @@ class BlockTemplateEditStandardType extends AbstractType
             array(
                 'required' => false,
                 'attr' => array(
-                    "class" => "kit-cms-rte-simple"
+                    "class" => "kit-cms-rte-advanced"
                 )
             )
         );
-        
+
         $builder->add(
             'displaySeparator',
             'checkbox',
@@ -57,9 +57,9 @@ class BlockTemplateEditStandardType extends AbstractType
             )
         );
     }
-    
+
     public function getName() {
         return 'BlockTemplateEditStandardType';
     }
-    
+
 }
