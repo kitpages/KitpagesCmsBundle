@@ -12,21 +12,21 @@ use Kitpages\CmsBundle\Entity\PagePublish;
 
 class NavController extends Controller
 {
- 
+
     public function publishAction() {
-        
+
 
         $navManager = $this->get('kitpages.cms.manager.nav');
         $navManager->publish();
-        
+
         $this->getRequest()->getSession()->setFlash('notice', 'Navigation published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
-        }        
+        }
         return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
-    }  
-    
+    }
+
     public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
@@ -34,7 +34,7 @@ class NavController extends Controller
         $navigation = array();
         $selectPageSlugList = array();
         if ($startDepth == 1) {
-           $filterByCurrentPage = false; 
+           $filterByCurrentPage = false;
         }
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
             $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
@@ -58,7 +58,7 @@ class NavController extends Controller
                     }
                 }
             }
-            
+
         }
 
         elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
@@ -78,7 +78,7 @@ class NavController extends Controller
                     $navigation = array();
                     $selectPageSlugList = array();
                     if ($startDepth == 1) {
-                       $filterByCurrentPage = false; 
+                       $filterByCurrentPage = false;
                     }
                     $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slug);
                     $currentNavPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($currentPageSlug);
@@ -89,7 +89,7 @@ class NavController extends Controller
                         if ($filterByCurrentPage && $currentNavPublish != null) {
                             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->childOfPageWithForParentOtherPage($navPublish, $currentNavPublish, $startDepth-1);
                             $startDepth = 1;
-                        }                
+                        }
                         $startLevel = $navPublish->getLevel() + $startDepth;
                         $endLevel = $navPublish->getLevel() + $endDepth;
                         $navigation =  $myThis->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
@@ -137,14 +137,14 @@ class NavController extends Controller
             $page = $navPublishChild->getPage();
             $pagePublish = $page->getPagePublish();
             $navigationElem = array(
-                'slug' => $navPublishChild->getSlug(),                
+                'slug' => $navPublishChild->getSlug(),
                 'title' => $navPublishChild->getTitle(),
-                'level' => $navPublishChild->getLevel(),   
-                'url' => ''                 
+                'level' => $navPublishChild->getLevel(),
+                'url' => ''
             );
             if ($pagePublish->getPageType() == 'link' ) {
                 $navigationElem['url'] = $page->getLinkUrl();
-            } 
+            }
             if ($pagePublish->getPageType() == 'edito' ) {
                 if ($pagePublish->getForcedUrl()) {
                     $navigationElem['url'] = $this->getRequest()->getBaseUrl().$pagePublish->getForcedUrl();
@@ -158,9 +158,9 @@ class NavController extends Controller
                         )
                     );
                 }
-            } 
+            }
             $navigationElem['children'] = array();
-            if ($navPublishChild->getLevel() < $endLevel) {            
+            if ($navPublishChild->getLevel() < $endLevel) {
                 $navigationElem['children'] = $this->navPublishChildren($navPublishChild, $viewMode, 1, $endLevel);
             }
             $listNavigationElem[] = $navigationElem;
@@ -174,7 +174,7 @@ class NavController extends Controller
         $listNavigationElem = array();
         foreach($pageList as $pageChild) {
             $navigationElem = array(
-                'slug' => $pageChild->getSlug(),                
+                'slug' => $pageChild->getSlug(),
                 'title' => $pageChild->getMenuTitle(),
                 'level' => $pageChild->getLevel(),
                 'url' => ''
@@ -204,31 +204,31 @@ class NavController extends Controller
         }
         return $listNavigationElem;
     }
-    
-    
+
+
     public function arboAction(){
-      
+
         $arbo = $this->arboChildren();
         return $this->render('KitpagesCmsBundle:Nav:arbo.html.twig', array('arbo' => $arbo));
-    }    
- 
-    
-   
-    public function arboChildren($pageParent = null){ 
-        
+    }
+
+
+
+    public function arboChildren($pageParent = null){
+
         $em = $this->getDoctrine()->getEntityManager();
-        
+
         if (is_null($pageParent)) {
             $pageList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
         } else {
-            $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($pageParent, true);        
+            $pageList = $em->getRepository('KitpagesCmsBundle:Page')->children($pageParent, true);
         }
-        
+
         $pageListRenderer = array();
         foreach($pageList as $page) {
             $pageArbo = array();
             $pageArbo['slug'] = $page->getSlug();
-            $pageArbo['menuTitle'] = $page->getMenuTitle(); 
+            $pageArbo['menuTitle'] = $page->getMenuTitle();
             $paramUrl = array(
                 'id' => $page->getId(),
                 'kitpages_target' => $_SERVER["REQUEST_URI"]
@@ -241,92 +241,92 @@ class NavController extends Controller
                 'id' => $page->getId(),
                 'children' => true,
                 'kitpages_target' => $_SERVER["REQUEST_URI"]
-            ); 
-        
-            
+            );
+
+
             if ($page->getIsPendingDelete() == 1) {
                 if ($pageParent->getIsPendingDelete() == 0) {
                     $pageArbo['actionList'][] = array(
-                        'label' => 'undelete', 
+                        'label' => 'undelete',
                         'url' => $this->generateUrl('kitpages_cms_page_undelete', $paramUrl),
                     );
                     $pageArbo['actionList'][] = array(
                         'label' => 'publish All',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild)
-                    );                     
+                    );
                 } else {
                     $pageArbo['actionList'][] = array(
                         'label' => 'publish All',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-advanced'
-                    ); 
+                    );
                 }
             } else {
-                
+
                 $pageArbo['actionList'][] = array(
-                    'label' => 'publish', 
+                    'label' => 'publish',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/publish.png'
-                );                     
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'publish All', 
+                    'label' => 'publish All',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                     'class' => 'kit-cms-advanced'
-                );                     
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'up', 
+                    'label' => 'up',
                     'url'  => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/arrow-up.png'
-                    
-                );                     
+
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'down', 
+                    'label' => 'down',
                     'url'  => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/arrow-down.png'
-                );                     
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'add page', 
+                    'label' => 'add page',
                     'url'  => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate),
                     'icon' => 'icon/add.png'
-                ); 
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'add page technical', 
+                    'label' => 'add page technical',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
-                ); 
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'add page link', 
+                    'label' => 'add page link',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
-                ); 
+                );
                 $pageArbo['actionList'][] = array(
-                    'label' => 'delete', 
+                    'label' => 'delete',
                     'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/delete.png'
-                ); 
-               
+                );
+
             }
-            
-            
+
+
             if ($page->getPageType() == 'edito') {
                 $pageArbo['url'] = $this->generateUrl(
-                            'kitpages_cms_page_view_lang',
-                            array(
-                                'id' => $page->getId(),
-                                'lang' => $page->getLanguage(),
-                                'urlTitle' => $page->getUrlTitle()
-                            )
-                        );
+                    'kitpages_cms_page_view_lang',
+                    array(
+                        'id' => $page->getId(),
+                        'lang' => $page->getLanguage(),
+                        'urlTitle' => $page->getUrlTitle()
+                    )
+                );
             } elseif($page->getPageType() == 'technical') {
                 $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_technical', $paramUrl);
             } elseif($page->getPageType() == 'link') {
                 $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
                 //$pageArbo['actionList']['link'] = $page->getLinkUrl();
-                $pageArbo['menuTitle'] .= ' ['.$page->getLinkUrl().']'; 
+                $pageArbo['menuTitle'] .= ' <span class="kit-cms-arbo-indicator-link">[ -&gt; '.$page->getLinkUrl().']<span>';
             }
             $pageArbo['children'] = $this->arboChildren($page);
             $pageListRenderer[] = $pageArbo;
@@ -335,10 +335,10 @@ class NavController extends Controller
     }
 
     public function moveUpAction(Page $page){
-        
+
         $navManager = $this->get('kitpages.cms.manager.nav');
-        $navManager->moveUp($page, 1);        
-        
+        $navManager->moveUp($page, 1);
+
         $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
@@ -349,7 +349,7 @@ class NavController extends Controller
 
     public function moveDownAction(Page $page){
         $navManager = $this->get('kitpages.cms.manager.nav');
-        $navManager->moveDown($page, 1);    
+        $navManager->moveDown($page, 1);
         $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
@@ -358,5 +358,5 @@ class NavController extends Controller
         return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
 
     }
-    
+
 }

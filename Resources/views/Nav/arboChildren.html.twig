@@ -3,8 +3,9 @@
             <li class="kit-cms-arbo-node ">
                 <div class="kit-cms-arbo-line">
                     <a href="{{kitCmsArboPage.url}}">
-                        <span class="kit-cms-arbo-page-title">{{kitCmsArboPage.menuTitle}}</span>
+                        <span class="kit-cms-arbo-page-title">{{kitCmsArboPage.menuTitle|raw}}</span>
                         <span class="kit-cms-arbo-page-slug {% if kitCmsArboPage.menuTitle %}kit-cms-advanced{% endif %}">{{kitCmsArboPage.slug}}</span>
+                        <img class="kit-cms-arbo-edit-button" src="{{asset("bundles/kitpagescms/icon/edit.png")}}"/>
                     </a>
                     <ul class="kit-cms-arbo-actions kit-cms-menu">
                     {% for kitCmsArboPageAction in kitCmsArboPage.actionList %}
