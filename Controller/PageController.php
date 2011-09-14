@@ -175,7 +175,8 @@ class PageController extends Controller
 
                 $em->persist($page);
                 $em->flush();
-                $zoneList = $layout['zone_list'];
+                $layoutKey = $dataForm['layout'];
+                $zoneList = $layoutList[$layoutKey]['zone_list'];
                 foreach($zoneList as $locationInPage => $render) {
                     $pageManager->createZoneInPage($page, $locationInPage);
                 }
