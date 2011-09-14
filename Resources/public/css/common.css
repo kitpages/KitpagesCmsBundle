@@ -314,3 +314,12 @@ textarea.kit-cms-rte-simple {
     border-radius: 3px;
     border: 0px;
 }
+
+.kit-cms-arbo-indicator-link {
+    font-style: italic;
+    color: #808080;
+    font-size: 0.9em;
+}
+.kit-cms-arbo-edit-button {
+    vertical-align: middle;
+}
