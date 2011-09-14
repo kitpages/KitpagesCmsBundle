@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\DoctrineBundle\Registry;
-
+use Symfony\Component\HttpFoundation\Session;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -18,28 +18,37 @@ use Kitpages\CmsBundle\Entity\Block;
 
 class CmsManager
 {
-  
+
+    protected $session = null;
     protected $doctrine = null;
     protected $layout = null;
-    protected $currentLanguage = 'fr';
-    
+
     public function __construct(
+        Session $session            ,
         Registry $doctrine,
         $defaultLayout,
         LoggerInterface $logger
     )
     {
+        $this->session = $session;
         $this->layout = $defaultLayout;
         $this->doctrine = $doctrine;
         $this->logger = $logger;
-    }      
+    }
     /**
      * @return Registry $doctrine
      */
     public function getDoctrine() {
         return $this->doctrine;
-    } 
-    
+    }
+
+    /**
+     * @return Session $session
+     */
+    public function getSession() {
+        return $this->session;
+    }
+
     /**
      * @return LoggerInterface
      */
@@ -48,14 +57,14 @@ class CmsManager
         return $this->logger;
     }
 
-   
+
     public function onCoreController(FilterControllerEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             //echo "gloubi=".$this->getLayout();
         }
     }
-    
+
     public function getLayout()
     {
         return $this->layout;
@@ -64,16 +73,10 @@ class CmsManager
     {
         $this->layout = $layout;
     }
-    
+
     public function getCurrentLanguage()
     {
-        return $this->currentLanguage;
+        return $this->getSession()->getLocale();
     }
-    public function setCurrentLanguage($lang)
-    {
-        $this->currentLanguage = $lang;
-    }
-   
-    
-  
+
 }
