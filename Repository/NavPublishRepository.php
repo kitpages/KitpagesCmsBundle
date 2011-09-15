@@ -20,15 +20,15 @@ class NavPublishRepository extends NestedTreeRepository
             ->getResult();
         return $listNavPublish;
      }
- 
+
     public function findByPageIsNotInNavigation()
     {
         $listNavPublish = $this->_em
             ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np JOIN np.page p WHERE p.isInNavigation = 0')
-            ->getResult();        
+            ->getResult();
         return $listNavPublish;
-     }  
-     
+     }
+
     public function removeWithChildren(NavPublish $navPublish)
     {
 
@@ -44,47 +44,71 @@ class NavPublishRepository extends NestedTreeRepository
             ->getResult();
 
     }
-    
+
     public function childrenOfDepth(NavPublish $navPublish, $depth)
-    {   
+    {
         $navPublishList = $this->_em
-            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right < :right AND np.left > :left AND np.level = :level')
+            ->createQuery('
+                SELECT np
+                FROM KitpagesCmsBundle:NavPublish np
+                WHERE np.right < :right
+                  AND np.left > :left
+                  AND np.level = :level
+                ORDER BY np.left ASC
+               ')
             ->setParameter("level", $navPublish->getLevel()+$depth)
             ->setParameter("right", $navPublish->getRight())
             ->setParameter("left", $navPublish->getLeft())
-            ->getResult();        
+            ->getResult();
         return $navPublishList;
      }
-     
+
 
     public function parentBetweenTwoDepth(NavPublish $navPublish, $startLevel, $endLevel)
-    {   
+    {
         $navPublishList = $this->_em
-            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right > :right AND np.left < :left AND np.level >= :levelMin AND np.level <= :levelMax')
+            ->createQuery('
+                SELECT np
+                FROM KitpagesCmsBundle:NavPublish np
+                WHERE np.right > :right
+                  AND np.left < :left
+                  AND np.level >= :levelMin
+                  AND np.level <= :levelMax
+                ORDER BY np.left ASC
+               ')
             ->setParameter("right", $navPublish->getRight())
             ->setParameter("left", $navPublish->getLeft())
             ->setParameter("levelMin", $startLevel)
             ->setParameter("levelMax", $endLevel)
-            ->getResult();        
+            ->getResult();
         return $navPublishList;
-    }        
-    
+    }
+
     public function childOfPageWithForParentOtherPage(NavPublish $navPublishParent, NavPublish $navPublishChild, $depth)
-    {   
+    {
         $listPage = $this->_em
-            ->createQuery('SELECT np FROM KitpagesCmsBundle:NavPublish np WHERE np.right >= :rightChild AND np.left <= :leftChild AND np.right <= :rightParent AND np.left >= :leftParent AND np.level = :level')
+            ->createQuery('
+                SELECT np
+                FROM KitpagesCmsBundle:NavPublish np
+                WHERE np.right >= :rightChild
+                  AND np.left <= :leftChild
+                  AND np.right <= :rightParent
+                  AND np.left >= :leftParent
+                  AND np.level = :level
+                ORDER BY np.left ASC
+               ')
             ->setParameter("level", $navPublishParent->getLevel()+$depth)
             ->setParameter("rightChild", $navPublishChild->getRight())
             ->setParameter("leftChild", $navPublishChild->getLeft())
             ->setParameter("rightParent", $navPublishParent->getRight())
-            ->setParameter("leftParent", $navPublishParent->getLeft())                    
-            ->getResult(); 
+            ->setParameter("leftParent", $navPublishParent->getLeft())
+            ->getResult();
         if (count($listPage) == 1) {
             return $listPage[0];
         } else {
             return null;
-        }        
-    }   
-    
-     
+        }
+    }
+
+
 }
