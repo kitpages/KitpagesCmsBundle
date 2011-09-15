@@ -144,8 +144,22 @@ class PageController extends Controller
 
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('title', 'text');
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+        $builder->add(
+            'title',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('size'=>'40')
+            )
+        );
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
