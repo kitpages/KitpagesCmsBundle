@@ -90,6 +90,9 @@
             <tag name="doctrine.event_listener" event="postPersist" />
             <tag name="doctrine.event_listener" event="preUpdate" />
         </service>
+        <service id="kitpages_cms.twig.extension.date" class="Kitpages\CmsBundle\Twig\Extension\DateExtension">
+            <tag name="twig.extension" />
+        </service>
     </services>
 
 </container>
