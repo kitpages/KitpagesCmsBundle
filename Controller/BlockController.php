@@ -44,6 +44,45 @@ class BlockController extends Controller
                 $selectTemplateList[$key] = $template['name'];
             }
         }
+
+
+        //create automatic if one template
+        if (count($selectTemplateList) == 1) {
+            $templateKeyList = array_keys($selectTemplateList);
+            $block->setBlockType('edito');
+            $block->setIsPublished(false);
+            $block->setTemplate($templateKeyList[0]);
+            $em = $this->get('doctrine')->getEntityManager();
+            $em->persist($block);
+
+            $dataForm = $request->request->get('form');
+            $zone_id = $this->get('request')->query->get('zone_id');
+            $position = $this->get('request')->query->get('position', null);
+            if ($position == null) {
+                $position = 0;
+            }
+            if (!empty($zone_id)) {
+                $zoneBlock = new ZoneBlock();
+                $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
+                $zoneBlock->setZone($zone);
+                $zoneBlock->setBlock($block);
+                $em->persist($zoneBlock);
+                $em->flush();
+                $zoneBlock->setPosition($position);
+            }
+            $em->flush();
+            $this->getRequest()->getSession()->setFlash('notice', 'Block created');
+            return $this->redirect(
+                $this->generateUrl(
+                    'kitpages_cms_block_edit',
+                    array(
+                        'id' => $block->getId(),
+                        'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
+                    )
+                )
+            );
+        }
+
         $block->setSlug($request->query->get('kitpagesBlockSlugDefault', null));
         // build basic form
         $builder = $this->createFormBuilder($block);
