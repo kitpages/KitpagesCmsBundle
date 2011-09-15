@@ -8,7 +8,16 @@ class BlockTemplateEditStandardType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('title', 'text');
+        $builder->add(
+            'title',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array(
+                    "size" => "50"
+                )
+            )
+        );
         $builder->add(
             'mainContent',
             'textarea',
