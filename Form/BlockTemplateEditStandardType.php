@@ -8,19 +8,28 @@ class BlockTemplateEditStandardType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('title', 'text');
+        $builder->add(
+            'title',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array(
+                    "size" => "50"
+                )
+            )
+        );
         $builder->add(
             'mainContent',
             'textarea',
             array(
                 'required' => false,
                 'attr' => array(
-                    "class" => "kit-cms-rte-simple"
+                    "class" => "kit-cms-rte-advanced"
                 )
             )
         );
         $builder->add('media_mainImage', 'hidden');
-        
+
         $builder->add(
             'imagePosition',
             'choice',
@@ -46,7 +55,7 @@ class BlockTemplateEditStandardType extends AbstractType
                 )
             )
         );
-        
+
         $builder->add(
             'displaySeparator',
             'checkbox',
@@ -57,9 +66,9 @@ class BlockTemplateEditStandardType extends AbstractType
             )
         );
     }
-    
+
     public function getName() {
         return 'BlockTemplateEditStandardType';
     }
-    
+
 }

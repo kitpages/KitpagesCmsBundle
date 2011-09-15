@@ -63,6 +63,10 @@ textarea.kit-cms-rte-simple {
     width: 500px;
     height: 250px;
 }
+textarea.kit-cms-rte-advanced {
+    width: 500px;
+    height: 300px;
+}
 
 /*
  * Toolbar
