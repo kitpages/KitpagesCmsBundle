@@ -29,15 +29,39 @@ class TwigRenderer {
 
     public function render($data, $viewMode = Context::VIEW_MODE_PROD)
     {
-        return $this->twig->render(
+        $output = $this->twig->render(
             $this->getTemplateName(),
             array(
                 'data' => $data,
                 'kitCmsViewMode' => $viewMode
             )
         );
+        $output = $this->parse($output, $data);
+        return $output;
     }
 
+    public function parse($output, $data)
+    {
+        $tag = preg_match_all(
+            '/\[\[cms\:mediaField\:(\w+)\]\]/',
+            $output,
+            $matches
+        );
+
+        $mediaFieldList = $matches[1];
+        foreach ($mediaFieldList as $mediaFieldName) {
+            $fieldName = 'url_media_'.$mediaFieldName;
+            if (isset($data['root']) && isset($data['root']) && isset($data['root'][$fieldName]) ) {
+                $replacement = $data['root'][$fieldName];
+                $output = preg_replace(
+                    '/\[\[cms\:mediaField\:'.$mediaFieldName.'\]\]/',
+                    $replacement,
+                    $output
+                );
+            }
+        }
+        return $output;
+    }
 
 }
 
