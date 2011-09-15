@@ -11,6 +11,7 @@
     <label>Image</label>
     {{ form_widget(form.data.root.media_mainImage) }}
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_mainImage'} %}
+    <div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:mediaField:mainImage]]</div>
 </div>
 
 {{ form_row(
