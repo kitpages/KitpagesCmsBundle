@@ -44,7 +44,7 @@ class Page
     {
         $this->zoneList = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set slug
      *
@@ -259,13 +259,13 @@ class Page
     public function prePersist()
     {
         $this->urlTitle = Urlizer::transliterate($this->title, '-');
-        $this->slug = Urlizer::transliterate($this->slug, '-');        
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
 
     public function preUpdate()
     {
         $this->urlTitle = Urlizer::transliterate($this->title, '-');
-        $this->slug = Urlizer::transliterate($this->slug, '-');         
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
 
 
@@ -414,7 +414,7 @@ class Page
     /**
      * Get language
      *
-     * @return string 
+     * @return string
      */
     public function getLanguage()
     {
@@ -440,7 +440,7 @@ class Page
     /**
      * Get pageZoneList
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getPageZoneList()
     {
@@ -470,7 +470,7 @@ class Page
     /**
      * Get urlTitle
      *
-     * @return string 
+     * @return string
      */
     public function getUrlTitle()
     {
@@ -490,7 +490,7 @@ class Page
     /**
      * Get pagePublish
      *
-     * @return Kitpages\CmsBundle\Entity\PagePublish 
+     * @return Kitpages\CmsBundle\Entity\PagePublish
      */
     public function getPagePublish()
     {
@@ -515,7 +515,7 @@ class Page
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -560,7 +560,7 @@ class Page
     /**
      * Get left
      *
-     * @return integer 
+     * @return integer
      */
     public function getLeft()
     {
@@ -580,7 +580,7 @@ class Page
     /**
      * Get right
      *
-     * @return integer 
+     * @return integer
      */
     public function getRight()
     {
@@ -600,7 +600,7 @@ class Page
     /**
      * Get root
      *
-     * @return integer 
+     * @return integer
      */
     public function getRoot()
     {
@@ -620,7 +620,7 @@ class Page
     /**
      * Get level
      *
-     * @return integer 
+     * @return integer
      */
     public function getLevel()
     {
@@ -640,7 +640,7 @@ class Page
     /**
      * Get parent
      *
-     * @return Kitpages\CmsBundle\Entity\Page 
+     * @return Kitpages\CmsBundle\Entity\Page
      */
     public function getParent()
     {
@@ -665,7 +665,7 @@ class Page
     /**
      * Get linkUrl
      *
-     * @return string 
+     * @return string
      */
     public function getLinkUrl()
     {
@@ -690,7 +690,7 @@ class Page
     /**
      * Get navPublish
      *
-     * @return Kitpages\CmsBundle\Entity\NavPublish 
+     * @return Kitpages\CmsBundle\Entity\NavPublish
      */
     public function getNavPublish()
     {
@@ -715,7 +715,7 @@ class Page
     /**
      * Get menuTitle
      *
-     * @return string 
+     * @return string
      */
     public function getMenuTitle()
     {
@@ -740,7 +740,7 @@ class Page
     /**
      * Get isPendingDelete
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPendingDelete()
     {
@@ -765,17 +765,17 @@ class Page
     /**
      * Get isInNavigation
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsInNavigation()
     {
         return $this->isInNavigation;
     }
-    
+
     public function defaultSlug(){
         $this->setSlug('page_'.$this->getId());
-    }    
-    
+    }
+
     /**
      * @var boolean $isActive
      */
@@ -795,7 +795,7 @@ class Page
     /**
      * Get isActive
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -820,10 +820,26 @@ class Page
     /**
      * Get forcedUrl
      *
-     * @return string 
+     * @return string
      */
     public function getForcedUrl()
     {
         return $this->forcedUrl;
     }
+
+    /**
+     * Get hasChildren
+     *
+     * @return boolean
+     */
+    public function getHasChildren()
+    {
+        if (($this->right - $this->left) > 1) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+
 }

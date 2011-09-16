@@ -79,7 +79,7 @@ class NavPublish
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -99,7 +99,7 @@ class NavPublish
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -119,7 +119,7 @@ class NavPublish
     /**
      * Get data
      *
-     * @return array 
+     * @return array
      */
     public function getData()
     {
@@ -139,7 +139,7 @@ class NavPublish
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getCreatedAt()
     {
@@ -159,7 +159,7 @@ class NavPublish
     /**
      * Get left
      *
-     * @return integer 
+     * @return integer
      */
     public function getLeft()
     {
@@ -179,7 +179,7 @@ class NavPublish
     /**
      * Get right
      *
-     * @return integer 
+     * @return integer
      */
     public function getRight()
     {
@@ -199,7 +199,7 @@ class NavPublish
     /**
      * Get root
      *
-     * @return integer 
+     * @return integer
      */
     public function getRoot()
     {
@@ -219,7 +219,7 @@ class NavPublish
     /**
      * Get level
      *
-     * @return integer 
+     * @return integer
      */
     public function getLevel()
     {
@@ -229,7 +229,7 @@ class NavPublish
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -249,7 +249,7 @@ class NavPublish
     /**
      * Get page
      *
-     * @return Kitpages\CmsBundle\Entity\Page 
+     * @return Kitpages\CmsBundle\Entity\Page
      */
     public function getPage()
     {
@@ -269,7 +269,7 @@ class NavPublish
     /**
      * Get parent
      *
-     * @return Kitpages\CmsBundle\Entity\NavPublish 
+     * @return Kitpages\CmsBundle\Entity\NavPublish
      */
     public function getParent()
     {
@@ -294,10 +294,25 @@ class NavPublish
     /**
      * Get forcedUrl
      *
-     * @return string 
+     * @return string
      */
     public function getForcedUrl()
     {
         return $this->forcedUrl;
     }
+
+    /**
+     * Get hasChildren
+     *
+     * @return boolean
+     */
+    public function getHasChildren()
+    {
+        if (($this->right - $this->left) > 1) {
+            return true;
+        }else {
+            return false;
+        }
+    } 
+
 }
