@@ -331,7 +331,8 @@ class BlockController extends Controller
                     $resultingHtml = $data['html'];
                 }
             } else {
-                return new Response('The block with the slug "'.htmlspecialchars($slug).'" is not published');
+                //return new Response('The block with the slug "'.htmlspecialchars($slug).'" is not published');
+                return new Response();
             }
         }
         return new Response($resultingHtml);

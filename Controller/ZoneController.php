@@ -209,7 +209,8 @@ class ZoneController extends Controller
             }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
             if ($zone == null) {
-                return new Response('The zone with the slug "'.htmlspecialchars($slug).'" is missing');
+                //return new Response('The zone with the slug "'.htmlspecialchars($slug).'" is missing');
+                return new Response();
             }
         }
         // display block order
@@ -304,7 +305,8 @@ class ZoneController extends Controller
                 }
             }
             else {
-                return new Response('This zone is not published');
+                //return new Response('This zone is not published');
+                return new Response();
             }
         }
 
