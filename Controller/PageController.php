@@ -612,7 +612,8 @@ class PageController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
             foreach($pageChildren as $pageChild) {
-                $this->publish($pageChild, $childrenPublish);
+                $pageManager->publish($pageChild, $layoutList, $listRenderer);
+//                $this->publish($pageChild, $childrenPublish);
             }
         }
         $pageManager->publish($page, $layoutList, $listRenderer);
