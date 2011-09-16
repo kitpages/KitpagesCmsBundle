@@ -610,10 +610,10 @@ class PageController extends Controller
         if ($childrenPublish) {
 
             $em = $this->getDoctrine()->getEntityManager();
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
-                $pageManager->publish($pageChild, $layoutList, $listRenderer);
-//                $this->publish($pageChild, $childrenPublish);
+//                $pageManager->publish($pageChild, $layoutList, $listRenderer);
+                $this->publish($pageChild, $childrenPublish);
             }
         }
         $pageManager->publish($page, $layoutList, $listRenderer);
@@ -640,7 +640,7 @@ class PageController extends Controller
         if ($childrenDelete) {
 
             $em = $this->getDoctrine()->getEntityManager();
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->delete($pageChild, $childrenDelete);
             }
@@ -654,7 +654,7 @@ class PageController extends Controller
         if ($childrenDelete) {
 
             $em = $this->getDoctrine()->getEntityManager();
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->pendingDelete($pageChild, $childrenDelete);
             }
@@ -668,7 +668,7 @@ class PageController extends Controller
         if ($childrenUndelete) {
 
             $em = $this->getDoctrine()->getEntityManager();
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->unpendingDelete($pageChild, $childrenUndelete);
             }
