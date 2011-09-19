@@ -132,7 +132,7 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageDelete, $event);
     }
 
-    public function publish(Page $page, array $listLayout, array $listRenderer)
+    public function publish(Page $page, array $listLayout, array $listRenderer, array $dataInheritanceList)
     {
         $event = new PageEvent($page, $listLayout);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
@@ -165,8 +165,12 @@ class PageManager
                 foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
                     $zoneList[] = $zone->getId();
                 }
+
+                $data = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+
                 $pagePublishNew = new PagePublish();
                 $pagePublishNew->initByPage($page);
+                $pagePublishNew->setData(array('root' => $data));
                 $pagePublishNew->setZoneList(array("zoneList"=>$zoneList));
                 $page->setIsPublished(true);
                 $page->setPagePublish($pagePublishNew);

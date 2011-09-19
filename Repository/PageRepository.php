@@ -107,4 +107,41 @@ class PageRepository extends NestedTreeRepository
     }
 
 
+    public function parentDataInheritance(Page $page, $fieldInheritanceList)
+    {
+
+        $dataList = $this->_em
+            ->createQuery('
+                SELECT p.data as data FROM KitpagesCmsBundle:Page p
+                WHERE p.right > :right
+                    AND p.left < :left
+                ORDER BY p.level DESC
+            ')
+            ->setParameter("right", $page->getRight())
+            ->setParameter("left", $page->getLeft())
+            ->getResult();
+
+        $dataReturn = array();
+        $fieldInheritanceList = array_flip($fieldInheritanceList);
+        foreach($dataList as $data) {
+            $dataFieldList = unserialize($data['data']);
+            if ($dataFieldList != null && $dataFieldList['root'] != null) {
+                $dataReturnTmp = array_intersect_key(array_diff($dataFieldList['root'], array(null)), $fieldInheritanceList);
+                $dataReturn = array_merge( $dataReturnTmp, $dataReturn);
+            }
+        }
+
+        return $dataReturn;
+    }
+
+    public function getDataWithInheritance(Page $page, $fieldInheritanceList)
+    {
+        $pageData = $page->getData();
+        $dataReturn = $this->parentDataInheritance($page, $fieldInheritanceList);
+        if($pageData != null && $pageData['root'] != null) {
+            $dataReturn = array_merge($dataReturn, array_diff($pageData['root'], array(null)));
+        }
+        return $dataReturn;
+    }
+
 }
