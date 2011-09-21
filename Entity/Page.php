@@ -858,7 +858,8 @@ class Page
             'left' => $this->getLeft(),
             'right' => $this->getRight(),
             'root' => $this->getRoot(),
-            'level' => $this->getLevel()
+            'level' => $this->getLevel(),
+            'hasChildren' => $this->getHasChildren()
         );
     }
 
