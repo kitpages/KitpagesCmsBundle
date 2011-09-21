@@ -35,6 +35,7 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
+        $rendererTwig = $this->container->getParameter('kitpages_cms.page.renderer_twig_main');
         $pageId = $page->getId();
         $pageType = $page->getPageType();
         $pageLanguage = $page->getLanguage();
@@ -54,10 +55,13 @@ class PageController extends Controller
             $pageLayout = $pagePublish->getLayout();
             $forcedUrl = $pagePublish->getForcedUrl();
             $data = $pagePublish->getData();
-            $data = $data['root'];
+
         } else {
             $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
-            $data = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+            $dataRoot = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+            $data['root'] = $data;
+            $data['page'] = $page->getDataPage();
+
         }
 
         if ($pageType == "technical") {
@@ -93,7 +97,7 @@ class PageController extends Controller
         $cmsManager->setLayout($layout['renderer_twig']);
 
         return $this->render(
-            'KitpagesCmsBundle:Page:layout.html.twig',
+            $rendererTwig,
             array(
                 'kitCmsViewMode' => $context->getViewMode(),
                 'kitCmsPage' => $page,

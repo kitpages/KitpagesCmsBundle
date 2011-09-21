@@ -169,8 +169,7 @@ class PageManager
                 $data = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
 
                 $pagePublishNew = new PagePublish();
-                $pagePublishNew->initByPage($page);
-                $pagePublishNew->setData(array('root' => $data));
+                $pagePublishNew->initByPage($page, $data);
                 $pagePublishNew->setZoneList(array("zoneList"=>$zoneList));
                 $page->setIsPublished(true);
                 $page->setPagePublish($pagePublishNew);

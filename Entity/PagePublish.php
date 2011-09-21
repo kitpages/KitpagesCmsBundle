@@ -54,7 +54,7 @@ class PagePublish
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -74,7 +74,7 @@ class PagePublish
     /**
      * Get data
      *
-     * @return array 
+     * @return array
      */
     public function getData()
     {
@@ -94,7 +94,7 @@ class PagePublish
     /**
      * Get zoneList
      *
-     * @return array 
+     * @return array
      */
     public function getZoneList()
     {
@@ -114,7 +114,7 @@ class PagePublish
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getCreatedAt()
     {
@@ -124,7 +124,7 @@ class PagePublish
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -144,7 +144,7 @@ class PagePublish
     /**
      * Get page
      *
-     * @return Kitpages\CmsBundle\Entity\Page 
+     * @return Kitpages\CmsBundle\Entity\Page
      */
     public function getPage()
     {
@@ -184,23 +184,27 @@ class PagePublish
     /**
      * Get urlTitle
      *
-     * @return string 
+     * @return string
      */
     public function getUrlTitle()
     {
         return $this->urlTitle;
     }
-    
-    public function initByPage(Page $page){
+
+    public function initByPage(Page $page, $data){
         $this->setSlug($page->getSlug());
         $this->setPageType($page->getPageType());
-        $this->setLayout($page->getLayout());      
-        $this->setLanguage($page->getLanguage());          
-        $this->setUrlTitle($page->getUrlTitle());   
+        $this->setLayout($page->getLayout());
+        $this->setLanguage($page->getLanguage());
+        $this->setUrlTitle($page->getUrlTitle());
         $this->setForcedUrl($page->getForcedUrl());
         $this->setPage($page);
+        $this->setData(array(
+            'root' => $data,
+            'page' => $page->getDataPage()
+        ));
     }
-    
+
     /**
      * @var string $pageType
      */
@@ -220,7 +224,7 @@ class PagePublish
     /**
      * Get pageType
      *
-     * @return string 
+     * @return string
      */
     public function getPageType()
     {
@@ -250,7 +254,7 @@ class PagePublish
     /**
      * Get language
      *
-     * @return string 
+     * @return string
      */
     public function getLanguage()
     {
@@ -270,7 +274,7 @@ class PagePublish
     /**
      * Get layout
      *
-     * @return string 
+     * @return string
      */
     public function getLayout()
     {
@@ -295,7 +299,7 @@ class PagePublish
     /**
      * Get forcedUrl
      *
-     * @return string 
+     * @return string
      */
     public function getForcedUrl()
     {
