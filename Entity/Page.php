@@ -854,7 +854,11 @@ class Page
             'language' => $this->getLanguage(),
             'menu_title' => $this->getMenuTitle(),
             'is_in_navigation' => $this->getIsInNavigation(),
-            'forced_url' => $this->getForcedUrl()
+            'forced_url' => $this->getForcedUrl(),
+            'left' => $this->getLeft(),
+            'right' => $this->getRight(),
+            'root' => $this->getRoot(),
+            'level' => $this->getLevel()
         );
     }
 
