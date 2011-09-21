@@ -57,6 +57,7 @@ class PageController extends Controller
             $data = $pagePublish->getData();
 
         } else {
+
             $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
             $dataRoot = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
             $data['root'] = $data;
@@ -508,14 +509,14 @@ class PageController extends Controller
             'property_path' => false,
             'data' => $parentId
         ));
+        if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_class')) {
+            $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
 
-        $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
-
-        // build custom form
-        $builder->add('data', 'collection', array(
-           'type' => new $classNameFormInheritance(),
-        ));
-
+            // build custom form
+            $builder->add('data', 'collection', array(
+               'type' => new $classNameFormInheritance(),
+            ));
+        }
         // get form
         $form = $builder->getForm();
 
@@ -541,9 +542,9 @@ class PageController extends Controller
         }
         $view = $form->createView();
 
-        $renderer = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_twig', null);
-        if ($renderer == null) {
-            $renderer = 'KitpagesCmsBundle:Page:editTechnical.html.twig';
+        $renderer = 'KitpagesCmsBundle:Page:editTechnical.html.twig';
+        if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_twig')) {
+            $renderer = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_twig');
         }
 
         return $this->render($renderer, array(
@@ -612,14 +613,14 @@ class PageController extends Controller
 
 
         $builder->add('linkUrl', 'text');
+        if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_class')) {
+            $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
 
-        $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
-
-        // build custom form
-        $builder->add('data', 'collection', array(
-           'type' => new $classNameFormInheritance(),
-        ));
-
+            // build custom form
+            $builder->add('data', 'collection', array(
+               'type' => new $classNameFormInheritance(),
+            ));
+        }
         // get form
         $form = $builder->getForm();
 
@@ -645,9 +646,9 @@ class PageController extends Controller
         }
         $view = $form->createView();
 
-        $renderer = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_twig', null);
-        if ($renderer == null) {
-            $renderer = 'KitpagesCmsBundle:Page:editLink.html.twig';
+        $renderer = 'KitpagesCmsBundle:Page:editLink.html.twig';
+        if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_twig')) {
+            $renderer = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_twig');
         }
 
         return $this->render($renderer, array(

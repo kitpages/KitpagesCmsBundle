@@ -161,6 +161,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('KitpagesCmsBundle:Page:layout.html.twig')
                         ->end()
                         ->arrayNode('data_inheritance_list')
+                            ->defaultValue('[]')
                             ->prototype('scalar')->end()
                         ->end()
                         ->scalarNode('data_inheritance_form_class')
