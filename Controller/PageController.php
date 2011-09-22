@@ -458,7 +458,21 @@ class PageController extends Controller
                 $pageManager = $this->get('kitpages.cms.manager.page');
                 $pageManager->afterModify($page, $oldPageData);
                 $this->getRequest()->getSession()->setFlash('notice', 'Page modified');
-                if ($target) {
+                if (is_null($target)) {
+                    $forcedUrl = $page->getForcedUrl();
+                    if ($forcedUrl != null) {
+                        return $this->redirect($page->getForcedUrl());
+                    } else {
+                        return $this->redirect($this->generateUrl(
+                            'kitpages_cms_page_view_lang',
+                            array(
+                                'id' => $page->getId(),
+                                'lang' => $page->getLanguage(),
+                                'urlTitle' => $page->getUrlTitle()
+                            )
+                        ));
+                    }
+                } else {
                     return $this->redirect($target);
                 }
                 return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
