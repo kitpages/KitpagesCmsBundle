@@ -38,6 +38,9 @@ final class KitpagesCmsEvents
     const onPagePublish = 'kitpages.cms.page.on.publish';
     const afterPagePublish = 'kitpages.cms.page.after.publish';
 
+    const onMultiplePagePublish = 'kitpages.cms.page.on.multiple_publish';
+    const afterMultiplePagePublish = 'kitpages.cms.page.after.multiple_publish';
+
     const onPageUnpublish = 'kitpages.cms.page.on.unpublish';
     const afterPageUnpublish = 'kitpages.cms.page.after.unpublish';
 

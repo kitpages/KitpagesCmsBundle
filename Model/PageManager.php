@@ -132,7 +132,7 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageDelete, $event);
     }
 
-    public function publish(Page $page, array $listLayout, array $listRenderer, array $dataInheritanceList)
+    public function publishPage(Page $page, array $listLayout, array $listRenderer, array $dataInheritanceList)
     {
         $event = new PageEvent($page, $listLayout);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
@@ -177,6 +177,24 @@ class PageManager
             }
         }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePublish, $event);
+    }
+
+    public function publish(Page $page, array $layoutList, array $listRenderer, array $dataInheritanceList, $childrenPublish)
+    {
+
+        $event = new PageEvent($page, $layoutList);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onMultiplePagePublish, $event);
+        if ($childrenPublish) {
+            $em = $this->getDoctrine()->getEntityManager();
+            //$pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, false, 'level', 'DESC');
+            foreach($pageChildren as $pageChild) {
+                $this->publishPage($pageChild, $layoutList, $listRenderer, $dataInheritanceList);
+                //$this->publish($pageChild, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
+            }
+        }
+        $this->publishPage($page, $layoutList, $listRenderer, $dataInheritanceList);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterMultiplePagePublish, $event);
     }
 
     public function afterModify($page, $oldPageData)

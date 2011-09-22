@@ -685,31 +685,16 @@ class PageController extends Controller
         return $resultingHtml;
     }
 
-    public function publish(Page $page, $childrenPublish)
-    {
-        $pageManager = $this->get('kitpages.cms.manager.page');
-        $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
-        $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
-        $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
-        if ($childrenPublish) {
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
-            foreach($pageChildren as $pageChild) {
-//                $pageManager->publish($pageChild, $layoutList, $listRenderer);
-                $this->publish($pageChild, $childrenPublish);
-            }
-        }
-        $pageManager->publish($page, $layoutList, $listRenderer, $dataInheritanceList);
-    }
-
     public function publishAction(Page $page)
     {
         ini_set ('max_execution_time', 3000);
         ini_set ('memory_limit', "750M");
+        $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
+        $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
+        $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
+        $pageManager = $this->get('kitpages.cms.manager.page');
         $childrenPublish = $this->get('request')->query->get('children', false);
-        $this->publish($page, $childrenPublish);
-
+        $pageManager->publish($page, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
         $this->getRequest()->getSession()->setFlash('notice', 'Page published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
