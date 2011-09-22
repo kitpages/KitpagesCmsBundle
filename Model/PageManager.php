@@ -176,7 +176,6 @@ class PageManager
                 $em->flush();
             }
         }
-        $event = new PageEvent($page, $listLayout, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePublish, $event);
     }
 
@@ -198,7 +197,6 @@ class PageManager
         $em = $this->getDoctrine()->getEntityManager();
         $page->setIsPublished(false);
         $em->flush();
-        $event = new PageEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageUnpublish, $event);
     }
 
