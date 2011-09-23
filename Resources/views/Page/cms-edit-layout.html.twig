@@ -4,30 +4,13 @@
 {{ parent() }}
 <link rel="stylesheet" type="text/css" href="{{ asset ("bundles/kitpagesfile/uploadify/uploadify.css") }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset ("bundles/kitpagesfile/css/style.css") }}" />
-<link rel="stylesheet" type="text/css" href="{{ asset ("bundles/kitpagescms/css/datepicker/datepicker.css") }}" />
 {% endblock stylesheets %}
 
 {% block kitpages_cms_javascripts %}
 {{ parent() }}
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/swfobject.js") }}"></script>
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/jquery.uploadify.v2.1.4.min.js") }}"></script>
-<script type="text/javascript" src="{{ asset ("bundles/kitpagescms/js/datepicker/datepicker.js") }}"></script>
 <script type="text/javascript" src="{{ asset ("bundles/kitpagescms/js/tiny_mce/tiny_mce.js") }}" ></script>
-<script language="javascript" type="text/javascript">
-$(document).ready(function(){
-    $('input.kit-cms-datepicker').DatePicker({
-	format:'Y-m-d',
-	date: $('input.kit-cms-datepicker').val(),
-	current: $('input.kit-cms-datepicker').val(),
-	starts: 1,
-	position: 'right',
-	onChange: function(formated, dates){
-            $('input.kit-cms-datepicker').val(formated);
-	}
-    });
-});
-
-</script>
 <script language="javascript" type="text/javascript">
 tinyMCE.init({
     mode : "textareas",
