@@ -1,10 +1,30 @@
 {% extends 'KitpagesCmsBundle:Page:cms-edit-layout.html.twig' %}
 
 {% block body %}
-<h1>Create Page Technical</h1>
+<h1>Edit Page Technical</h1>
 
 <form class="kit-cms-form" action="{{ path('kitpages_cms_page_edit_technical', { 'id': id ,  'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(
+        form.slug,
+        {'help': "Don't change this value until you know what your are doing"}
+    ) }}
+    {{ form_row(
+        form.menuTitle,
+        {'help': "Name of the page in the navigation"}
+    ) }}
+    {{ form_row(
+        form.isInNavigation,
+        {'help': "Ex: indicates if the page appears in the navigation."}
+    ) }}
+
+    {{ form_row(form.language) }}
+
+    {{ form_row(form.parent_id) }}
+
+    {% block editData %}{% endblock %}
+
+    {{ form_rest(form) }}
 
     <input type="submit" />
 </form>

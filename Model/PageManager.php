@@ -132,7 +132,7 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageDelete, $event);
     }
 
-    public function publish(Page $page, array $listLayout, array $listRenderer)
+    public function publishPage(Page $page, array $listLayout, array $listRenderer, array $dataInheritanceList)
     {
         $event = new PageEvent($page, $listLayout);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
@@ -165,16 +165,36 @@ class PageManager
                 foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
                     $zoneList[] = $zone->getId();
                 }
+
+                $data = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+
                 $pagePublishNew = new PagePublish();
-                $pagePublishNew->initByPage($page);
+                $pagePublishNew->initByPage($page, $data);
                 $pagePublishNew->setZoneList(array("zoneList"=>$zoneList));
                 $page->setIsPublished(true);
                 $page->setPagePublish($pagePublishNew);
                 $em->flush();
             }
         }
-        $event = new PageEvent($page, $listLayout, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePublish, $event);
+    }
+
+    public function publish(Page $page, array $layoutList, array $listRenderer, array $dataInheritanceList, $childrenPublish)
+    {
+
+        $event = new PageEvent($page, $layoutList);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::onMultiplePagePublish, $event);
+        if ($childrenPublish) {
+            $em = $this->getDoctrine()->getEntityManager();
+            //$pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, false, 'level', 'DESC');
+            foreach($pageChildren as $pageChild) {
+                $this->publishPage($pageChild, $layoutList, $listRenderer, $dataInheritanceList);
+                //$this->publish($pageChild, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
+            }
+        }
+        $this->publishPage($page, $layoutList, $listRenderer, $dataInheritanceList);
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterMultiplePagePublish, $event);
     }
 
     public function afterModify($page, $oldPageData)
@@ -195,7 +215,6 @@ class PageManager
         $em = $this->getDoctrine()->getEntityManager();
         $page->setIsPublished(false);
         $em->flush();
-        $event = new PageEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageUnpublish, $event);
     }
 

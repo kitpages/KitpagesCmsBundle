@@ -110,7 +110,6 @@ class ZoneManager
             $em->persist($zone);
             $em->flush();
         }
-        $event = new ZoneEvent($zone, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZonePublish, $event);
     }
 
@@ -120,7 +119,6 @@ class ZoneManager
         $em = $this->getDoctrine()->getEntityManager();
         $zone->setIsPublished(false);
         $em->flush();
-        $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZoneUnpublish, $event);
     }
     public function deletePublished($zonePublish){
@@ -175,7 +173,6 @@ class ZoneManager
             $this->unpublish($zone);
             $em->flush();
         }
-        $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockMove, $event);
     }
     public function moveDownBlock(Zone $zone, $block_id)
@@ -193,7 +190,6 @@ class ZoneManager
             $this->reorderBlockList($zone);
             $this->unpublish($zone);
         }
-        $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockMove, $event);
     }
 

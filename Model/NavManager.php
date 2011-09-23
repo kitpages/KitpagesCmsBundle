@@ -29,7 +29,7 @@ class NavManager
     protected $pageManager = null;
     protected $cacheManager = null;
     protected $logger = null;
-    
+
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
@@ -43,21 +43,21 @@ class NavManager
         $this->pageManager = $pageManager;
         $this->cacheManager = $cacheManager;
         $this->logger = $logger;
-    }      
+    }
 
     /**
      * @return EventDispatcher $dispatcher
      */
     public function getDispatcher() {
         return $this->dispatcher;
-    }  
-    
+    }
+
     /**
      * @return Registry $doctrine
      */
     public function getDoctrine() {
         return $this->doctrine;
-    }    
+    }
 
     /**
      * @return $pageManager
@@ -65,7 +65,7 @@ class NavManager
     public function getPageManager() {
         return $this->pageManager;
     }
-    
+
     /**
      * @return LoggerInterface
      */
@@ -84,21 +84,19 @@ class NavManager
         if (! $event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->getRepository('KitpagesCmsBundle:Page')->moveUp($page, $nbrPosition);
-        }    
-        $event = new NavEvent($page);
+        }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavMove, $event);
-    } 
+    }
     public function moveDown($page, $nbrPosition)
     {
         $event = new NavEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavMove, $event);
         if (! $event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $em->getRepository('KitpagesCmsBundle:Page')->moveDown($page, $nbrPosition);    
-        }    
-        $event = new NavEvent($page);
+            $em->getRepository('KitpagesCmsBundle:Page')->moveDown($page, $nbrPosition);
+        }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavMove, $event);
-    }      
+    }
     public function publish()
     {
         $event = new NavEvent();
@@ -141,7 +139,7 @@ class NavManager
             $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
             $em->flush();
         }
-        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavPublish, $event);        
+        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavPublish, $event);
     }
     ////
     // event listener
@@ -153,6 +151,6 @@ class NavManager
             $this->unpublish();
         }
     }
-  
-    
+
+
 }

@@ -841,5 +841,27 @@ class Page
         }
     }
 
+    /**
+     * Get list fields
+     *
+     * @return array
+     */
+    public function getDataPage()
+    {
+        return array(
+            'title' => $this->getTitle(),
+            'slug' => $this->getSlug(),
+            'language' => $this->getLanguage(),
+            'menu_title' => $this->getMenuTitle(),
+            'is_in_navigation' => $this->getIsInNavigation(),
+            'forced_url' => $this->getForcedUrl(),
+            'left' => $this->getLeft(),
+            'right' => $this->getRight(),
+            'root' => $this->getRoot(),
+            'level' => $this->getLevel(),
+            'hasChildren' => $this->getHasChildren()
+        );
+    }
+
 
 }
