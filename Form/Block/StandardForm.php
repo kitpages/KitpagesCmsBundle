@@ -1,10 +1,10 @@
 <?php
-namespace Kitpages\CmsBundle\Form;
+namespace Kitpages\CmsBundle\Form\Block;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class BlockTemplateEditStandardType extends AbstractType
+class StandardForm extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {

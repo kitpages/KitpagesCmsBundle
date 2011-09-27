@@ -27,10 +27,6 @@ Edit deps file
         git=http://github.com/kitpages/KitpagesSimpleCacheBundle.git
         target=Kitpages/SimpleCacheBundle
 
-    [KitpagesRedirectBundle]
-        git=http://github.com/kitpages/KitpagesRedirectBundle.git
-        target=Kitpages/RedirectBundle
-
     [KitpagesUtilBundle]
         git=http://github.com/kitpages/KitpagesUtilBundle.git
         target=Kitpages/UtilBundle
@@ -79,7 +75,6 @@ In the app/AppKernel.php add
     new Kitpages\FileBundle\KitpagesFileBundle(),
     new Kitpages\SimpleCacheBundle\KitpagesSimpleCacheBundle(),
     new Kitpages\UtilBundle\KitpagesUtilBundle(),
-    new Kitpages\RedirectBundle\KitpagesRedirectBundle(),
     new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
     new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
 
@@ -100,7 +95,7 @@ Edit app/config/parameters.ini, put your confs and add a new conf
 
 ::
 
-    base_url          = http://www.kitpages.fr
+    base_url          = http://www.mywebsite.fr
 
 
 Edit the app/config/config.yml
@@ -136,31 +131,20 @@ add the following sections
             template:
                 template_list:
                     standard:
-                        class: "\Kitpages\CmsBundle\Form\BlockTemplateEditStandardType"
+                        class: '\Kitpages\CmsBundle\Form\Block\StandardForm'
                         name: "Standard"
-                        twig: "KitpagesCmsBundle:Block:edit/standard.html.twig"
-                    news:
-                        class: "\Kitpages\CmsBundle\Form\BlockTemplateEditNewsType"
-                        name: "News"
-                        twig: "KitpagesCmsBundle:Block:edit/news.html.twig"
+                        twig: "KitpagesCmsBundle:Block:form/standard.html.twig"
             renderer:
                 standard:
                     default:
                         type: "twig"
-                        twig: "KitpagesCmsBundle:Block:render/standard-default.html.twig"
-                news:
-                    default:
-                        type: "twig"
-                        twig: "KitpagesCmsBundle:Block:render/news-default.html.twig"
-                    short:
-                        type: "twig"
-                        twig: "KitpagesCmsBundle:Block:render/news-short.html.twig"
+                        twig: "KitpagesCmsBundle:Block:renderer/standard/default.html.twig"
         page:
             layout_list:
                 default:
-                    renderer_twig: "KitpagesCmsBundle:Page:_exampleLayout.html.twig"
-                    data_form_class: "\Kitpages\CmsBundle\Form\PageLayoutEditDefault"
-                    data_form_twig: "KitpagesCmsBundle:Page:page-layout-edit-default.html.twig"
+                    renderer_twig: "KitpagesCmsBundle:Page:template/default.html.twig"
+                    data_form_class: '\Kitpages\CmsBundle\Form\Page\DefaultForm'
+                    data_form_twig: "KitpagesCmsBundle:Page:form/default.html.twig"
                     zone_list:
                         column:
                             renderer: "default"
