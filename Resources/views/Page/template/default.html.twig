@@ -1,0 +1,41 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+<div class="layout-inside-column">
+    {% render 'KitpagesCmsBundle:Page:widgetZone' with {'location_in_page': 'column', 'page':kitCmsPage} %}
+</div>
+<div class="layout-inside-main">
+    <h1>{{kitCmsPage.title}}</h1>
+    <div class="app-separator"></div>
+    {% render 'KitpagesCmsBundle:Page:widgetZone' with {'location_in_page': 'main', 'page':kitCmsPage} %}
+</div>
+<div style="clear:both;"></div>
+{% endblock body %}
+
+{% block siteNavigation %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-main',
+        'cssClass': "kit-cms-navigation-top",
+        'currentPageSlug':kitCmsPage.slug|default(''),
+        'startDepth':1 ,
+        'endDepth':1}
+    %}
+{% endblock  siteNavigation %}
+
+{% block mainNavigation %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-main',
+        'cssClass': "kit-cms-navigation-main",
+        'currentPageSlug':kitCmsPage.slug|default(''),
+        'startDepth':2 ,
+        'endDepth':2}
+    %}
+
+{% endblock  mainNavigation %}
+
+{% block footerNavigation %}
+    {% render 'KitpagesCmsBundle:Nav:widget' with {
+        'slug': kitCmsPage.language|default(cms.currentLanguage) ~ '-footer',
+        'cssClass': "kitpages-cms-navigation-footer",
+        'currentPageSlug':kitCmsPage.slug|default('')}
+    %}
+{% endblock  footerNavigation %}

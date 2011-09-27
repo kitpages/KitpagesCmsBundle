@@ -252,7 +252,8 @@ class NavController extends Controller
                     );
                     $pageArbo['actionList'][] = array(
                         'label' => 'publish All',
-                        'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild)
+                        'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
+                        'class' => 'kit-cms-modal-open'
                     );
                 } else {
                     $pageArbo['actionList'][] = array(
@@ -272,7 +273,7 @@ class NavController extends Controller
                 $pageArbo['actionList'][] = array(
                     'label' => 'publish All',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
-                    'class' => 'kit-cms-advanced'
+                    'class' => 'kit-cms-advanced kit-cms-modal-open'
                 );
                 $pageArbo['actionList'][] = array(
                     'label' => 'up',

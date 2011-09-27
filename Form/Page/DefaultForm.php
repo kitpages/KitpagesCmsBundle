@@ -1,34 +1,34 @@
 <?php
-namespace Kitpages\CmsBundle\Form;
+namespace Kitpages\CmsBundle\Form\Page;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class PageLayoutEditDefault extends AbstractType
+class DefaultForm extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add(
             'backgroundColor',
-            'text', 
+            'text',
             array(
                 'label' => "Background color",
                 'required' => false
             )
         );
-        
+
         $builder->add(
             'author',
-            'text', 
+            'text',
             array(
-                'label' => 'Author', 
+                'label' => 'Author',
                 'required' => false
             )
         );
     }
-    
+
     public function getName() {
         return 'PageLayoutEditDefault';
     }
-    
+
 }

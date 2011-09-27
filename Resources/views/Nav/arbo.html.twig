@@ -1,5 +1,11 @@
 {% extends 'KitpagesCmsBundle:Page:layout.html.twig' %}
 {% block body %}
+    <script type="text/javascript" src="{{ asset ("bundles/kitpagescms/js/jQuery/kitCmsModal.js") }}" ></script>
+    <script>
+        $(document).ready(function() {
+            $('.kit-cms-modal-open > a').kitCmsModal({closable:false});
+        });
+    </script>
     <h1>Arbo</h1>
     <div class="kit-cms-arbo kit-cms">
         {% set cycle = 0 %}
