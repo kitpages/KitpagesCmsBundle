@@ -60,7 +60,7 @@ class PageController extends Controller
 
             $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
             $dataRoot = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
-            $data['root'] = $data;
+            $data['root'] = $dataRoot;
             $data['page'] = $page->getDataPage();
 
         }
