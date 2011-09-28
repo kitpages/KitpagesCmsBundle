@@ -250,9 +250,9 @@ textarea.kit-cms-rte-advanced {
     padding: 1px;
     margin-bottom: 1px;
 }
-
-.kit-cms .kit-cms-zone-toolbar > .kit-cms-menu {
+.kit-cms-zone-toolbar > .kit-cms-menu {
     background-color: #E3CCCC;
+    margin: 0px;
 }
 
 
