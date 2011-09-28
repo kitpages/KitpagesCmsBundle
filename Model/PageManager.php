@@ -186,11 +186,11 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onMultiplePagePublish, $event);
         if ($childrenPublish) {
             $em = $this->getDoctrine()->getEntityManager();
-            //$pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
-            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, false, 'level', 'DESC');
+            $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
+            //$pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, false, 'level', 'DESC');
             foreach($pageChildren as $pageChild) {
-                $this->publishPage($pageChild, $layoutList, $listRenderer, $dataInheritanceList);
-                //$this->publish($pageChild, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
+                //$this->publishPage($pageChild, $layoutList, $listRenderer, $dataInheritanceList);
+                $this->publish($pageChild, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
             }
         }
         $this->publishPage($page, $layoutList, $listRenderer, $dataInheritanceList);
