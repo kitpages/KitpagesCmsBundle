@@ -248,19 +248,32 @@ class ZoneController extends Controller
             }
 
             $tmpDisplayToobar = false;
+            $blockCount = count($blockList);
+            $cnt = 1;
             foreach($blockList as $block){
                 $tmpDisplayToobar = true;
                 if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
                     $resultingHtml .= $this->toolbarBlock($zone, $block, $authorizedBlockTemplateList);
                     $tmpDisplayToobar = false;
                 }
+                // add class firstLastClass if needed (kit-cms-first or kit-cms-last)
+                $firstLastClass = '';
+                if ($cnt == 1) {
+                    $firstLastClass .= ' kit-cms-first ';
+                }
+                if ($cnt == $blockCount) {
+                    $firstLastClass .= ' kit-cms-last ';
+                }
+                $cnt++;
+
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
                     "KitpagesCmsBundle:Block:widget",
                     array(
                         "slug" => $block->getSlug(),
                         "renderer" =>$renderer,
                         "displayToolbar" => $tmpDisplayToobar,
-                        "authorizedBlockTemplateList" => $authorizedBlockTemplateList
+                        "authorizedBlockTemplateList" => $authorizedBlockTemplateList,
+                        "filterParameterList" => array('firstLastClass' => $firstLastClass)
                     ),
                     array()
                 );
@@ -296,11 +309,26 @@ class ZoneController extends Controller
                     );
                 }
 
+                $blockCount = count($blockList);
+                $cnt = 1;
                 foreach($blockList as $blockPublishId){
                     $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
                     $blockPublishData = $blockPublish->getData();
+                    // add class firstLastClass if needed (kit-cms-first or kit-cms-last)
+                    $firstLastClass = '';
+                    if ($cnt == 1) {
+                        $firstLastClass .= ' kit-cms-first ';
+                    }
+                    if ($cnt == $blockCount) {
+                        $firstLastClass .= ' kit-cms-last ';
+                    }
+                    $cnt++;
+                    // render blocks
                     if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
-                        $resultingHtml .= $blockPublishData['html'];
+                        $resultingHtml .= $this->widgetPostFilter(
+                            $blockPublishData['html'],
+                            array('firstLastClass' => $firstLastClass)
+                        );
                     }
                 }
             }
@@ -317,6 +345,13 @@ class ZoneController extends Controller
         return new Response($resultingHtml);
     }
 
+    public function widgetPostFilter($resultingHtml, $filterParameterList)
+    {
+        foreach ($filterParameterList as $paramName => $paramValue) {
+            $resultingHtml = str_replace("[[cms:parameter:$paramName]]", $paramValue, $resultingHtml);
+        }
+        return $resultingHtml;
+    }
 
     public function publishAction(Zone $zone)
     {
