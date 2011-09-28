@@ -1,6 +1,9 @@
 {% extends 'KitpagesCmsBundle:Page:cms-edit-layout.html.twig' %}
 
 {% block body %}
+<div class="kit-cms-edit kit-cms">
+
+
 <h1>Edit Page Technical</h1>
 
 <form class="kit-cms-form" action="{{ path('kitpages_cms_page_edit_technical', { 'id': id ,  'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
@@ -28,4 +31,6 @@
 
     <input type="submit" />
 </form>
+
+</div>
 {% endblock body %}

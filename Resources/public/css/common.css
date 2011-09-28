@@ -68,6 +68,10 @@ textarea.kit-cms-rte-advanced {
     height: 300px;
 }
 
+.kit-cms-edit {
+    background-color: #FFF;
+    padding: 5px;
+}
 /*
  * Toolbar
  */
@@ -260,6 +264,7 @@ textarea.kit-cms-rte-advanced {
  *  arbo
  */
 .kit-cms-arbo {
+    background-color: #FFF;
 }
 .kit-cms-arbo > .kit-cms-arbo-node-container:first-child {
     margin: 0px;

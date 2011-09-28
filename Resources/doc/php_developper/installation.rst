@@ -207,7 +207,7 @@ Modify base template
 Add at the end of the header
 
 ::
-
+    {% block kitpages_cms_stylesheets %}{% endblock %}
     {% block kitpages_cms_javascripts %}{% endblock %}
 
 Add at the very beginning of the body :
