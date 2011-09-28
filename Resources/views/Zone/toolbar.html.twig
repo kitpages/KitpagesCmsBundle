@@ -6,9 +6,9 @@
             {% for action in actionList %}
                 <li class="{{action.class|default()}}" >
                     {% if action.icon is defined %}
-                        <a href="{{action.url}}" title="{{action.label}}"><img src="{{asset("bundles/kitpagescms/" ~ action.icon)}}"></a>
+                        <a href="{{action.url}}" title="{{action.label}}">{% if action.id == 'publish' and isPublished != 1 %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}">{% endif %}<img src="{{asset("bundles/kitpagescms/" ~ action.icon)}}"></a>
                     {% else %}
-                        <a href="{{action.url}}">{{action.label}}</a>
+                        <a href="{{action.url}}">{% if action.id == 'publish' and isPublished != 1 %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}">{% endif %}{{action.label}}</a>
                     {% endif %}
                 </li>
             {% endfor %}

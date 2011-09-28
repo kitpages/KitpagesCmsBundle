@@ -63,6 +63,7 @@ class ZoneController extends Controller
     public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null) {
         $actionList = array();
         $actionList[] = array(
+            'id' => '',
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_create',
@@ -75,6 +76,7 @@ class ZoneController extends Controller
             'icon' => 'icon/add.png'
         );
         $actionList[] = array(
+            'id' => 'publish',
             'label' => 'publish',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_zone_publish',
@@ -84,11 +86,13 @@ class ZoneController extends Controller
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
             ),
+            'class' => ($zone->getIsPublished() == '1')?'kit-cms-advanced':'',
             'icon' => 'icon/publish.png'
         );
 
         $dataRenderer = array(
             'title' => $zone->getSlug(),
+            'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
             'htmlBlock' => $htmlBlock
         );
@@ -103,6 +107,7 @@ class ZoneController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block);
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'edit',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_edit',
@@ -115,6 +120,7 @@ class ZoneController extends Controller
             'icon' => 'icon/edit.png'
         );
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_create',
@@ -128,6 +134,7 @@ class ZoneController extends Controller
             'icon' => 'icon/add.png'
         );
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'delete',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_delete',
@@ -146,6 +153,7 @@ class ZoneController extends Controller
             'kitpages_target' => $_SERVER["REQUEST_URI"]
         );
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'moveUp',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_zoneblock_moveup',
@@ -155,6 +163,7 @@ class ZoneController extends Controller
         );
 
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'moveDown',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_zoneblock_movedown',

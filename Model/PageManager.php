@@ -197,9 +197,9 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterMultiplePagePublish, $event);
     }
 
-    public function afterModify($page, $oldPageData)
+    public function afterModify($page, $oldPage)
     {
-        if ($oldPageData != $page->getData()) {
+        if ($oldPage != $page) {
             $page->setRealUpdatedAt(new \DateTime());
             $em = $this->getDoctrine()->getEntityManager();
             $em->flush();

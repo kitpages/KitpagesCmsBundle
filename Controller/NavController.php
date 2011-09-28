@@ -231,6 +231,7 @@ class NavController extends Controller
             $pageArbo = array();
             $pageArbo['slug'] = $page->getSlug();
             $pageArbo['menuTitle'] = $page->getMenuTitle();
+            $pageArbo['isPublished'] = $page->getIsPublished();
             $paramUrl = array(
                 'id' => $page->getId(),
                 'kitpages_target' => $_SERVER["REQUEST_URI"]
@@ -249,16 +250,19 @@ class NavController extends Controller
             if ($page->getIsPendingDelete() == 1) {
                 if ($pageParent->getIsPendingDelete() == 0) {
                     $pageArbo['actionList'][] = array(
+                        'id' => '',
                         'label' => 'undelete',
                         'url' => $this->generateUrl('kitpages_cms_page_undelete', $paramUrl),
                     );
                     $pageArbo['actionList'][] = array(
+                        'id' => '',
                         'label' => 'publish All',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-modal-open'
                     );
                 } else {
                     $pageArbo['actionList'][] = array(
+                        'id' => '',
                         'label' => 'publish All',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-advanced'
@@ -267,17 +271,20 @@ class NavController extends Controller
             } else {
 
                 $pageArbo['actionList'][] = array(
+                    'id' => 'publish',
                     'label' => 'publish',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
-                    'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
+                    'class' => ($page->getIsPublished() == '1')?'kit-cms-advanced':'',
                     'icon' => 'icon/publish.png'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'publish All',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                     'class' => 'kit-cms-advanced kit-cms-modal-open'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'up',
                     'url'  => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
@@ -285,27 +292,32 @@ class NavController extends Controller
 
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'down',
                     'url'  => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/arrow-down.png'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'add page',
                     'url'  => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate),
                     'icon' => 'icon/add.png'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'add page technical',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'add page link',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
                 );
                 $pageArbo['actionList'][] = array(
+                    'id' => '',
                     'label' => 'delete',
                     'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',

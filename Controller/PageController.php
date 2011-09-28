@@ -443,7 +443,7 @@ class PageController extends Controller
 
         // persist form if needed
         if ($request->getMethod() == 'POST') {
-            $oldPageData = $page->getData();
+            $oldPage = clone $page;
             $form->bindRequest($request);
 
             if ($form->isValid()) {
@@ -456,7 +456,7 @@ class PageController extends Controller
                 }
                 $em->flush();
                 $pageManager = $this->get('kitpages.cms.manager.page');
-                $pageManager->afterModify($page, $oldPageData);
+                $pageManager->afterModify($page, $oldPage);
                 $this->getRequest()->getSession()->setFlash('notice', 'Page modified');
                 if (is_null($target)) {
                     $forcedUrl = $page->getForcedUrl();
@@ -675,6 +675,7 @@ class PageController extends Controller
 
     public function toolbarZone(Zone $zone, $htmlZone, $authorizedBlockTemplateList = null) {
         $actionList[] = array(
+            'id' => '',
             'label' => 'addBlock',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_create',
@@ -690,6 +691,7 @@ class PageController extends Controller
 
         $dataRenderer = array(
             'title' => $zone->getSlug(),
+            'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
             'htmlBlock' => $htmlZone
         );
