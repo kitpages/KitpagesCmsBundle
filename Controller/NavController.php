@@ -90,14 +90,16 @@ class NavController extends Controller
                             $navPublish = $em->getRepository('KitpagesCmsBundle:NavPublish')->childOfPageWithForParentOtherPage($navPublish, $currentNavPublish, $startDepth-1);
                             $startDepth = 1;
                         }
-                        $startLevel = $navPublish->getLevel() + $startDepth;
-                        $endLevel = $navPublish->getLevel() + $endDepth;
-                        $navigation =  $myThis->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
+                        if ($navPublish != null) {
+                            $startLevel = $navPublish->getLevel() + $startDepth;
+                            $endLevel = $navPublish->getLevel() + $endDepth;
+                            $navigation =  $myThis->navPublishChildren($navPublish, $context->getViewMode(), $startDepth, $endLevel);
 
-                        if ($currentNavPublish != null) {
-                            $selectParentNavPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($currentNavPublish, $startLevel, $endLevel);
-                            foreach($selectParentNavPublishList as $selectParentNavPublish) {
-                                $selectPageSlugList[] = $selectParentNavPublish->getSlug();
+                            if ($currentNavPublish != null) {
+                                $selectParentNavPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($currentNavPublish, $startLevel, $endLevel);
+                                foreach($selectParentNavPublishList as $selectParentNavPublish) {
+                                    $selectPageSlugList[] = $selectParentNavPublish->getSlug();
+                                }
                             }
                         }
                     }

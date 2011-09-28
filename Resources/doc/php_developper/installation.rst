@@ -140,6 +140,10 @@ add the following sections
                         type: "twig"
                         twig: "KitpagesCmsBundle:Block:renderer/standard/default.html.twig"
         page:
+            renderer_twig_main: "KitpagesCmsBundle:Page:layout.html.twig" # optional default:"KitpagesCmsBundle:Page:layout.html.twig"
+            data_inheritance_list: ["backgroundColor", "author"] # optional
+            data_inheritance_form_class: "\App\SiteBundle\Form\\Page\DataInheritance" # optional
+            data_inheritance_form_twig: "AppSiteBundle:Page:form/data-inheritance.html.twig" # optional
             layout_list:
                 default:
                     renderer_twig: "KitpagesCmsBundle:Page:template/default.html.twig"
