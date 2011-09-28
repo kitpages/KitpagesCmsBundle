@@ -45,7 +45,7 @@ class BlockController extends Controller
             }
         }
 
-
+        $block->setSlug($request->query->get('kitpagesBlockSlugDefault', null));
         //create automatic if one template
         if (count($selectTemplateList) == 1) {
             $templateKeyList = array_keys($selectTemplateList);
@@ -83,7 +83,6 @@ class BlockController extends Controller
             );
         }
 
-        $block->setSlug($request->query->get('kitpagesBlockSlugDefault', null));
         // build basic form
         $builder = $this->createFormBuilder($block);
         $builder->add(
@@ -240,6 +239,7 @@ class BlockController extends Controller
     public function toolbar(Block $block, $authorizedBlockTemplateList) {
 
         $dataRenderer['actionList'][] = array(
+            'id' => '',
             'label' => 'edit',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_edit',
@@ -252,6 +252,7 @@ class BlockController extends Controller
             'icon' => 'icon/edit.png'
         );
         $dataRenderer['actionList'][] = array(
+            'id' => 'publish',
             'label' => 'publish',
             'url' => $this->get('router')->generate(
                 'kitpages_cms_block_publish',
@@ -259,9 +260,11 @@ class BlockController extends Controller
                     'id' => $block->getId(),
                     'kitpages_target' => $_SERVER['REQUEST_URI']
                 )
-            )
+            ),
+            'class' => ($block->getIsPublished() == '1')?'kit-cms-advanced':'',
+            'icon' => 'icon/publish.png'
         );
-
+        $dataRenderer['isPublished'] = $block->getIsPublished();
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
         );
