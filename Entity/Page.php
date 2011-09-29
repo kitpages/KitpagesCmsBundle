@@ -814,6 +814,9 @@ class Page
      */
     public function setForcedUrl($forcedUrl)
     {
+        if (substr($forcedUrl, 0, 1) != '/') {
+            $forcedUrl = '/'.$forcedUrl;
+        }
         $this->forcedUrl = $forcedUrl;
     }
 
