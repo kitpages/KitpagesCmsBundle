@@ -13,6 +13,54 @@ use Kitpages\CmsBundle\Entity\PagePublish;
 class NavController extends Controller
 {
 
+    public function publishAllAction()
+    {
+        ini_set ('max_execution_time', 3000);
+        ini_set ('memory_limit', "750M");
+        $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
+        $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
+        $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
+        $em = $this->getDoctrine()->getEntityManager();
+        $pageManager = $this->get('kitpages.cms.manager.page');
+        $zoneManager = $this->get('kitpages.cms.manager.zone');
+        $blockManager = $this->get('kitpages.cms.manager.block');
+        $navManager = $this->get('kitpages.cms.manager.nav');
+
+        $pageSiteList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
+
+        $query = $em->getConnection()->executeUpdate("UPDATE cms_page SET is_published = 0");
+        $query = $em->getConnection()->executeUpdate("UPDATE cms_zone SET is_published = 0");
+        $query = $em->getConnection()->executeUpdate("UPDATE cms_block SET is_published = 0");
+
+        foreach($pageSiteList as $pageSite) {
+            $pageManager->publish($pageSite, $layoutList, $listRenderer, $dataInheritanceList, true);
+        }
+
+        $zoneList = $em->getRepository('KitpagesCmsBundle:Zone')->findByIsPublished(0);
+
+        foreach($zoneList as $zone) {
+            $zoneManager->publish($zone, $listRenderer);
+        }
+
+        $blockList = $em->getRepository('KitpagesCmsBundle:Block')->findByIsPublished(0);
+
+        foreach($blockList as $block) {
+            $blockManager->publish($block, $listRenderer[$block->getTemplate()]);
+        }
+
+
+        $navManager->publish();
+
+        //$this->getRequest()->getSession()->setFlash('notice', 'Page published');
+
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
+
+    }
+
     public function publishAction() {
 
 
@@ -24,7 +72,7 @@ class NavController extends Controller
         if ($target) {
             return $this->redirect($target);
         }
-        return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');
+        return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
     }
 
     public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
@@ -373,5 +421,8 @@ class NavController extends Controller
         return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
 
     }
+
+
+
 
 }

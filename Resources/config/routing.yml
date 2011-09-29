@@ -151,6 +151,9 @@ kitpages_cms_nav_publish:
     pattern:  /nav/publish
     defaults: { _controller: KitpagesCmsBundle:Nav:publish }
 
+kitpages_cms_nav_publish_all:
+    pattern:  /nav/publishAll
+    defaults: { _controller: KitpagesCmsBundle:Nav:publishAll }
 
 kitpages_cms_nav_arbo:
     pattern:  /arbo
