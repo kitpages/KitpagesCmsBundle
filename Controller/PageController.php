@@ -238,18 +238,46 @@ class PageController extends Controller
         $parent_id = $this->get('request')->query->get('parent_id', null);
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));
-        $builder->add('menuTitle', 'text', array('required' => false));
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'label' => 'Slug of the technical page'
+            )
+        );
+        $builder->add(
+            'isInNavigation',
+            'checkbox',
+            array(
+                'required' => false,
+                'label' => "Is in navigation ?",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+        $builder->add(
+            'menuTitle',
+            'text',
+            array(
+                'required' => false,
+                'label' => "Name in navigation",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+
         if (empty($parent_id)) {
-            $builder->add('language', 'text');
+            $builder->add(
+                'language',
+                'text',
+                array(
+                    'label' => "Page language",
+                    'attr' => array('class'=>'kit-cms-advanced')
+                )
+            );
         }
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $parent_id
         ));
-
-
 
 
         // get form
@@ -505,7 +533,13 @@ class PageController extends Controller
         }
 
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'label' => 'Slug of the technical page'
+            )
+        );
         $builder->add(
             'language',
             'text',
@@ -514,15 +548,34 @@ class PageController extends Controller
                 'attr' => array('class'=>'kit-cms-advanced')
             )
         );
-
-        $builder->add('isInNavigation', 'checkbox', array('required' => false));
-        $builder->add('menuTitle', 'text', array('required' => false));
-        $builder->add('parent_id','text',array(
-            'label' => 'Id of the parent page',
-            'attr' => array('class'=>'kit-cms-advanced'),
-            'property_path' => false,
-            'data' => $parentId
-        ));
+        $builder->add(
+            'isInNavigation',
+            'checkbox',
+            array(
+                'required' => false,
+                'label' => "Is in navigation ?",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+        $builder->add(
+            'menuTitle',
+            'text',
+            array(
+                'required' => false,
+                'label' => "Name in navigation",
+                'attr' => array('class'=>'kit-cms-advanced')
+            )
+        );
+        $builder->add(
+            'parent_id',
+            'text',
+            array(
+                'label' => 'Id of the parent page',
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'property_path' => false,
+                'data' => $parentId
+            )
+        );
         if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_class')) {
             $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
 
