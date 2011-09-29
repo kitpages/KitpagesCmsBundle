@@ -1,6 +1,8 @@
 {% extends 'KitpagesCmsBundle:Page:cms-edit-layout.html.twig' %}
 
 {% block body %}
+<div class="kit-cms-edit kit-cms">
+
 <h1>Create Zone</h1>
 
 <form action="{{ path('kitpages_cms_zone_create', { 'kitpages_target': kitpages_target }) }}" method="post" {{ form_enctype(form) }}>
@@ -8,4 +10,6 @@
 
     <input type="submit" />
 </form>
+
+</div>
 {% endblock body %}

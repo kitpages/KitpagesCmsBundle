@@ -1,18 +1,22 @@
 {% extends 'KitpagesCmsBundle:Page:cms-edit-layout.html.twig' %}
 
 {% block body %}
+<div class="kit-cms-edit kit-cms">
+
 <h1>Edit block</h1>
 
 <form class="kit-cms-form" action="{{ path('kitpages_cms_block_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
-  
+
     {{ form_row(form.slug) }}
     {{ form_row(form.template) }}
-    
+
     {% block editData %}{% endblock %}
 
     {{ form_rest(form) }}
     <input type="submit" />
 </form>
+
+</div>
 {% endblock body %}

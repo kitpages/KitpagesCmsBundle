@@ -4,9 +4,9 @@
 <form class="kit-cms kit-cms-form" action="{{ path('kitpages_cms_page_edit', { 'id': id , 'kitpages_target': kitpages_target } ) }}" method="post" {{ form_enctype(form) }}>
 
     <h2>Edit page</h2>
-    
+
     {{ form_errors(form) }}
-    
+
     <h3>Main values</h3>
     {{ form_row(
         form.slug,
@@ -32,11 +32,10 @@
         form.isInNavigation,
         {'help': "Ex: indicates if the page appears in the navigation."}
     ) }}
-    
+
     <h3>Content values</h3>
     {% block editData %}{% endblock %}
 
     {{ form_rest(form) }}
     <input type="submit" />
 </form>
-

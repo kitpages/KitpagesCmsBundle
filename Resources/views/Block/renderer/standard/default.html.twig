@@ -1,30 +1,30 @@
 {% autoescape false %}
-<div class="app-block-standard">
+<div class="app-block-standard [[cms:parameter:firstLastClass]]">
     {% set img = data.root.media_mainImage|default('') %}
     {% set imgPos = data.root.imagePosition|default('top') %}
-    
+
     {% if data.root.title|default('') %}<h2>{{data.root.title}}</h2>{% endif %}
-    
+
     {% if imgPos == "top" %}
         {% if img %}<img src="{{data.root.url_media_mainImage}}"/>{% endif %}
     {% endif %}
-        
+
     {% if (imgPos == "left") or (imgPos == "right") %}
         {% if img %}<img src="{{data.root.url_media_mainImage}}" style="display: block; float: {{imgPos}};"/>{% endif %}
     {% endif %}
-    
+
     {% if data.root.mainContent|default('') %}<div>{{data.root.mainContent}}</div>{%endif%}
-    
+
     {% if ( (imgPos == "left") or (imgPos == "right") ) and (img) %}
         <div style="clear:{{imgPos}};"></div>
     {% endif %}
-    
+
     {% if imgPos == "bottom" %}
         {% if img %}<img src="{{data.root.url_media_mainImage}}"/>{% endif %}
     {% endif %}
-        
+
     {% if data.root.subContent|default('') %}<div>{{data.root.subContent}}</div>{%endif%}
-    
+
     {% if data.root.displaySeparator|default('NO') == "YES" %}<div class="app-separator"></div>{% endif %}
 </div>
 {% endautoescape %}

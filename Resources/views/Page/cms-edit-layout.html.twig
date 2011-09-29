@@ -1,10 +1,10 @@
 {% extends 'KitpagesCmsBundle:Page:layout.html.twig' %}
 
-{% block stylesheets %}
+{% block kitpages_cms_stylesheets %}
 {{ parent() }}
 <link rel="stylesheet" type="text/css" href="{{ asset ("bundles/kitpagesfile/uploadify/uploadify.css") }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset ("bundles/kitpagesfile/css/style.css") }}" />
-{% endblock stylesheets %}
+{% endblock kitpages_cms_stylesheets %}
 
 {% block kitpages_cms_javascripts %}
 {{ parent() }}

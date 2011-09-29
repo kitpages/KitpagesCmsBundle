@@ -276,7 +276,8 @@ class BlockController extends Controller
         $slug,
         $renderer = 'default',
         $displayToolbar = true,
-        $authorizedBlockTemplateList = null
+        $authorizedBlockTemplateList = null,
+        $filterParameterList = array()
     )
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -309,8 +310,7 @@ class BlockController extends Controller
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml .= '<div class="kit-cms-block-container">'.
-//                        print_r($dataRenderer, true).
-                        $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode()).
+                        $this->widgetPostFilter($blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode()) , $filterParameterList).
                         '</div>';
                 }
             }
@@ -324,6 +324,7 @@ class BlockController extends Controller
                 if (!is_null($block->getData())) {
                     $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
                     $resultingHtml = $blockManager->render($dataRenderer[$renderer], $block, $context->getViewMode());
+                    $resultingHtml = $this->widgetPostFilter($resultingHtml, $filterParameterList);
                 }
             }
         } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
@@ -332,6 +333,7 @@ class BlockController extends Controller
                 $data = $blockPublish->getData();
                 if ($blockPublish->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                     $resultingHtml = $data['html'];
+                    $resultingHtml = $this->widgetPostFilter($resultingHtml, $filterParameterList);
                 }
             } else {
                 //return new Response('The block with the slug "'.htmlspecialchars($slug).'" is not published');
@@ -339,6 +341,14 @@ class BlockController extends Controller
             }
         }
         return new Response($resultingHtml);
+    }
+
+    public function widgetPostFilter($resultingHtml, $filterParameterList)
+    {
+        foreach ($filterParameterList as $paramName => $paramValue) {
+            $resultingHtml = str_replace("[[cms:parameter:$paramName]]", $paramValue, $resultingHtml);
+        }
+        return $resultingHtml;
     }
 
     public function editSuccessAction()
