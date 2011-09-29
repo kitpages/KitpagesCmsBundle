@@ -26,11 +26,11 @@ class NavController extends Controller
         $blockManager = $this->get('kitpages.cms.manager.block');
         $navManager = $this->get('kitpages.cms.manager.nav');
 
-        $pageSiteList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
-
         $query = $em->getConnection()->executeUpdate("UPDATE cms_page SET is_published = 0");
         $query = $em->getConnection()->executeUpdate("UPDATE cms_zone SET is_published = 0");
         $query = $em->getConnection()->executeUpdate("UPDATE cms_block SET is_published = 0");
+
+        $pageSiteList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
 
         foreach($pageSiteList as $pageSite) {
             $pageManager->publish($pageSite, $layoutList, $listRenderer, $dataInheritanceList, true);
@@ -51,7 +51,7 @@ class NavController extends Controller
 
         $navManager->publish();
 
-        //$this->getRequest()->getSession()->setFlash('notice', 'Page published');
+        $this->getRequest()->getSession()->setFlash('notice', 'Site published');
 
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {

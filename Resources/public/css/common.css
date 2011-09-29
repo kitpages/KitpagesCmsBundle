@@ -264,8 +264,26 @@ textarea.kit-cms-rte-advanced {
  *  arbo
  */
 .kit-cms-arbo {
+    position: relative;
     background-color: #FFF;
 }
+.kit-cms-arbo .kit-cms-publish-all {
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+
+    padding: 5px;
+    border: 1px solid #F0F0F0;
+
+    border-radius: 3px;
+    text-decoration: none;
+    color: #333;
+}
+.kit-cms-arbo .kit-cms-publish-all:hover {
+    background-color: #EEE;
+}
+
 .kit-cms-arbo > .kit-cms-arbo-node-container:first-child {
     margin: 0px;
 }
