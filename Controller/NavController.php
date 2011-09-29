@@ -304,14 +304,14 @@ class NavController extends Controller
                     );
                     $pageArbo['actionList'][] = array(
                         'id' => '',
-                        'label' => 'publish All',
+                        'label' => 'confirm delete',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-modal-open'
                     );
                 } else {
                     $pageArbo['actionList'][] = array(
                         'id' => '',
-                        'label' => 'publish All',
+                        'label' => 'publish all',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-advanced'
                     );
@@ -327,7 +327,7 @@ class NavController extends Controller
                 );
                 $pageArbo['actionList'][] = array(
                     'id' => '',
-                    'label' => 'publish All',
+                    'label' => 'publish all',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                     'class' => 'kit-cms-advanced kit-cms-modal-open'
                 );
@@ -369,7 +369,8 @@ class NavController extends Controller
                     'label' => 'delete',
                     'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
-                    'icon' => 'icon/delete.png'
+                    'icon' => 'icon/delete.png',
+                    'class' => 'kit-cms-advanced'
                 );
 
             }
