@@ -9,6 +9,7 @@ use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\ZonePublish;
 use Kitpages\CmsBundle\Entity\ZoneBlock;
 use Kitpages\CmsBundle\Event\PageEvent;
+use Kitpages\CmsBundle\Event\PagePublishEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -140,6 +141,8 @@ class PageManager
             $em = $this->getDoctrine()->getEntityManager();
             if ($page->getIsPendingDelete()) {
                 $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+                $eventPublish = new PagePublishEvent($pagePublish);
+                $this->getDispatcher()->dispatch(KitpagesCmsEvents::onModifyPagePublish, $eventPublish);
                 if (!is_null($pagePublish)) {
                     $em->remove($pagePublish);
                     $em->flush();
@@ -155,6 +158,9 @@ class PageManager
                 // remove old pagePublish
                 $zonePublish = null;
                 $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+
+                $eventPublish = new PagePublishEvent($pagePublish);
+                $this->getDispatcher()->dispatch(KitpagesCmsEvents::onModifyPagePublish, $eventPublish);
                 if (!is_null($pagePublish)) {
                     $em->remove($pagePublish);
                     $em->flush();
@@ -174,7 +180,9 @@ class PageManager
                 $page->setIsPublished(true);
                 $page->setPagePublish($pagePublishNew);
                 $em->flush();
+                $eventPublish->setPagePublishNew($pagePublishNew);
             }
+            $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterModifyPagePublish, $eventPublish);
         }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPagePublish, $event);
     }

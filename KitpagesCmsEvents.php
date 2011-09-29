@@ -54,6 +54,12 @@ final class KitpagesCmsEvents
     const afterPageUnpendingDelete = 'kitpages.cms.page.after.unpending_delete';
 
     ////
+    // pagePublish events
+    ////
+    const onModifyPagePublish = 'kitpages.cms.pagepublish.on.modify';
+    const afterModifyPagePublish = 'kitpages.cms.pagepublish.after.modify';
+
+    ////
     // nav events
     ////
     const onNavMove = 'kitpages.cms.nav.on.move';

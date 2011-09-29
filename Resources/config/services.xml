@@ -63,6 +63,7 @@
         </service>
         <service id="kitpages.cms.manager.nav" class="%kitpages_cms.cms.navManager%">
             <tag name="kernel.event_listener" event="kitpages.cms.nav.after.move" method="afterMove" />
+            <tag name="kernel.event_listener" event="kitpages.cms.pagepublish.after.modify" method="afterModyPagePublish" />
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="kitpages.cms.manager.page"/>

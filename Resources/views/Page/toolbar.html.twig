@@ -2,17 +2,10 @@
 <div class="kit-cms-toolbar-page kit-cms-toolbar-top">
     <ul class="kit-cms-toolbar-page-top-actions">
         <li>
-            <a href="{{ path('kitpages_cms_page_publish', { 'id': kitCmsPage.id, 'kitpages_target' : target }) }}">Publish</a>
+            <a href="{{ path('kitpages_cms_page_publish', { 'id': kitCmsPage.id, 'kitpages_target' : target }) }}">{% if kitCmsPage.isPublished != 1 %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}"/>{% endif %}Publish Page</a>
         </li>
         <li>
-            <a id="kit-cms-page-edit" >Edit</a>
-        </li>
-        <li>
-            {% if kitCmsPage.isPublished == 1 %}
-                Page published
-            {% else %}
-                <img src="{{asset("bundles/kitpagescms/icon/warning.png")}}"/> Page not published
-            {% endif %}
+            <a id="kit-cms-page-edit" >Edit Page Data</a>
         </li>
     </ul>
 </div>
