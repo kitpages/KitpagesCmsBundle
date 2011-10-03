@@ -9,7 +9,7 @@ class DateExtension extends \Twig_Extension
     public static function kitStrftime($datetime, $formatdate, $locale = null)
     {
             $timestamp = $datetime->getTimestamp();
-            return strftime($formatdate, $timestamp);
+            return utf8_encode(strftime($formatdate, $timestamp));
 
     }
 
