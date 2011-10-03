@@ -12,6 +12,7 @@
         <field name="slug" column="slug" type="string" unique="true" nullable="true" length="250"/>
         <field name="title" column="title" type="string" nullable="true" length="250"/>
         <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250"/>
+        <field name="linkUrl" column="link_url" type="string" nullable="true" />
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="left" column="lft" type="integer">
@@ -25,7 +26,7 @@
         </field>
         <field name="level" column="lvl" type="integer">
             <gedmo:tree-level/>
-        </field>       
+        </field>
 
         <gedmo:tree type="nested"/>
 
@@ -35,7 +36,7 @@
         </many-to-one>
         <one-to-one field="page" target-entity="Kitpages\CmsBundle\Entity\Page" inversed-by="navPublish">
             <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL"/>
-        </one-to-one> 
+        </one-to-one>
     </entity>
 
 </doctrine-mapping>

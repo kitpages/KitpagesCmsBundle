@@ -75,6 +75,63 @@ class NavController extends Controller
         return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
     }
 
+
+    public function widgetBreadcrumbAction($slug, Page $page, $slugHP = null, $startDepth = 0) {
+        if ($page != null) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $context = $this->get('kitpages.cms.controller.context');
+            $dataBreadcrumb = array();
+            if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
+                $pageStartBreadcrumb = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
+                $levelStartBreadcrumb = $pageStartBreadcrumb->getLevel()+1+$startDepth;
+                $levelEndBreadcrumb = $page->getLevel()-1;
+                $pageListBreadcrumb = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($page, $levelStartBreadcrumb, $levelEndBreadcrumb);
+
+                if ($slugHP != null && (isset($pageListBreadcrumb[0]) && $pageListBreadcrumb[0]->getSlug() != $slugHP)) {
+                    $pageHP = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slugHP);
+                    array_unshift($pageListBreadcrumb, $pageHP);
+                }
+
+                foreach($pageListBreadcrumb as $pageBreadcrumb) {
+                    $dataBreadcrumb[] = array(
+                        'url' => $this->getPageLink($pageBreadcrumb),
+                        'label' => $pageBreadcrumb->getMenuTitle()
+                    );
+                }
+                $title = $page->getMenuTitle();
+            } elseif ($context->getViewMode() == Context::VIEW_MODE_PROD) {
+                $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
+                $pageStartBreadcrumb = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slug);
+                $levelStartBreadcrumb = $pageStartBreadcrumb->getLevel()+1+$startDepth;
+                $pageData = $pagePublish->getData();
+                $levelEndBreadcrumb = $pageData['page']['level']-1;
+                $navPublish = $page->getNavPublish();
+                $navListBreadcrumb = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($navPublish, $levelStartBreadcrumb, $levelEndBreadcrumb);
+
+                if ($slugHP != null && (isset($navListBreadcrumb[0]) && $navListBreadcrumb[0]->getSlug() != $slugHP)) {
+                    $pageHP = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slugHP);
+                    array_unshift($navListBreadcrumb, $pageHP);
+                }
+
+                foreach($navListBreadcrumb as $navBreadcrumb) {
+                    $dataBreadcrumb[] = array(
+                        'url' => $this->getPagePublishLink($navBreadcrumb),
+                        'label' => $navBreadcrumb->getTitle()
+                    );
+                }
+                $title = $navPublish->getTitle();
+            }
+            return $this->render(
+                'KitpagesCmsBundle:Nav:breadcrumb.html.twig',
+                array(
+                    'kitCmsPageList' => $dataBreadcrumb,
+                    'kitCmsPageLabel' => $title
+                )
+            );
+        }
+        return  new Response('');
+    }
+
     public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
         $em = $this->getDoctrine()->getEntityManager();
         $context = $this->get('kitpages.cms.controller.context');
@@ -184,31 +241,14 @@ class NavController extends Controller
         $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->childrenOfDepth($navPublish, $currentDepth);
         $listNavigationElem = array();
         foreach($navPublishList as $navPublishChild) {
-            $page = $navPublishChild->getPage();
-            $pagePublish = $page->getPagePublish();
             $navigationElem = array(
                 'slug' => $navPublishChild->getSlug(),
                 'title' => $navPublishChild->getTitle(),
                 'level' => $navPublishChild->getLevel(),
                 'url' => ''
             );
-            if ($pagePublish->getPageType() == 'link' ) {
-                $navigationElem['url'] = $page->getLinkUrl();
-            }
-            if ($pagePublish->getPageType() == 'edito' ) {
-                if ($pagePublish->getForcedUrl()) {
-                    $navigationElem['url'] = $this->getRequest()->getBaseUrl().$pagePublish->getForcedUrl();
-                } else {
-                    $navigationElem['url'] = $this->generateUrl(
-                        'kitpages_cms_page_view_lang',
-                        array(
-                            'id' => $navPublishChild->getId(),
-                            'lang' => $pagePublish->getLanguage(),
-                            'urlTitle' => $pagePublish->getUrlTitle()
-                        )
-                    );
-                }
-            }
+            $navigationElem['url'] = $this->getPagePublishLink($navPublishChild);
+
             $navigationElem['children'] = array();
             if ($navPublishChild->getLevel() < $endLevel) {
                 $navigationElem['children'] = $this->navPublishChildren($navPublishChild, $viewMode, 1, $endLevel);
@@ -229,23 +269,9 @@ class NavController extends Controller
                 'level' => $pageChild->getLevel(),
                 'url' => ''
             );
-            if ($pageChild->getPageType() == 'link' ) {
-                $navigationElem['url'] = $pageChild->getLinkUrl();
-            }
-            if ($pageChild->getPageType() == 'edito' ) {
-                if ($pageChild->getForcedUrl()) {
-                    $navigationElem['url'] = $this->getRequest()->getBaseUrl().$pageChild->getForcedUrl();
-                } else {
-                    $navigationElem['url'] = $this->generateUrl(
-                        'kitpages_cms_page_view_lang',
-                        array(
-                            'id' => $pageChild->getId(),
-                            'lang' => $pageChild->getLanguage(),
-                            'urlTitle' => $pageChild->getUrlTitle()
-                        )
-                    );
-                }
-            }
+
+            $navigationElem['url'] = $this->getPageLink($pageChild);
+
             $navigationElem['children'] = array();
             if ($pageChild->getLevel() < $endLevel) {
                 $navigationElem['children'] = $this->navPageChildren($pageChild, $viewMode, 1, $endLevel);
@@ -422,7 +448,51 @@ class NavController extends Controller
 
     }
 
+    public function getPageLink($page) {
+        if ($page->getPageType() == 'link' ) {
+            $url = $page->getLinkUrl();
+        }
+        if ($page->getPageType() == 'edito' ) {
+            if ($page->getForcedUrl()) {
+                $url = $this->getRequest()->getBaseUrl().$page->getForcedUrl();
+            } else {
+                $url = $this->generateUrl(
+                    'kitpages_cms_page_view_lang',
+                    array(
+                        'id' => $page->getId(),
+                        'lang' => $page->getLanguage(),
+                        'urlTitle' => $page->getUrlTitle()
+                    )
+                );
+            }
+        }
+        return $url;
 
+    }
 
+    public function getPagePublishLink($navPublish) {
+        $page = $navPublish->getPage();
+        $pagePublish = $page->getPagePublish();
+        if ($pagePublish->getPageType() == 'link' ) {
+            $url = $navPublish->getLinkUrl();
+        }
+        if ($pagePublish->getPageType() == 'edito' ) {
+            if ($pagePublish->getForcedUrl()) {
+                $url = $this->getRequest()->getBaseUrl().$pagePublish->getForcedUrl();
+            } else {
+                $url = $this->generateUrl(
+                    'kitpages_cms_page_view_lang',
+                    array(
+                        'id' => $page->getId(),
+                        'lang' => $pagePublish->getLanguage(),
+                        'urlTitle' => $pagePublish->getUrlTitle()
+                    )
+                );
+            }
+        }
+
+        return $url;
+
+    }
 
 }

@@ -280,6 +280,10 @@ class NavPublish
      */
     private $forcedUrl;
 
+    /**
+     * @var string $linkUrl
+     */
+    private $linkUrl;
 
     /**
      * Set forcedUrl
@@ -313,6 +317,26 @@ class NavPublish
         }else {
             return false;
         }
-    } 
+    }
 
+
+    /**
+     * Set linkUrl
+     *
+     * @param string $linkUrl
+     */
+    public function setLinkUrl($linkUrl)
+    {
+        $this->linkUrl = $linkUrl;
+    }
+
+    /**
+     * Get linkUrl
+     *
+     * @return string 
+     */
+    public function getLinkUrl()
+    {
+        return $this->linkUrl;
+    }
 }

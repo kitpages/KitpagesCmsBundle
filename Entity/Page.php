@@ -867,4 +867,14 @@ class Page
     }
 
 
+
+    /**
+     * Add pageZoneList
+     *
+     * @param Kitpages\CmsBundle\Entity\PageZone $pageZoneList
+     */
+    public function addPageZone(\Kitpages\CmsBundle\Entity\PageZone $pageZoneList)
+    {
+        $this->pageZoneList[] = $pageZoneList;
+    }
 }

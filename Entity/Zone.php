@@ -270,4 +270,24 @@ class Zone
     {
         return $this->pageZoneList;
     }
+
+    /**
+     * Add pageZoneList
+     *
+     * @param Kitpages\CmsBundle\Entity\PageZone $pageZoneList
+     */
+    public function addPageZone(\Kitpages\CmsBundle\Entity\PageZone $pageZoneList)
+    {
+        $this->pageZoneList[] = $pageZoneList;
+    }
+
+    /**
+     * Add zoneBlockList
+     *
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
+     */
+    public function addZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
+    {
+        $this->zoneBlockList[] = $zoneBlockList;
+    }
 }

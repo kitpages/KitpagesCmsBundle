@@ -376,4 +376,24 @@ class Block
     {
         $this->slug = Urlizer::transliterate($this->slug, '-'); 
     }
+
+    /**
+     * Add blockPublishList
+     *
+     * @param Kitpages\CmsBundle\Entity\BlockPublish $blockPublishList
+     */
+    public function addBlockPublish(\Kitpages\CmsBundle\Entity\BlockPublish $blockPublishList)
+    {
+        $this->blockPublishList[] = $blockPublishList;
+    }
+
+    /**
+     * Add zoneBlockList
+     *
+     * @param Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList
+     */
+    public function addZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
+    {
+        $this->zoneBlockList[] = $zoneBlockList;
+    }
 }
