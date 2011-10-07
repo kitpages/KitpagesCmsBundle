@@ -10,9 +10,19 @@ NEW features
 * remove dependency with KitpagesRedirectBundle
 * a configuration "renderer_twig_main" to change the layout.html.twig which adds cms toolbar
 * added some technical values in pagePublish
+* added indicators on needed publication in the tree view and in edition page
+* Breadcrumb management
+* added a big "Publish all pages and navigation" button
+
+REFACTORING
+* directory reorganization for templates
 
 CORRECTED
 * remove unused date picker (and we miss informations on license)
+* correction on the navigation when the current page was outsite the displayed navigation
+* corrections on the flags displayed when the publication is needed (navigation and page)
+* pageData was not transmitted to the twig layout
+* update cms css for less intrusive stylesheets on the real site design
 
 v1.0.0
 ------

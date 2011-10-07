@@ -4,10 +4,23 @@
     <script>
         $(document).ready(function() {
             $('.kit-cms-modal-open > a').kitCmsModal({closable:false});
+            $('a.kit-cms-modal-open').kitCmsModal({closable:false});
         });
     </script>
     <div class="kit-cms-arbo kit-cms">
         <h1>Arbo</h1>
+        <a class="kit-cms-modal-open kit-cms-publish-all" href="{{ path('kitpages_cms_nav_publish_all', { 'kitpages_target' : path('kitpages_cms_nav_arbo') }) }}">
+            <img src="{{asset("bundles/kitpagescms/icon/publish.png")}}"/> Publish all pages and navigation
+        </a>
+        <script>
+            $('.kit-cms-publish-all').click(function(e) {
+                var response = confirm("Do you confirm you want to publish all pages and the navigation ?");
+                if (!response) {
+                    e.preventDefault();
+                }
+            });
+        </script>
+
         {% set cycle = 0 %}
     {% include 'KitpagesCmsBundle:Nav:arboChildren.html.twig' with {'arbo': arbo } %}
     </div>

@@ -287,7 +287,7 @@ class ZoneController extends Controller
                     array()
                 );
             }
-            if ($displayToolbar && ($tmpDisplayToobar === false)) {
+            if ($displayToolbar && ($tmpDisplayToobar === false ) && ($context->getViewMode() == Context::VIEW_MODE_EDIT)) {
                 $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList);
             }
 

@@ -26,11 +26,11 @@ class NavController extends Controller
         $blockManager = $this->get('kitpages.cms.manager.block');
         $navManager = $this->get('kitpages.cms.manager.nav');
 
-        $pageSiteList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
-
         $query = $em->getConnection()->executeUpdate("UPDATE cms_page SET is_published = 0");
         $query = $em->getConnection()->executeUpdate("UPDATE cms_zone SET is_published = 0");
         $query = $em->getConnection()->executeUpdate("UPDATE cms_block SET is_published = 0");
+
+        $pageSiteList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
 
         foreach($pageSiteList as $pageSite) {
             $pageManager->publish($pageSite, $layoutList, $listRenderer, $dataInheritanceList, true);
@@ -51,7 +51,7 @@ class NavController extends Controller
 
         $navManager->publish();
 
-        //$this->getRequest()->getSession()->setFlash('notice', 'Page published');
+        $this->getRequest()->getSession()->setFlash('notice', 'Site published');
 
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
@@ -330,14 +330,14 @@ class NavController extends Controller
                     );
                     $pageArbo['actionList'][] = array(
                         'id' => '',
-                        'label' => 'publish All',
+                        'label' => 'confirm delete',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-modal-open'
                     );
                 } else {
                     $pageArbo['actionList'][] = array(
                         'id' => '',
-                        'label' => 'publish All',
+                        'label' => 'publish all',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-advanced'
                     );
@@ -353,7 +353,7 @@ class NavController extends Controller
                 );
                 $pageArbo['actionList'][] = array(
                     'id' => '',
-                    'label' => 'publish All',
+                    'label' => 'publish all',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                     'class' => 'kit-cms-advanced kit-cms-modal-open'
                 );
@@ -395,7 +395,8 @@ class NavController extends Controller
                     'label' => 'delete',
                     'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
-                    'icon' => 'icon/delete.png'
+                    'icon' => 'icon/delete.png',
+                    'class' => 'kit-cms-advanced'
                 );
 
             }
