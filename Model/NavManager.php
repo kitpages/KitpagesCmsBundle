@@ -152,6 +152,16 @@ class NavManager
         }
     }
 
+    public function afterPublishPage(Event $event)
+    {
+        $page = $event->getPage();
+        $navPublish = $page->getNavPublish();
+        $navPublish->setForcedUrl($page->getForcedUrl());
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->flush();
+        $this->cacheManager->clear('kit-cms-navigation-%');
+    }
+
     public function afterModyPagePublish(Event $event)
     {
         $pagePublish = $event->getPagePublish();
