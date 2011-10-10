@@ -11,30 +11,31 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" unique="true"  type="string" length="250"/>
-        <field name="isPublished" column="is_published" type="boolean"/>        
+        <field name="slug" column="slug" unique="true" type="string" length="250"/>
+        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"/>
+        <field name="isPublished" column="is_published" type="boolean"/>
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />
         </field>
         <field name="unpublishedAt" column="unpublished_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="0" />
         </field>
-        
+
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
         </field>
         <field name="updatedAt" type="datetime">
             <gedmo:timestampable on="update"/>
-        </field>  
-        
+        </field>
+
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
-  
+
         <one-to-many field="pageZoneList" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="zone" >
         </one-to-many>
-        
+
         <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
         </one-to-many>
 
@@ -42,7 +43,7 @@
             <cascade>
                 <cascade-persist />
                 <cascade-remove />
-            </cascade>  
+            </cascade>
         </one-to-one>
     </entity>
 

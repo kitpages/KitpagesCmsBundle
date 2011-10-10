@@ -47,7 +47,7 @@ class ZonePublish
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -67,7 +67,7 @@ class ZonePublish
     /**
      * Get data
      *
-     * @return array 
+     * @return array
      */
     public function getData()
     {
@@ -87,7 +87,7 @@ class ZonePublish
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getCreatedAt()
     {
@@ -97,14 +97,14 @@ class ZonePublish
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
 
- 
+
     /**
      * @ORM\prePersist
      */
@@ -120,12 +120,13 @@ class ZonePublish
     {
         // Add your code here
     }
-    
+
     public function initByZone(Zone $zone){
         $this->setSlug($zone->getSlug());
+        $this->setCanonicalUrl($zone->getCanonicalUrl());
         $this->setZone($zone);
     }
-    
+
 
     /**
      * Set zone
@@ -140,10 +141,35 @@ class ZonePublish
     /**
      * Get zone
      *
-     * @return Kitpages\CmsBundle\Entity\Zone 
+     * @return Kitpages\CmsBundle\Entity\Zone
      */
     public function getZone()
     {
         return $this->zone;
+    }
+    /**
+     * @var string $canonicalUrl
+     */
+    private $canonicalUrl;
+
+
+    /**
+     * Set canonicalUrl
+     *
+     * @param string $canonicalUrl
+     */
+    public function setCanonicalUrl($canonicalUrl)
+    {
+        $this->canonicalUrl = $canonicalUrl;
+    }
+
+    /**
+     * Get canonicalUrl
+     *
+     * @return string
+     */
+    public function getCanonicalUrl()
+    {
+        return $this->canonicalUrl;
     }
 }

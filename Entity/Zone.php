@@ -290,4 +290,29 @@ class Zone
     {
         $this->zoneBlockList[] = $zoneBlockList;
     }
+    /**
+     * @var string $canonicalUrl
+     */
+    private $canonicalUrl;
+
+
+    /**
+     * Set canonicalUrl
+     *
+     * @param string $canonicalUrl
+     */
+    public function setCanonicalUrl($canonicalUrl)
+    {
+        $this->canonicalUrl = $canonicalUrl;
+    }
+
+    /**
+     * Get canonicalUrl
+     *
+     * @return string 
+     */
+    public function getCanonicalUrl()
+    {
+        return $this->canonicalUrl;
+    }
 }
