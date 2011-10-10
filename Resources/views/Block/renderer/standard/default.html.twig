@@ -1,5 +1,6 @@
 {% autoescape false %}
 <div class="app-block-standard [[cms:parameter:firstLastClass]]">
+<a name="{{data.block.slug}}"></a>
     {% set img = data.root.media_mainImage|default('') %}
     {% set imgPos = data.root.imagePosition|default('top') %}
 
