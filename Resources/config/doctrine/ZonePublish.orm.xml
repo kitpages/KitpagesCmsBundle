@@ -11,7 +11,7 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" length="250"/>
+        <field name="slug" column="slug" type="string" unique="true" length="250"/>
         <field name="canonicalUrl" column="canonical_url"  type="string" length="250"/>
         <field name="data" column="data" type="array" nullable="true" />
         <field name="createdAt" type="datetime">

@@ -303,6 +303,7 @@ class NavController extends Controller
         $pageListRenderer = array();
         foreach($pageList as $page) {
             $pageArbo = array();
+            $pageArbo['id'] = $page->getId();
             $pageArbo['slug'] = $page->getSlug();
             $pageArbo['menuTitle'] = $page->getMenuTitle();
             $pageArbo['isPublished'] = $page->getIsPublished();

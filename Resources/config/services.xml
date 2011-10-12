@@ -16,6 +16,7 @@
         <parameter key="kitpages_cms.doctrineListener.class">Kitpages\CmsBundle\EventListener\DoctrineListener</parameter>
         <parameter key="kitpages_cms.page.default_layout">::base.html.twig</parameter>
         <parameter key="kitpages_cms.cms.target_parameter">cms_target</parameter>
+        <parameter key="kitpages_cms.validator.generic.class">Kitpages\CmsBundle\Validator\GenericValidator</parameter>
     </parameters>
 
     <services>
@@ -95,6 +96,17 @@
         <service id="kitpages_cms.twig.extension.date" class="Kitpages\CmsBundle\Twig\Extension\DateExtension">
             <tag name="twig.extension" />
         </service>
+
+
+        <!-- Unique Validator Service -->
+        <service id="kitpages_cms.validator.page" class="%kitpages_cms.validator.generic.class%">
+            <argument type="service" id="kitpages.cms.manager.page" />
+            <tag name="validator.constraint_validator" alias="kitpages_cms.validator.page" />
+        </service>
+        <!-- <service id="kitpages_cms.validator.block" class="%kitpages_cms.validator.generic.class%">
+            <argument type="service" id="kitpages.cms.manager.block" />
+            <tag name="validator.constraint_validator" alias="kitpages_cms.validator.block" />
+        </service>-->
     </services>
 
 </container>

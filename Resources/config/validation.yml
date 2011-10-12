@@ -1,4 +1,0 @@
-Kitpages\CmsBundle\Entity\Block:
-    properties:
-        template:
-            - NotBlank: ~

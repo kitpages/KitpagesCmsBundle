@@ -314,6 +314,10 @@ textarea.kit-cms-rte-advanced {
     padding-left: 3px;
     padding-top: 5px;
 }
+.kit-cms-arbo-page-id {
+    font-size: 0.7em;
+    color: #808080;
+}
 .kit-cms-arbo-page-title {
 }
 .kit-cms-arbo-page-slug {

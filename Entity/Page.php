@@ -814,7 +814,7 @@ class Page
      */
     public function setForcedUrl($forcedUrl)
     {
-        if (substr($forcedUrl, 0, 1) != '/') {
+        if (substr($forcedUrl, 0, 1) != '/' && $forcedUrl != null) {
             $forcedUrl = '/'.$forcedUrl;
         }
         $this->forcedUrl = $forcedUrl;
@@ -866,7 +866,18 @@ class Page
         );
     }
 
-
+    /**
+     * Tells if the the given page is this page.
+     *
+     * Useful when not hydrating all fields.
+     *
+     * @param Page $Page
+     * @return Boolean
+     */
+    public function isPage(Page $page = null)
+    {
+        return null !== $page && $this->getId() === $page->getId();
+    }
 
     /**
      * Add pageZoneList

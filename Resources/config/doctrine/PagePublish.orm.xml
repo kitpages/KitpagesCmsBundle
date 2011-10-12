@@ -11,29 +11,29 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" type="string" length="250"/>
+        <field name="slug" column="slug" type="string" unique="true" length="250"/>
         <field name="urlTitle" column="url_title" type="string" nullable="false" length="250"/>
         <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250" unique="true"/>
         <field name="pageType" column="page_type" type="string" length="100" />
-        <field name="language" column="language" type="string" nullable="true" length="250"/> 
-        <field name="layout" column="layout" type="string" length="250"  nullable="true" />        
+        <field name="language" column="language" type="string" nullable="true" length="250"/>
+        <field name="layout" column="layout" type="string" length="250"  nullable="true" />
         <field name="data" column="data" type="array" nullable="true" />
-        <field name="zoneList" column="zone_list" type="array" nullable="true" />        
+        <field name="zoneList" column="zone_list" type="array" nullable="true" />
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>
         </field>
-        
+
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
-        
+
         <one-to-one field="page" target-entity="Kitpages\CmsBundle\Entity\Page" inversed-by="pagePublish">
             <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL" />
-        </one-to-one> 
+        </one-to-one>
 
-  
-        
+
+
     </entity>
 
 </doctrine-mapping>

@@ -92,7 +92,7 @@ class ZoneController extends Controller
         );
 
         $dataRenderer = array(
-            'title' => $zone->getSlug(),
+            'kitCmsZoneSlug' => $zone->getSlug(),
             'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
             'htmlBlock' => $htmlBlock

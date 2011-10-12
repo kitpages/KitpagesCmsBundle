@@ -189,7 +189,14 @@ class BlockController extends Controller
 
         // build basic form
         $builder = $this->createFormBuilder($block);
-        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'error_bubbling' => true
+            )
+        );
         $builder->add('template', 'choice',array(
             'attr' => array('class'=>'kit-cms-advanced'),
             'choices' => $selectTemplateList,
@@ -201,7 +208,6 @@ class BlockController extends Controller
         $builder->add('data', 'collection', array(
            'type' => new $className(),
         ));
-
         // get form
         $form = $builder->getForm();
 

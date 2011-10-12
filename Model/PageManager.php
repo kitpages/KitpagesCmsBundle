@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\Validator\Constraint;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -254,6 +255,32 @@ class PageManager
         }
     }
 
+    ////
+    //  Validator
+    ////
+    public function validateUniqueForceUrlPublish(Page $page, Constraint $constraint)
+    {
+
+        if ($page->getForcedUrl() == null) {
+            return true;
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $pagePublishConflictList = $em->getRepository('KitpagesCmsBundle:PagePublish')->findBy(array('forcedUrl' => $page->getForcedUrl()));
+        // there is no conflictual user
+        if (empty($pagePublishConflictList)) {
+            return true;
+        }
+
+        foreach ($pagePublishConflictList as $pagePublishConflict) {
+            if ($pagePublishConflict->getPage()->getId() != $page->getId()) {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
 
 
 

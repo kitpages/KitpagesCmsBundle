@@ -156,10 +156,12 @@ class NavManager
     {
         $page = $event->getPage();
         $navPublish = $page->getNavPublish();
-        $navPublish->setForcedUrl($page->getForcedUrl());
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->flush();
-        $this->cacheManager->clear('kit-cms-navigation-%');
+        if ($navPublish != null) {
+            $navPublish->setForcedUrl($page->getForcedUrl());
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->flush();
+            $this->cacheManager->clear('kit-cms-navigation-%');
+        }
     }
 
     public function afterModyPagePublish(Event $event)

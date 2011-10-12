@@ -158,7 +158,8 @@ class PageController extends Controller
             'text',
             array(
                 'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced')
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'error_bubbling' => true
             )
         );
         $builder->add(
@@ -324,7 +325,15 @@ class PageController extends Controller
 
         // build basic form
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('required' => false, 'attr' => array('class'=>'kit-cms-advanced')));
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'error_bubbling' => true
+            )
+        );
         $builder->add('title', 'text');
         $builder->add('isInNavigation', 'checkbox', array('required' => false));
         $builder->add('menuTitle', 'text', array('required' => false));
@@ -373,6 +382,7 @@ class PageController extends Controller
     public function editAction(Page $page, $inToolbar = false, $target = null)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $validator = $this->container->get('validator');
         $request = $this->getRequest();
         if (is_null($target)) {
             $target = $request->query->get('kitpages_target', null);
@@ -394,7 +404,8 @@ class PageController extends Controller
             'slug',
             'text',
             array(
-                'attr' => array('class'=>'kit-cms-advanced')
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'error_bubbling' => true
             )
         );
         $builder->add(
@@ -406,7 +417,8 @@ class PageController extends Controller
                 'attr' => array(
                     'class'=>'kit-cms-advanced',
                     'size' => '100'
-                )
+                ),
+                'error_bubbling' => true
             )
         );
         $builder->add(
@@ -464,8 +476,6 @@ class PageController extends Controller
 //        // data of parent page
 //        $result = $em->getRepository('KitpagesCmsBundle:Page')->parentDataInheritance($page, $dataInheritanceList);
 
-
-
         // get form
         $form = $builder->getForm();
 
@@ -473,8 +483,8 @@ class PageController extends Controller
         if ($request->getMethod() == 'POST') {
             $oldPage = clone $page;
             $form->bindRequest($request);
-
-            if ($form->isValid()) {
+            $errorList = $validator->validate($page);
+            if (count($errorList) == 0) {
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
@@ -486,24 +496,31 @@ class PageController extends Controller
                 $pageManager = $this->get('kitpages.cms.manager.page');
                 $pageManager->afterModify($page, $oldPage);
                 $this->getRequest()->getSession()->setFlash('notice', 'Page modified');
-                if (is_null($target)) {
-                    $forcedUrl = $page->getForcedUrl();
-                    if ($forcedUrl != null) {
-                        return $this->redirect($page->getForcedUrl());
-                    } else {
-                        return $this->redirect($this->generateUrl(
-                            'kitpages_cms_page_view_lang',
-                            array(
-                                'id' => $page->getId(),
-                                'lang' => $page->getLanguage(),
-                                'urlTitle' => $page->getUrlTitle()
-                            )
-                        ));
-                    }
-                } else {
-                    return $this->redirect($target);
+                $forcedUrl = $page->getForcedUrl();
+            } else {
+                $msg = 'Page not saved <br />';
+                foreach ($errorList as $err) {
+                    $msg.= $err->getMessage() . '<br />';
                 }
-                return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
+                $this->getRequest()->getSession()->setFlash('error', $msg);
+                $forcedUrl = $oldPage->getForcedUrl();
+            }
+
+            if (is_null($target)) {
+                if ($forcedUrl != null) {
+                    return $this->redirect($forcedUrl);
+                } else {
+                    return $this->redirect($this->generateUrl(
+                        'kitpages_cms_page_view_lang',
+                        array(
+                            'id' => $page->getId(),
+                            'lang' => $page->getLanguage(),
+                            'urlTitle' => $page->getUrlTitle()
+                        )
+                    ));
+                }
+            } else {
+                return $this->redirect($target);
             }
         }
         $view = $form->createView();
@@ -640,7 +657,14 @@ class PageController extends Controller
         }
 
         $builder = $this->createFormBuilder($page);
-        $builder->add('slug', 'text', array('attr' => array('class'=>'kit-cms-advanced')));
+        $builder->add(
+            'slug',
+            'text',
+            array(
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'error_bubbling' => true
+            )
+        );
 
         $builder->add(
             'isInNavigation',
@@ -743,7 +767,7 @@ class PageController extends Controller
         );
 
         $dataRenderer = array(
-            'title' => $zone->getSlug(),
+            'kitCmsZoneSlug' => $zone->getSlug(),
             'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
             'htmlBlock' => $htmlZone
