@@ -8,19 +8,21 @@ use Kitpages\CmsBundle\KitpagesCmsEvents;
 
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Renderer\TwigRenderer;
+use Kitpages\UtilBundle\Service\Util;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Validator\Constraint;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class BlockManager
 {
- 
+
     ////
     // dependency injection
     ////
@@ -28,28 +30,36 @@ class BlockManager
     protected $doctrine = null;
     protected $templating = null;
     protected $fileManager = null;
-    
-    public function __construct(Registry $doctrine, EventDispatcher $dispatcher, $templating, CmsFileManager $fileManager){
+    protected $util = null;
+
+    public function __construct(
+        Registry $doctrine,
+        EventDispatcher $dispatcher,
+        $templating,
+        CmsFileManager $fileManager,
+        Util $util
+    ){
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->templating = $templating;
-        $this->fileManager = $fileManager;        
-    }      
+        $this->fileManager = $fileManager;
+        $this->util = $util;
+    }
 
     /**
      * @return EventDispatcher $dispatcher
      */
     public function getDispatcher() {
         return $this->dispatcher;
-    }  
-    
+    }
+
     /**
      * @return $templating
      */
     public function getTemplating() {
         return $this->templating;
-    }    
-    
+    }
+
     /**
      * @return Registry $doctrine
      */
@@ -62,14 +72,21 @@ class BlockManager
      */
     public function getFileManager() {
         return $this->fileManager;
-    }    
-    
+    }
+
+    /**
+     * @return Util
+     */
+    public function getUtil()
+    {
+        return $this->util;
+    }
     ////
     // action function
     ////
     /**
      *
-     * @param Block $block 
+     * @param Block $block
      */
     public function delete(Block $block)
     {
@@ -77,7 +94,7 @@ class BlockManager
         $fileManager = $this->getFileManager();
         $event = new BlockEvent($block);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
-        
+
         // preventable action
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
@@ -89,7 +106,7 @@ class BlockManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockDelete, $event);
     }
 
-    
+
     public function deletePublished(BlockPublish $blockPublish)
     {
         $fileManager = $this->getFileManager();
@@ -98,14 +115,14 @@ class BlockManager
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($blockPublish);
     }
-    
+
     /**
      *
      * @param type $templateTwig
      * @param array $blockData
      * @param boolean $viewMode
      * @param array|null $listMediaUrl
-     * @return type 
+     * @return type
      */
     public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
         $blockData = $block->getData();
@@ -125,7 +142,7 @@ class BlockManager
             $blockData['root'] = array();
         }
         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
-        
+
         if ($renderer['type'] == 'twig') {
             $instance = new TwigRenderer();
             $instance->setTwig($this->getTemplating());
@@ -136,9 +153,9 @@ class BlockManager
 //        return $this->getTemplating()->render(
 //            $templateTwig,
 //            array('data' => $blockData)
-//        );  
+//        );
     }
-    
+
     public function publish(Block $block, array $listRenderer)
     {
         $event = new BlockEvent($block, $listRenderer);
@@ -160,14 +177,14 @@ class BlockManager
             $em->refresh($block);
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
                 $blockData = $block->getData();
-                if (!is_null($blockData) && isset($blockData['root'])) {             
+                if (!is_null($blockData) && isset($blockData['root'])) {
                     foreach($listRenderer as $nameRenderer => $renderer) {
-                        
+
                         $fileManager->publishInBlockData($blockData);
-                        
+
                         $listMediaUrl = $fileManager->urlListInBlockData($blockData, true);
                         $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
-                      
+
                         $resultingHtml = $this->render($renderer, $block, Context::VIEW_MODE_PROD);
 
                         $blockPublish = new BlockPublish();
@@ -184,7 +201,7 @@ class BlockManager
         }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockPublish, $event);
     }
-    
+
     public function afterModify($block, $oldBlockData)
     {
         if ($oldBlockData != $block->getData()) {
@@ -198,8 +215,17 @@ class BlockManager
     }
 
     ////
-    // doctrine events
+    //  Validator
     ////
-  
-    
+    public function stripTagText($text)
+    {
+        return $this->getUtil()->stripTags(
+            array(
+                'allowTags' => array("span","div","li","ul","ol","u","i","em", "strong", "strike","b","p","br","hr"),
+                'allowAttribs' => array("class")
+            ),
+            $text
+        );
+    }
+
 }

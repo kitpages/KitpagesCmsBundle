@@ -12,11 +12,6 @@ class Generic extends Constraint
     public $method = null;
     public $service = null;
 
-    public function initialize()
-    {
-        
-    }
-
     public function getDefaultOption()
     {
         return 'property';

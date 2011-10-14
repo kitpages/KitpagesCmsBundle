@@ -203,10 +203,13 @@ class BlockController extends Controller
             'required' => true
         ));
 
+
+
         // build custom form
         $className = $templateList[$block->getTemplate()]['class'];
+        $formData = new $className();
         $builder->add('data', 'collection', array(
-           'type' => new $className(),
+           'type' => $formData,
         ));
         // get form
         $form = $builder->getForm();
@@ -214,12 +217,22 @@ class BlockController extends Controller
         // persist form if needed
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
+            $blockManager = $this->get('kitpages.cms.manager.block');
+
             $oldBlockData = $block->getData();
+
             $form->bindRequest($request);
+
+            $formChildren = $form->getChildren();
+            $blockData = $block->getData();
+            foreach($formData->methodApplyToField() as $field => $method) {
+                $blockData['root'][$field] = $blockManager->$method($blockData['root'][$field]);
+            }
+            $block->setData($blockData);
 
             if ($form->isValid()) {
                 $em->flush();
-                $blockManager = $this->get('kitpages.cms.manager.block');
+
                 $blockManager->afterModify($block, $oldBlockData);
                 $this->getRequest()->getSession()->setFlash('notice', 'Block modified');
                 $target = $request->query->get('kitpages_target', null);
@@ -227,6 +240,9 @@ class BlockController extends Controller
                     return $this->redirect($target);
                 }
                 return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
+            } else {
+                $msg = 'Block not saved <br />';
+                $this->getRequest()->getSession()->setFlash('error', $msg);
             }
         }
         $view = $form->createView();

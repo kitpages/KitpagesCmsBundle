@@ -38,6 +38,7 @@
             <argument type="service" id="templating"/>
             <!--<argument type="service" id="kitpages.cms.twig"/>  -->
             <argument type="service" id="kitpages.cms.manager.file"/>
+            <argument type="service" id="kitpages.util"/>
             <!--<tag name="doctrine.event_listener" event="prePersist" />
             <tag name="doctrine.event_listener" event="postPersist" />
             <tag name="doctrine.event_listener" event="preUpdate" />-->
@@ -103,10 +104,10 @@
             <argument type="service" id="kitpages.cms.manager.page" />
             <tag name="validator.constraint_validator" alias="kitpages_cms.validator.page" />
         </service>
-        <!-- <service id="kitpages_cms.validator.block" class="%kitpages_cms.validator.generic.class%">
+        <service id="kitpages_cms.validator.block" class="%kitpages_cms.validator.generic.class%">
             <argument type="service" id="kitpages.cms.manager.block" />
             <tag name="validator.constraint_validator" alias="kitpages_cms.validator.block" />
-        </service>-->
+        </service>
     </services>
 
 </container>

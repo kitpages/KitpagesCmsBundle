@@ -31,6 +31,12 @@
             <option name="fields">slug</option>
             <option name="message">The slug is already used</option>
         </constraint>
+        <!--<constraint name="Kitpages\CmsBundle\Validator\Generic">
+            <option name="property">slug</option>
+            <option name="message">testmodif</option>
+            <option name="method">validateStripTagText</option>
+            <option name="service">kitpages_cms.validator.block</option>
+        </constraint>-->
     </class>
     <class name="Kitpages\CmsBundle\Entity\Zone">
         <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">

@@ -3,11 +3,16 @@ namespace Kitpages\CmsBundle\Form\Block;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Kitpages\CmsBundle\Validator\Generic;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\MaxLength;
+use Symfony\Component\Validator\Constraints\Email;
 
 class StandardForm extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
+
         $builder->add(
             'title',
             'text',
@@ -66,6 +71,28 @@ class StandardForm extends AbstractType
             )
         );
     }
+
+    public function methodApplyToField() {
+        return array(
+            'subContent' => 'stripTagText'
+        );
+    }
+
+//    public function getDefaultOptions(array $options)
+//    {
+//        $stripTagConstraint = new Generic(array(
+//            'message'=>'tutout',
+//            'property'=> 'subContent',
+//            'method'=>'validateStripTagText',
+//            'service'=>'kitpages_cms.validator.block'
+//        ));
+//        $collectionConstraint = new Collection(array(
+//            'subContent' => $stripTagConstraint
+//        ));
+//        $options['validation_constraint'] = $collectionConstraint;
+//        return array('validation_constraint' => $collectionConstraint);
+//
+//    }
 
     public function getName() {
         return 'BlockTemplateEditStandardType';
