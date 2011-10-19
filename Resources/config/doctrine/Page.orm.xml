@@ -12,21 +12,21 @@
         </id>
 
         <field name="slug" column="slug" type="string" unique="true" nullable="false" length="250"/>
-        <field name="language" column="language" type="string" nullable="true" length="250"/>   
+        <field name="language" column="language" type="string" nullable="true" length="250"/>
         <field name="title" column="title" type="string" nullable="true" length="250" />
         <field name="urlTitle" column="url_title" type="string" nullable="true" length="250" />
         <field name="forcedUrl" column="forced_url" type="string" nullable="true" length="250" unique="true"/>
-        <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250" />  
+        <field name="menuTitle" column="menu_title" type="string" nullable="true" length="250" />
         <field name="pageType" column="page_type" type="string" length="100" />
         <field name="layout" column="layout" type="string" length="250"  nullable="true" />
-        
+
         <field name="isPublished" column="is_published" type="boolean"/>
-        <field name="isInNavigation" column="is_in_navigation" type="boolean"/>           
-        <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>        
+        <field name="isInNavigation" column="is_in_navigation" type="boolean"/>
+        <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="linkUrl" column="link_url" type="string" nullable="true" />
-        
+
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />
         </field>
@@ -39,8 +39,8 @@
         </field>
         <field name="updatedAt" type="datetime">
             <gedmo:timestampable on="update"/>
-        </field>  
- 
+        </field>
+
         <field name="left" column="lft" type="integer">
             <gedmo:tree-left/>
         </field>
@@ -60,7 +60,7 @@
         </many-to-one>
 
         <gedmo:tree type="nested"/>
- 
+
         <lifecycle-callbacks>
           <lifecycle-callback type="prePersist" method="prePersist"/>
           <lifecycle-callback type="preUpdate" method="preUpdate"/>
@@ -69,17 +69,20 @@
         <one-to-many field="pageZoneList" target-entity="Kitpages\CmsBundle\Entity\PageZone" mapped-by="page" >
             <cascade>
                 <cascade-persist />
-            </cascade>   
+            </cascade>
         </one-to-many>
 
         <one-to-one field="pagePublish" target-entity="Kitpages\CmsBundle\Entity\PagePublish" mapped-by="page">
             <cascade>
                 <cascade-persist />
                 <cascade-remove />
-            </cascade>               
+            </cascade>
         </one-to-one>
 
         <one-to-one field="navPublish" target-entity="Kitpages\CmsBundle\Entity\NavPublish" mapped-by="page" >
+            <cascade>
+                <cascade-remove />
+            </cascade>
         </one-to-one>
 
     </entity>

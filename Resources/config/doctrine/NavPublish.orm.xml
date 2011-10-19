@@ -35,7 +35,7 @@
             <gedmo:tree-parent/>
         </many-to-one>
         <one-to-one field="page" target-entity="Kitpages\CmsBundle\Entity\Page" inversed-by="navPublish">
-            <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="SET NULL"/>
+            <join-column name="page_id" referenced-column-name="id" on-update="CASCADE" on-delete="CASCADE"/>
         </one-to-one>
     </entity>
 

@@ -12,7 +12,7 @@ class Zone
      */
     private $slug;
 
-    
+
     /**
      * @var integer $id
      */
@@ -33,7 +33,7 @@ class Zone
      * @var datetime $unpublishedAt
      */
     private $unpublishedAt;
-    
+
     /**
      * @var datetime $createdAt
      */
@@ -63,7 +63,7 @@ class Zone
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -83,7 +83,7 @@ class Zone
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getCreatedAt()
     {
@@ -103,7 +103,7 @@ class Zone
     /**
      * Get updatedAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getUpdatedAt()
     {
@@ -113,7 +113,7 @@ class Zone
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -133,7 +133,7 @@ class Zone
     /**
      * Get zoneBlockList
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getZoneBlockList()
     {
@@ -142,12 +142,12 @@ class Zone
 
     public function prePersist()
     {
-        $this->slug = Urlizer::transliterate($this->slug, '-'); 
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
 
     public function preUpdate()
     {
-        $this->slug = Urlizer::transliterate($this->slug, '-'); 
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
     /**
      * @var Kitpages\CmsBundle\Entity\ZonePublish
@@ -168,17 +168,17 @@ class Zone
     /**
      * Get zonePublish
      *
-     * @return Kitpages\CmsBundle\Entity\ZonePublish 
+     * @return Kitpages\CmsBundle\Entity\ZonePublish
      */
     public function getZonePublish()
     {
         return $this->zonePublish;
     }
-    
+
     public function defaultSlug(){
         $this->setSlug('zone_'.$this->getId());
     }
-    
+
 
     /**
      * Set isPublished
@@ -193,7 +193,7 @@ class Zone
     /**
      * Get isPublished
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPublished()
     {
@@ -213,7 +213,7 @@ class Zone
     /**
      * Get publishedAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getPublishedAt()
     {
@@ -233,7 +233,7 @@ class Zone
     /**
      * Get unpublishedAt
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getUnpublishedAt()
     {
@@ -250,7 +250,7 @@ class Zone
         $this->pageZoneList = new \Doctrine\Common\Collections\ArrayCollection();
     $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Add pageZoneList
      *
@@ -264,7 +264,7 @@ class Zone
     /**
      * Get pageZoneList
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getPageZoneList()
     {
@@ -309,10 +309,15 @@ class Zone
     /**
      * Get canonicalUrl
      *
-     * @return string 
+     * @return string
      */
     public function getCanonicalUrl()
     {
         return $this->canonicalUrl;
     }
+
+    public function __toString() {
+        return '['.get_class($this).':'.$this->getId().':'.$this->getSlug().']';
+    }
+
 }

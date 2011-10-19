@@ -9,9 +9,9 @@ use Gedmo\Sluggable\Util\Urlizer;
  */
 class Block
 {
-    
+
     const BLOCK_TYPE_EDITO = 'edito';
-    
+
     /**
      * @var string $slug
      */
@@ -276,7 +276,7 @@ class Block
     {
         return $this->id;
     }
-    
+
     public function defaultSlug(){
         $this->setSlug('block_'.$this->getId());
     }
@@ -289,7 +289,7 @@ class Block
     {
         $this->listBlockPublish = new \Doctrine\Common\Collections\ArrayCollection();
     }
- 
+
     /**
      * @var Kitpages\CmsBundle\Entity\BlockPublish
      */
@@ -314,7 +314,7 @@ class Block
     /**
      * Get blockPublishList
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getBlockPublishList()
     {
@@ -334,7 +334,7 @@ class Block
     /**
      * Get zoneBlockList
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getZoneBlockList()
     {
@@ -360,7 +360,7 @@ class Block
     /**
      * Get dataMedia
      *
-     * @return array 
+     * @return array
      */
     public function getDataMedia()
     {
@@ -369,12 +369,12 @@ class Block
 
     public function prePersist()
     {
-        $this->slug = Urlizer::transliterate($this->slug, '-'); 
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
 
     public function preUpdate()
     {
-        $this->slug = Urlizer::transliterate($this->slug, '-'); 
+        $this->slug = Urlizer::transliterate($this->slug, '-');
     }
 
     /**
@@ -395,5 +395,9 @@ class Block
     public function addZoneBlock(\Kitpages\CmsBundle\Entity\ZoneBlock $zoneBlockList)
     {
         $this->zoneBlockList[] = $zoneBlockList;
+    }
+
+    public function __toString() {
+        return '['.get_class($this).':'.$this->getId().':'.$this->getSlug().']';
     }
 }
