@@ -1,6 +1,26 @@
 VERSIONS
 ========
 
+v1.2.0 (no tagged yet)
+======================
+NEW features
+* action render for 404 page for easing navigation for admins
+* canonical URL for zones
+* block renderer : display anchors for anchor links inside a zone
+* pageId displayed in advanced mode in the tree (helps to change parentId if you want to move a page)
+* add a filter on RTE editors to remove formats included by word for example
+* add a breadcrumb system
+
+DEBUG
+* add forceUrl and linkUrl in navPublish and use a published version of forceUrl
+* add an error message on a dupplication of slug
+* add an error message on a dupplication of the forceUrl
+
+HOW TO MIGRATE
+--------------
+you need to run : ./app/console doctrine:schema:update --force
+and click on "publish all pages and navigation" in the tree page
+
 v1.1.0
 ------
 NEW features

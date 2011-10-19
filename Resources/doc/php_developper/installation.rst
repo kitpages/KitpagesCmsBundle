@@ -1,12 +1,7 @@
 KitpagesCmsBundle Installation
 ==============================
 
-There is two methods to install the Kitpages Cms Bundle :
-* the easy one is to use the the KitpagesCmsEdition. This is a symfony distribution with all the bundles and configurations included to have a ready to run CMS
-* the flexible (and complicated) one is to use the KitpagesCms as a bundle in an existing symfony2 project.
-
-This page describe the second way.
-
+This page describes the installation procedure to integrate the Kitpages CMS Bundle in an existing website
 
 Download all the source code
 ----------------------------
