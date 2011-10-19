@@ -12,7 +12,7 @@
         </id>
 
         <field name="slug" column="slug" type="string" unique="true" length="250"/>
-        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"/>
+        <field name="canonicalUrl" column="canonical_url"  type="string" length="250" nullable="true"/>
         <field name="data" column="data" type="array" nullable="true" />
         <field name="createdAt" type="datetime">
             <gedmo:timestampable on="create"/>

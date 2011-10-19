@@ -11,8 +11,8 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="slug" column="slug" unique="true" type="string" length="250"/>
-        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"/>
+        <field name="slug" column="slug" unique="true" type="string" length="250" />
+        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"  nullable="true" />
         <field name="isPublished" column="is_published" type="boolean"/>
         <field name="publishedAt" column="published_at" type="datetime" nullable="true">
             <gedmo:timestampable on="change" field="isPublished" value="1" />
