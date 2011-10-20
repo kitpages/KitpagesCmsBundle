@@ -76,8 +76,8 @@ class NavController extends Controller
     }
 
 
-    public function widgetBreadcrumbAction($slug, Page $page, $slugHP = null, $startDepth = 0) {
-        if ($page != null) {
+    public function widgetBreadcrumbAction($slug, $page, $homePageSlug = null, $startDepth = 0) {
+        if ($page instanceof Page) {
             $em = $this->getDoctrine()->getEntityManager();
             $context = $this->get('kitpages.cms.controller.context');
             $dataBreadcrumb = array();
@@ -87,9 +87,11 @@ class NavController extends Controller
                 $levelEndBreadcrumb = $page->getLevel()-1;
                 $pageListBreadcrumb = $em->getRepository('KitpagesCmsBundle:Page')->parentBetweenTwoDepth($page, $levelStartBreadcrumb, $levelEndBreadcrumb);
 
-                if ($slugHP != null && (isset($pageListBreadcrumb[0]) && $pageListBreadcrumb[0]->getSlug() != $slugHP)) {
-                    $pageHP = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slugHP);
-                    array_unshift($pageListBreadcrumb, $pageHP);
+                if ($homePageSlug != null && (isset($pageListBreadcrumb[0]) && $pageListBreadcrumb[0]->getSlug() != $homePageSlug)) {
+                    $pageHP = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($homePageSlug);
+                    if ($pageHP instanceof Page) {
+                        array_unshift($pageListBreadcrumb, $pageHP);
+                    }
                 }
 
                 foreach($pageListBreadcrumb as $pageBreadcrumb) {
@@ -108,9 +110,11 @@ class NavController extends Controller
                 $navPublish = $page->getNavPublish();
                 $navListBreadcrumb = $em->getRepository('KitpagesCmsBundle:NavPublish')->parentBetweenTwoDepth($navPublish, $levelStartBreadcrumb, $levelEndBreadcrumb);
 
-                if ($slugHP != null && (isset($navListBreadcrumb[0]) && $navListBreadcrumb[0]->getSlug() != $slugHP)) {
-                    $pageHP = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($slugHP);
-                    array_unshift($navListBreadcrumb, $pageHP);
+                if ($homePageSlug != null && (isset($navListBreadcrumb[0]) && $navListBreadcrumb[0]->getSlug() != $homePageSlug)) {
+                    $pageHP = $em->getRepository('KitpagesCmsBundle:NavPublish')->findOneBySlug($homePageSlug);
+                    if ($pageHP instanceof NavPublish) {
+                        array_unshift($navListBreadcrumb, $pageHP);
+                    }
                 }
 
                 foreach($navListBreadcrumb as $navBreadcrumb) {
