@@ -19,7 +19,7 @@
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="dataMedia" column="data_media" type="array" nullable="true" />
-
+        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"  nullable="true" />
         <field name="realUpdatedAt" column="real_updated_date" type="datetime">
             <gedmo:timestampable on="create" />
         </field>

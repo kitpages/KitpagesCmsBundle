@@ -8,8 +8,8 @@ use Kitpages\CmsBundle\Entity\Block;
  */
 class BlockPublish
 {
-    
-   
+
+
     /**
      * @var string $slug
      */
@@ -30,7 +30,7 @@ class BlockPublish
      */
     private $createdAt;
 
-    
+
     /**
      * @var integer $id
      */
@@ -39,6 +39,7 @@ class BlockPublish
 
     public function initByBlock(Block $block) {
         $this->setSlug($block->getSlug());
+        $this->setCanonicalUrl($block->getCanonicalUrl());
         $this->setBlockType($block->getBlockType());
         $this->setBlock($block);
     }
@@ -135,7 +136,7 @@ class BlockPublish
         return $this->id;
     }
 
- 
+
     /**
      * @ORM\prePersist
      */
@@ -170,7 +171,7 @@ class BlockPublish
     /**
      * Get renderer
      *
-     * @return string 
+     * @return string
      */
     public function getRenderer()
     {
@@ -185,7 +186,7 @@ class BlockPublish
     {
         $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
 
 
 
@@ -209,7 +210,7 @@ class BlockPublish
     /**
      * Get block
      *
-     * @return Kitpages\CmsBundle\Entity\Block 
+     * @return Kitpages\CmsBundle\Entity\Block
      */
     public function getBlock()
     {
@@ -234,10 +235,35 @@ class BlockPublish
     /**
      * Get dataMedia
      *
-     * @return array 
+     * @return array
      */
     public function getDataMedia()
     {
         return $this->dataMedia;
+    }
+    /**
+     * @var string $canonicalUrl
+     */
+    private $canonicalUrl;
+
+
+    /**
+     * Set canonicalUrl
+     *
+     * @param string $canonicalUrl
+     */
+    public function setCanonicalUrl($canonicalUrl)
+    {
+        $this->canonicalUrl = $canonicalUrl;
+    }
+
+    /**
+     * Get canonicalUrl
+     *
+     * @return string 
+     */
+    public function getCanonicalUrl()
+    {
+        return $this->canonicalUrl;
     }
 }
