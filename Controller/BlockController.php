@@ -225,8 +225,12 @@ class BlockController extends Controller
 
             $formChildren = $form->getChildren();
             $blockData = $block->getData();
-            foreach($formData->methodApplyToField() as $field => $method) {
-                $blockData['root'][$field] = $blockManager->$method($blockData['root'][$field]);
+
+            $reflector = new \ReflectionObject($formData);
+            if ($reflector->hasMethod('filterList')) {
+                foreach($formData->filterList() as $field => $method) {
+                    $blockData['root'][$field] = $blockManager->$method($blockData['root'][$field]);
+                }
             }
             $block->setData($blockData);
 
