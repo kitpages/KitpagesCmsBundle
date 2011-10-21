@@ -1,6 +1,5 @@
-<ul class="kitCmsBreadcrumb" >
-{% for kitCmsPage in kitCmsPageList %}
-    <li class="{%if loop.first%} kit-cms-first {%endif%}{%if loop.last%} kit-cms-last {%endif%}"><a href="{{kitCmsPage.url}}" >{{kitCmsPage.label}}</a></li>
-{% endfor %}
-    <li>{{kitCmsPageLabel}}</li>
+<ul class="kit-cms-breadcrumb" >
+{% for kitCmsPage in kitCmsPageList %}<li class="{%if loop.first%} kit-cms-first {%endif%}">
+    <a href="{{kitCmsPage.url}}" >{{kitCmsPage.label}}</a>
+</li>{% endfor %}<li class="kit-cms-last"><a>{{kitCmsPageLabel}}</a></li>
 </ul>

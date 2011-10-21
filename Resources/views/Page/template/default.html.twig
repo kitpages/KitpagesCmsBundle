@@ -4,7 +4,7 @@
                     'slug': kitCmsPageData.language|default(cms.currentLanguage) ~ '-main',
                     'startDepth':0,
                     'page':kitCmsPage|default(''),
-                    'homePageSlug':'homepage'}
+                    'homePageSlug':'home-page'}
                 %}
 <div class="layout-inside-column">
     {% render 'KitpagesCmsBundle:Page:widgetZone' with {'location_in_page': 'column', 'page':kitCmsPage} %}
