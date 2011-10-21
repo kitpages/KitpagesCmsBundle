@@ -5,7 +5,8 @@ v1.2.0 (no tagged yet)
 ======================
 NEW features
 * action render for 404 page for easing navigation for admins
-* canonical URL for zones
+* canonical URL for zones and block
+* title for zones
 * block renderer : display anchors for anchor links inside a zone
 * pageId displayed in advanced mode in the tree (helps to change parentId if you want to move a page)
 * add a filter on RTE editors to remove formats included by word for example
@@ -13,8 +14,9 @@ NEW features
 
 DEBUG
 * add forceUrl and linkUrl in navPublish and use a published version of forceUrl
-* add an error message on a dupplication of slug
-* add an error message on a dupplication of the forceUrl
+* add an error message on a duplication of slug
+* add an error message on a duplication of the forceUrl
+* modify constant afterBlockPublish in KitpagesCmsEvents
 
 HOW TO MIGRATE
 --------------
