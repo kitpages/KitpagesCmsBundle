@@ -1,8 +1,16 @@
 VERSIONS
 ========
 
-v1.2.0 (no tagged yet)
-======================
+future v1.3.0 (master)
+=====================
+NEW features
+
+DEBUG
+
+MIGRATION
+
+v1.2.0
+======
 NEW features
 * action render for 404 page for easing navigation for admins
 * canonical URL for zones and block
