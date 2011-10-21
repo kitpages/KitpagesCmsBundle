@@ -124,6 +124,7 @@ class ZonePublish
     public function initByZone(Zone $zone){
         $this->setSlug($zone->getSlug());
         $this->setCanonicalUrl($zone->getCanonicalUrl());
+        $this->setTitle($zone->getTitle());
         $this->setZone($zone);
     }
 
@@ -171,5 +172,30 @@ class ZonePublish
     public function getCanonicalUrl()
     {
         return $this->canonicalUrl;
+    }
+    /**
+     * @var string $title
+     */
+    private $title;
+
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

@@ -13,13 +13,14 @@
 
         <field name="slug" column="slug" type="string" length="250"/>
         <field name="blockType" column="block_type" type="string" length="100" />
-        <field name="renderer" column="renderer" type="string" length="250" />        
+        <field name="renderer" column="renderer" type="string" length="250" />
         <field name="data" column="data" type="array" nullable="true" />
         <field name="dataMedia" column="data_media" type="array" nullable="true" />
+        <field name="canonicalUrl" column="canonical_url"  type="string" length="250"  nullable="true" />
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create"/>
-        </field>   
-        
+        </field>
+
         <many-to-one field="block" target-entity="Kitpages\CmsBundle\Entity\Block" inversed-by="blockPublishList" nullable="true" >
             <join-columns>
                 <join-column name="block_id" referenced-column-name="id" nullable="true" on-delete="SET NULL" on-update="CASCADE" />

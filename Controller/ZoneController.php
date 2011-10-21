@@ -36,6 +36,7 @@ class ZoneController extends Controller
         $builder = $this->createFormBuilder($zone);
         $builder->add('slug', 'text');
         $builder->add('canonicalUrl', 'text');
+        $builder->add('title', 'text');
         // get form
         $form = $builder->getForm();
 

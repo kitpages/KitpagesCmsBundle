@@ -400,4 +400,29 @@ class Block
     public function __toString() {
         return '['.get_class($this).':'.$this->getId().':'.$this->getSlug().']';
     }
+    /**
+     * @var string $canonicalUrl
+     */
+    private $canonicalUrl;
+
+
+    /**
+     * Set canonicalUrl
+     *
+     * @param string $canonicalUrl
+     */
+    public function setCanonicalUrl($canonicalUrl)
+    {
+        $this->canonicalUrl = $canonicalUrl;
+    }
+
+    /**
+     * Get canonicalUrl
+     *
+     * @return string 
+     */
+    public function getCanonicalUrl()
+    {
+        return $this->canonicalUrl;
+    }
 }

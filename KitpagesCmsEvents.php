@@ -9,7 +9,7 @@ final class KitpagesCmsEvents
     const afterBlockModify = 'kitpages.cms.block.after.modify';
 
     const onBlockPublish = 'kitpages.cms.block.on.publish';
-    const afterBlockPublish = 'kitpages.cms.block.on.publish';
+    const afterBlockPublish = 'kitpages.cms.block.after.publish';
 
     const onBlockDelete = 'kitpages.cms.block.on.delete';
     const afterBlockDelete = 'kitpages.cms.block.after.delete';

@@ -203,7 +203,14 @@ class BlockController extends Controller
             'required' => true
         ));
 
-
+        $builder->add(
+            'canonicalUrl',
+            'text',
+            array(
+                'attr' => array('class'=>'kit-cms-advanced'),
+                'required' => false
+            )
+        );
 
         // build custom form
         $className = $templateList[$block->getTemplate()]['class'];
