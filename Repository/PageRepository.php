@@ -126,11 +126,15 @@ class PageRepository extends NestedTreeRepository
         foreach($dataList as $data) {
             $dataFieldList = unserialize($data['data']);
             if ($dataFieldList != null && $dataFieldList['root'] != null) {
-                $dataReturnTmp = array_intersect_key(array_diff($dataFieldList['root'], array(null)), $fieldInheritanceList);
+                foreach($dataFieldList['root'] as $keyDataField => $dataField) {
+                    if ($dataField == null) {
+                        unset($dataFieldList['root'][$keyDataField]);
+                    }
+                }
+                $dataReturnTmp = array_intersect_key($dataFieldList['root'], $fieldInheritanceList);
                 $dataReturn = array_merge( $dataReturnTmp, $dataReturn);
             }
         }
-
         return $dataReturn;
     }
 
@@ -139,7 +143,12 @@ class PageRepository extends NestedTreeRepository
         $pageData = $page->getData();
         $dataReturn = $this->parentDataInheritance($page, $fieldInheritanceList);
         if($pageData != null && $pageData['root'] != null) {
-            $dataReturn = array_merge($dataReturn, array_diff($pageData['root'], array(null)));
+            foreach($pageData['root'] as $keyDataField => $dataField) {
+                if ($dataField == null) {
+                    unset($pageData['root'][$keyDataField]);
+                }
+            }
+            $dataReturn = array_merge($dataReturn, $pageData['root']);
         }
         return $dataReturn;
     }
