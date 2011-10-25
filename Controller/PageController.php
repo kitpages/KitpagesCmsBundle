@@ -337,11 +337,20 @@ class PageController extends Controller
         $builder->add('title', 'text');
         $builder->add('isInNavigation', 'checkbox', array('required' => false));
         $builder->add('menuTitle', 'text', array('required' => false));
-        $builder->add('linkUrl', 'text');
+        $builder->add('linkUrl', 'text', array('required' => false));
+        $builder->add(
+            'isLinkUrlFirstChild',
+            'checkbox',
+            array(
+                'required' => false,
+                'label' => "Link automatic on first child",
+            )
+        );
         $builder->add('parent_id','hidden',array(
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
         ));
+
 
 
         // get form
@@ -703,7 +712,22 @@ class PageController extends Controller
         );
 
 
-        $builder->add('linkUrl', 'text');
+        $builder->add(
+            'linkUrl',
+            'text',
+            array(
+                'label' => 'Url link',
+                'required' => false
+            )
+        );
+        $builder->add(
+            'isLinkUrlFirstChild',
+            'checkbox',
+            array(
+                'required' => false,
+                'label' => "Link automatic on first child",
+            )
+        );
         if ($this->container->hasParameter('kitpages_cms.page.data_inheritance_form_class')) {
             $classNameFormInheritance = $this->container->getParameter('kitpages_cms.page.data_inheritance_form_class');
 

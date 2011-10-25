@@ -108,8 +108,8 @@ class NavManager
             $resultDelete = $query->getResult();
             $query = $em->getConnection()->executeUpdate("
                 INSERT INTO cms_nav_publish
-                (id, parent_id, page_id, lft, rgt, lvl, root, title, slug, forced_url, link_url)
-                SELECT p.id, p.parent_id, p.id, p.lft, p.rgt, p.lvl, p.root, p.menu_title, p.slug, p.forced_url, p.link_url
+                (id, parent_id, page_id, lft, rgt, lvl, root, title, slug, forced_url, link_url, is_link_url_first_child)
+                SELECT p.id, p.parent_id, p.id, p.lft, p.rgt, p.lvl, p.root, p.menu_title, p.slug, p.forced_url, p.link_url, p.is_link_url_first_child
                 FROM cms_page p ORDER BY lft
             ");
 

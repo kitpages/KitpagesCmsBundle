@@ -339,4 +339,29 @@ class NavPublish
     {
         return $this->linkUrl;
     }
+    /**
+     * @var boolean $isLinkUrlFirstChild
+     */
+    private $isLinkUrlFirstChild;
+
+
+    /**
+     * Set isLinkUrlFirstChild
+     *
+     * @param boolean $isLinkUrlFirstChild
+     */
+    public function setIsLinkUrlFirstChild($isLinkUrlFirstChild)
+    {
+        $this->isLinkUrlFirstChild = $isLinkUrlFirstChild;
+    }
+
+    /**
+     * Get isLinkUrlFirstChild
+     *
+     * @return boolean 
+     */
+    public function getIsLinkUrlFirstChild()
+    {
+        return $this->isLinkUrlFirstChild;
+    }
 }
