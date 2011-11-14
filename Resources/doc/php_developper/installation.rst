@@ -178,10 +178,6 @@ Routing
 
 ::
 
-    KitpagesRedirectBundle:
-        resource: "@KitpagesRedirectBundle/Resources/config/routing.yml"
-        prefix:   /cms/redirect
-
     kitpages_cms:
         resource: "@KitpagesCmsBundle/Resources/config/routing.yml"
         prefix: "cms"
