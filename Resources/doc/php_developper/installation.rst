@@ -34,6 +34,10 @@ Edit deps file
         git=http://github.com/kitpages/KitpagesFileBundle.git
         target=Kitpages/FileBundle
 
+    [KitpagesRedirectBundle]   
+        git=http://github.com/kitpages/KitpagesRedirectBundle.git
+        target=Kitpages/RedirectBundle
+
     [DoctrineExtensions]
         git=http://github.com/l3pp4rd/DoctrineExtensions.git
         target=/gedmo-doctrine-extensions
@@ -70,6 +74,7 @@ In the app/AppKernel.php add
     new Kitpages\FileBundle\KitpagesFileBundle(),
     new Kitpages\SimpleCacheBundle\KitpagesSimpleCacheBundle(),
     new Kitpages\UtilBundle\KitpagesUtilBundle(),
+    new Kitpages\RedirectBundle\KitpagesRedirectBundle(),
     new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
     new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
 
