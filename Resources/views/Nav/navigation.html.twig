@@ -8,7 +8,7 @@
 {%endif%}
 {% if root %}
 <script>
-$(document).ready(function(){
+(function(){
     {% if currentPageSlug != '' %}
         $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-select');
         $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-current');
@@ -16,7 +16,7 @@ $(document).ready(function(){
     {% for selectPageSlug in selectPageSlugList %}
         $('.kit-cms-navigation-{{navigationSlug}}-slug-{{selectPageSlug}}').addClass('kit-cms-select');
     {% endfor %}
-});
+})();
 </script>
 
 {% endif %}
