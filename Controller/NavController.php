@@ -455,6 +455,7 @@ class NavController extends Controller
     }
 
     public function getPageLink($page) {
+        $url = '';
         if ($page->getPageType() == 'link' ) {
             $url = $page->getLinkUrl();
             if ($page->getIsLinkUrlFirstChild()) {
@@ -484,6 +485,7 @@ class NavController extends Controller
     }
 
     public function getPagePublishLink($navPublish) {
+        $url = '';
         $page = $navPublish->getPage();
         $pagePublish = $page->getPagePublish();
         if ($pagePublish->getPageType() == 'link' ) {

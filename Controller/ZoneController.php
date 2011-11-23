@@ -35,8 +35,22 @@ class ZoneController extends Controller
         // build basic form
         $builder = $this->createFormBuilder($zone);
         $builder->add('slug', 'text');
-        $builder->add('canonicalUrl', 'text');
-        $builder->add('title', 'text');
+        $builder->add(
+            'canonicalUrl',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class'=>'kit-cms-advanced'),
+            )
+        );
+        $builder->add(
+            'title',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class'=>'kit-cms-advanced'),
+            )
+        );
         // get form
         $form = $builder->getForm();
 
