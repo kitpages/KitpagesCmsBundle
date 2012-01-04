@@ -421,7 +421,7 @@ class NavController extends Controller
             } elseif($page->getPageType() == 'link') {
                 $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
                 //$pageArbo['actionList']['link'] = $page->getLinkUrl();
-                $pageArbo['menuTitle'] .= ' <span class="kit-cms-arbo-indicator-link">[ -&gt; '.$page->getLinkUrl().']<span>';
+                $pageArbo['menuTitle'] .= ' <span class="kit-cms-arbo-indicator-link">[ -&gt; '.$this->getPageLink($page).']<span>';
             }
             $pageArbo['children'] = $this->arboChildren($page);
             $pageListRenderer[] = $pageArbo;
@@ -455,8 +455,16 @@ class NavController extends Controller
     }
 
     public function getPageLink($page) {
+        $url = '';
         if ($page->getPageType() == 'link' ) {
             $url = $page->getLinkUrl();
+            if ($page->getIsLinkUrlFirstChild()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
+                if (count($pageChildren) > 0 && $pageChildren['0'] instanceof Page) {
+                    $url = $this->getPageLink($pageChildren['0']);
+                }
+            }
         }
         if ($page->getPageType() == 'edito' ) {
             if ($page->getForcedUrl()) {
@@ -477,10 +485,18 @@ class NavController extends Controller
     }
 
     public function getPagePublishLink($navPublish) {
+        $url = '';
         $page = $navPublish->getPage();
         $pagePublish = $page->getPagePublish();
         if ($pagePublish->getPageType() == 'link' ) {
             $url = $navPublish->getLinkUrl();
+            if ($navPublish->getIsLinkUrlFirstChild()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $navPublishChildren = $em->getRepository('KitpagesCmsBundle:NavPublish')->children($navPublish, true);
+                if (count($navPublishChildren) > 0 && $navPublishChildren['0'] instanceof NavPublish) {
+                    $url = $this->getPagePublishLink($navPublishChildren['0']);
+                }
+            }
         }
         if ($pagePublish->getPageType() == 'edito' ) {
             if ($pagePublish->getForcedUrl()) {

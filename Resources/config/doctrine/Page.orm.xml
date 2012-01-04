@@ -22,6 +22,7 @@
 
         <field name="isPublished" column="is_published" type="boolean"/>
         <field name="isInNavigation" column="is_in_navigation" type="boolean"/>
+        <field name="isLinkUrlFirstChild" column="is_link_url_first_child" type="boolean" nullable="true" />
         <field name="isPendingDelete" column="is_pending_delete" type="boolean"/>
         <field name="data" column="data" type="array" nullable="true" />
 

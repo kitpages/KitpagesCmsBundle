@@ -13,6 +13,7 @@
         <field name="title" column="title" type="string" nullable="true" length="250"/>
         <field name="forcedUrl" column="forced_url" type="string" unique="true" nullable="true" length="250"/>
         <field name="linkUrl" column="link_url" type="string" nullable="true" />
+        <field name="isLinkUrlFirstChild" column="is_link_url_first_child" type="boolean" nullable="true" />
         <field name="data" column="data" type="array" nullable="true" />
 
         <field name="left" column="lft" type="integer">
