@@ -1,6 +1,6 @@
 {% if navigation %}<ul {% if root %} class="{{navigationCssClass}}" {% endif %} >
     {# warning, don't split for and <li> in 2 lines. It removes spaces between two <li> then we can use display: inline-block;#}
-    {% for navigationElem in navigation %}<li class="{%if loop.first%} kit-cms-first {%endif%}{%if loop.last%} kit-cms-last {%endif%}kit-cms-navigation-{{navigationSlug}}-level{{navigationElem.level}} kit-cms-navigation-{{navigationSlug}}-slug-{{navigationElem.slug}}">
+    {% for navigationElem in navigation %}<li class="{%if loop.first%} kit-cms-first {%endif%}{%if loop.last%} kit-cms-last {%endif%}kit-cms-navigation-{{navigationSlug}}-level{{navigationElem.level}} kit-cms-navigation-{{navigationSlug}}-slug-{{navigationElem.slug}} kit-cms-not-select kit-cms-not-current">
             {% if navigationElem.url == '' %}{{navigationElem.title}}{% else %}<a href="{{navigationElem.url}}" >{{navigationElem.title}}</a>{% endif %}
             {% include 'KitpagesCmsBundle:Nav:navigation.html.twig' with {'navigation': navigationElem.children, 'navigationSlug':navigationSlug, 'root':false } %}
         </li>{% endfor %}
@@ -10,11 +10,11 @@
 <script>
 (function(){
     {% if currentPageSlug != '' %}
-        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-select');
-        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-current');
+        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-select').removeClass("kit-cms-not-select");
+        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-current').removeClass("kit-cms-not-current");
     {% endif %}
     {% for selectPageSlug in selectPageSlugList %}
-        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{selectPageSlug}}').addClass('kit-cms-select');
+        $('.kit-cms-navigation-{{navigationSlug}}-slug-{{selectPageSlug}}').addClass('kit-cms-select').removeClass("kit-cms-not-select");
     {% endfor %}
 })();
 </script>
