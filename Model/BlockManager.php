@@ -221,8 +221,8 @@ class BlockManager
     {
         return $this->getUtil()->stripTags(
             array(
-                'allowTags' => array("span","div","li","ul","ol","u","i","em", "strong", "strike","b","p","br","hr"),
-                'allowAttribs' => array("class")
+                'allowTags' => array("span","div","li","ul","ol","u","i","em", "strong", "strike","b","p","br","hr", "a"),
+                'allowAttribs' => array("class", "href", "target")
             ),
             $text
         );
