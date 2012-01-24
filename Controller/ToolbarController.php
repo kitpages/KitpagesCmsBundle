@@ -33,7 +33,7 @@ class ToolbarController extends Controller
         $request = $this->getRequest();
         $router = $this->get('router');
         $em = $this->getDoctrine()->getEntityManager();
-        if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if($this->get('security.context')->isGranted('ROLE_CMD_ADMIN')) {
 
             try {
                 $route = $router->match($request->getPathInfo());

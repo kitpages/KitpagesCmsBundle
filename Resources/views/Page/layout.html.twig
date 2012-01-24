@@ -8,7 +8,7 @@
 
 
 {% block kitpages_cms_toolbar %}
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_CMS_ADMIN') %}
         <div class="kit-cms kit-cms-toolbar">
         {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
         {% if (kitCmsViewMode is defined) and ( (kitCmsViewMode == 2) or (kitCmsViewMode == 3) ) %}
