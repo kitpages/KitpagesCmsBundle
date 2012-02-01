@@ -23,9 +23,6 @@
         <service id="kitpages.cms.controller.context" class="%kitpages_cms.cms.context%">
             <argument type="service" id="session"/>
         </service>
-        <service id="kitpages.cms.controller.context" class="%kitpages_cms.cms.context%">
-            <argument type="service" id="session"/>
-        </service>
         <service id="kitpages.cms.manager.file" class="%kitpages_cms.cms.fileManager%">
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
@@ -90,6 +87,7 @@
         <service id="kitpages_cms.doctrineListener" class="%kitpages_cms.doctrineListener.class%">
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="kitpages.util"/>
             <tag name="doctrine.event_listener" event="prePersist" />
             <tag name="doctrine.event_listener" event="postPersist" />
             <tag name="doctrine.event_listener" event="preUpdate" />

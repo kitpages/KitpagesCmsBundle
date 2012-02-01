@@ -9,6 +9,8 @@ use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Event\NavEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 
+use Kitpages\UtilBundle\Service\Util;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -25,14 +27,17 @@ class DoctrineListener {
     ////
     protected $doctrine = null;
     protected $dispatcher = null;
+    protected $util = null;
     
     public function __construct(
         Registry $doctrine,
-        EventDispatcher $dispatcher
+        EventDispatcher $dispatcher,
+        Util $util
     )
     {
         $this->doctrine = $doctrine;
         $this->dispatcher = $dispatcher;
+        $this->util = $util;
     }
     /**
      * @return EventDispatcher $dispatcher
@@ -56,24 +61,26 @@ class DoctrineListener {
     {
         $entity = $event->getEntity();
         if ($entity instanceof Block) {
-            $blockSlug = $entity->getSlug();
-            if(empty($blockSlug)) {
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->setSlug('block_ID');
             }
         }
         if ($entity instanceof Zone) {
-            $zoneSlug = $entity->getSlug();
-            if(empty($zoneSlug)) {
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->setSlug('zone_ID');
             }
         } 
         if ($entity instanceof Page) {
-            $pageSlug = $entity->getSlug();
-            if(empty($pageSlug)) {
+            $entity->setUrlTitle($this->util->urlPathEncode($entity->getTitle()));
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->setSlug('page_ID');
             }
-        }
-        if ($entity instanceof Page) {
             if($entity->getIsInNavigation() == 1) {
                 $this->unpublishNav();
             }
@@ -117,8 +124,9 @@ class DoctrineListener {
         
         /* Event BLOCK */
         if ($entity instanceof Block) {
-            $blockSlug = $entity->getSlug();
-            if(empty($blockSlug)) {
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->defaultSlug();
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($entity);
@@ -129,8 +137,9 @@ class DoctrineListener {
         
         /* Event Zone */
         if ($entity instanceof Zone) {
-            $zoneSlug = $entity->getSlug();
-            if(empty($zoneSlug)) {
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->defaultSlug();
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($entity);
@@ -149,8 +158,10 @@ class DoctrineListener {
         }   
         /* Event Page */
         if ($entity instanceof Page) {
-            $pageSlug = $entity->getSlug();
-            if(empty($pageSlug)) {
+            $entity->setUrlTitle($this->util->urlPathEncode($entity->getTitle()));
+            $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
+            $slug = $entity->getSlug();
+            if(empty($slug)) {
                 $entity->defaultSlug();
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($entity);

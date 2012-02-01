@@ -3,7 +3,7 @@
  * @Gedmo\Tree
  */
 namespace Kitpages\CmsBundle\Entity;
-use Gedmo\Sluggable\Util\Urlizer;
+
 /**
  * Kitpages\CmsBundle\Entity\Block
  */
@@ -367,16 +367,6 @@ class Block
         return $this->dataMedia;
     }
 
-    public function prePersist()
-    {
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
-
-    public function preUpdate()
-    {
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
-
     /**
      * Add blockPublishList
      *
@@ -424,5 +414,16 @@ class Block
     public function getCanonicalUrl()
     {
         return $this->canonicalUrl;
+    }
+
+
+    public function prePersist()
+    {
+        // Add your code here
+    }
+
+    public function preUpdate()
+    {
+        // Add your code here
     }
 }

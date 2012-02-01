@@ -2,7 +2,6 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
-use Gedmo\Sluggable\Util\Urlizer;
 /**
  * Kitpages\CmsBundle\Entity\Page
  */
@@ -254,20 +253,6 @@ class Page
     {
         return $this->id;
     }
-
-
-    public function prePersist()
-    {
-        $this->urlTitle = Urlizer::transliterate($this->title, '-');
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
-
-    public function preUpdate()
-    {
-        $this->urlTitle = Urlizer::transliterate($this->title, '-');
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
-
 
     /**
      * @var datetime $realUpdatedAt
@@ -917,5 +902,16 @@ class Page
     public function getIsLinkUrlFirstChild()
     {
         return $this->isLinkUrlFirstChild;
+    }
+
+
+    public function prePersist()
+    {
+        // Add your code here
+    }
+
+    public function preUpdate()
+    {
+        // Add your code here
     }
 }

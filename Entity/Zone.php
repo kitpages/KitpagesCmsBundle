@@ -1,7 +1,7 @@
 <?php
 
 namespace Kitpages\CmsBundle\Entity;
-use Gedmo\Sluggable\Util\Urlizer;
+
 /**
  * Kitpages\CmsBundle\Entity\Zone
  */
@@ -140,15 +140,6 @@ class Zone
         return $this->zoneBlockList;
     }
 
-    public function prePersist()
-    {
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
-
-    public function preUpdate()
-    {
-        $this->slug = Urlizer::transliterate($this->slug, '-');
-    }
     /**
      * @var Kitpages\CmsBundle\Entity\ZonePublish
      */
@@ -344,5 +335,16 @@ class Zone
     public function getTitle()
     {
         return $this->title;
+    }
+
+
+    public function prePersist()
+    {
+        // Add your code here
+    }
+
+    public function preUpdate()
+    {
+        // Add your code here
     }
 }
