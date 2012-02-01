@@ -532,7 +532,7 @@ class PageController extends Controller
                 return $this->redirect($target);
             }
         }
-        $view = $form->createView();
+        
         return $this->render($layout['data_form_twig'], array(
             'form' => $form->createView(),
             'id' => $page->getId(),
