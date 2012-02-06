@@ -17,6 +17,7 @@
 {% if root %}
 <script>
 (function(){
+    {%if kitCmsViewMode == 3%}
     $('.{{navigationCssClass}} .kit-cms-nav-button-add').click(function(event){
         event.preventDefault();
         if($(this).attr('data-cms-nav-next-sibling') == 1) {
@@ -26,6 +27,7 @@
         }
 
     })
+    {% endif %}
     {% if currentPageSlug != '' %}
         $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-select').removeClass("kit-cms-not-select");
         $('.kit-cms-navigation-{{navigationSlug}}-slug-{{currentPageSlug}}').addClass('kit-cms-current').removeClass("kit-cms-not-current");
