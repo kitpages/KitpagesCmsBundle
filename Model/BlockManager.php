@@ -127,6 +127,7 @@ class BlockManager
     public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
         $blockData = $block->getData();
         $blockData['block']['slug'] = $block->getSlug();
+        $blockData['block']['blockId'] = $block->getId();
         if (is_bool($viewMode)) {
             throw new Exception("boolean viewMode, strange");
         }
