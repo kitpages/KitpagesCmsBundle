@@ -400,3 +400,24 @@ textarea.kit-cms-rte-advanced {
 .kit-cms-navigation-main li div.kit-cms-navigation-nolink, .kitpages-cms-navigation-footer li div.kit-cms-navigation-nolink{
     position:relative;
 }
+
+.kit-cms-action-button > ul {
+    list-style: none;
+}
+
+.kit-cms-action-button > ul > li > a {
+    display: block;
+    margin: 7px 10px;
+    padding: 3px 10px;
+    background-color: #F0F0F0;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(128,128,128,0.7);
+    text-align: center;
+    color: #000;
+}
+
+.kit-cms-action-button > ul > li > a:hover {
+    background-color: #BB092D;
+    color: #FFF;
+}
