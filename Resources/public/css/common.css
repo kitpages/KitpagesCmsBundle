@@ -337,7 +337,7 @@ textarea.kit-cms-rte-advanced {
 .kit-cms-arbo-actions.kit-cms-menu {
     height: auto;
     background-color: transparent;
-    border-radius: none;
+    border-radius: 0;
     border: none;
 }
 .kit-cms-arbo-actions.kit-cms-menu > li {
@@ -395,5 +395,8 @@ textarea.kit-cms-rte-advanced {
     left:0%;
 }
 .kit-cms-navigation-main li a, .kitpages-cms-navigation-footer li a{
+    position:relative;
+}
+.kit-cms-navigation-main li div.kit-cms-navigation-nolink, .kitpages-cms-navigation-footer li div.kit-cms-navigation-nolink{
     position:relative;
 }
