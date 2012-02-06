@@ -1,0 +1,15 @@
+{% extends 'KitpagesCmsBundle:Page:layout.html.twig' %}
+
+{% block body %}
+<div class="kit-cms-edit kit-cms">
+
+<h1>choose the type of page to create</h1>
+<ul>
+    <li><a href="{{ path('kitpages_cms_page_create', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug, 'kitpages_target': kitpages_target }) }}">create page</a></li>
+    <li><a href="{{ path('kitpages_cms_page_create_technical', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug, 'kitpages_target': kitpages_target }) }}">create page technical</a></li>
+    <li><a href="{{ path('kitpages_cms_page_create_link', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug, 'kitpages_target': kitpages_target }) }}">create page link</a></li>
+</ul>
+
+</div>
+
+{% endblock body %}

@@ -75,6 +75,11 @@ kitpages_cms_admin_view_mode_change:
 ###
 # Pages
 ###
+
+kitpages_cms_page_choice_create:
+    pattern:  /page/choiceCreate
+    defaults: { _controller: KitpagesCmsBundle:Page:choiceCreate }
+
 kitpages_cms_page_create:
     pattern:  /page/create
     defaults: { _controller: KitpagesCmsBundle:Page:create }

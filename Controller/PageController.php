@@ -140,6 +140,26 @@ class PageController extends Controller
         return new Response($resultingHtml);
     }
 
+    public function choiceCreateAction(){
+        $em = $this->get('doctrine')->getEntityManager();
+        $next_sibling_slug = $this->get('request')->query->get('next_sibling_slug', null);
+        if ($next_sibling_slug != null) {
+            $slug = $next_sibling_slug;
+        }
+        $prev_sibling_slug = $this->get('request')->query->get('prev_sibling_slug', null);
+        if ($prev_sibling_slug != null) {
+            $slug = $prev_sibling_slug;
+        }
+        $target = $this->getRequest()->query->get('kitpages_target', null);
+        $page = $em->getRepository('KitpagesCmsBundle:Page')->findOneBySlug($slug);
+        return $this->render('KitpagesCmsBundle:Page:choiceCreate.html.twig', array(
+            'next_sibling_slug' => $next_sibling_slug,
+            'prev_sibling_slug' => $prev_sibling_slug,
+            'parent_id' => $page->getParent()->getId(),
+            'kitpages_target' => $target
+        ));
+    }
+
     public function createAction()
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
@@ -178,6 +198,14 @@ class PageController extends Controller
             'choices' => $selectLayoutList,
             'required' => true
         ));
+        $builder->add('next_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('next_sibling_slug', null)
+        ));
+        $builder->add('prev_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('prev_sibling_slug', null)
+        ));
         // get form
         $form = $builder->getForm();
 
@@ -191,13 +219,25 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
+                $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
                 if (!empty($parent_id)) {
-                    $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
+                    $pageParent = $repositoryPage->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
 
-                $em->persist($page);
+                $nextSiblingSlug = $dataForm['next_sibling_slug'];
+                $prevSiblingSlug = $dataForm['prev_sibling_slug'];
+                if($nextSiblingSlug != null) {
+                    $sibling = $repositoryPage->findOneBySlug($nextSiblingSlug);
+                    $repositoryPage->persistAsNextSiblingOf($page, $sibling);
+                }elseif($prevSiblingSlug != null){
+                    $sibling = $repositoryPage->findOneBySlug($prevSiblingSlug);
+                    $repositoryPage->persistAsPrevSiblingOf($page, $sibling);
+                }else {
+                    $em->persist($page);
+                }
+
                 $em->flush();
                 $layoutKey = $dataForm['layout'];
                 $zoneList = $layoutList[$layoutKey]['zone_list'];
@@ -279,8 +319,14 @@ class PageController extends Controller
             'property_path' => false,
             'data' => $parent_id
         ));
-
-
+        $builder->add('next_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('next_sibling_slug', null)
+        ));
+        $builder->add('prev_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('prev_sibling_slug', null)
+        ));
         // get form
         $form = $builder->getForm();
 
@@ -294,13 +340,24 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
+                $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
                 if (!empty($parent_id)) {
-                    $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
+                    $pageParent = $repositoryPage->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
 
-                $em->persist($page);
+                $nextSiblingSlug = $dataForm['next_sibling_slug'];
+                $prevSiblingSlug = $dataForm['prev_sibling_slug'];
+                if($nextSiblingSlug != null) {
+                    $sibling = $repositoryPage->findOneBySlug($nextSiblingSlug);
+                    $repositoryPage->persistAsNextSiblingOf($page, $sibling);
+                }elseif($prevSiblingSlug != null){
+                    $sibling = $repositoryPage->findOneBySlug($prevSiblingSlug);
+                    $repositoryPage->persistAsPrevSiblingOf($page, $sibling);
+                }else {
+                    $em->persist($page);
+                }
                 $em->flush();
 
                 $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');
@@ -350,7 +407,14 @@ class PageController extends Controller
             'property_path' => false,
             'data' => $this->get('request')->query->get('parent_id')
         ));
-
+        $builder->add('next_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('next_sibling_slug', null)
+        ));
+        $builder->add('prev_sibling_slug','hidden',array(
+            'property_path' => false,
+            'data' => $this->get('request')->query->get('prev_sibling_slug', null)
+        ));
 
 
         // get form
@@ -366,13 +430,24 @@ class PageController extends Controller
                 $em = $this->get('doctrine')->getEntityManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
+                $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
                 if (!empty($parent_id)) {
-                    $pageParent = $em->getRepository('KitpagesCmsBundle:Page')->find($parent_id);
+                    $pageParent = $repositoryPage->find($parent_id);
                     $page->setLanguage($pageParent->getLanguage());
                     $page->setParent($pageParent);
                 }
 
-                $em->persist($page);
+                $nextSiblingSlug = $dataForm['next_sibling_slug'];
+                $prevSiblingSlug = $dataForm['prev_sibling_slug'];
+                if($nextSiblingSlug != null) {
+                    $sibling = $repositoryPage->findOneBySlug($nextSiblingSlug);
+                    $repositoryPage->persistAsNextSiblingOf($page, $sibling);
+                }elseif($prevSiblingSlug != null){
+                    $sibling = $repositoryPage->findOneBySlug($prevSiblingSlug);
+                    $repositoryPage->persistAsPrevSiblingOf($page, $sibling);
+                }else {
+                    $em->persist($page);
+                }
                 $em->flush();
 
                 $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');

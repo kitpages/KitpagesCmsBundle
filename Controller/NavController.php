@@ -220,7 +220,8 @@ class NavController extends Controller
                             'navigation' => $navigation,
                             'navigationSlug' => $slug,
                             'navigationCssClass' => $cssClass,
-                            'root' => true
+                            'root' => true,
+                            'kitCmsViewMode' => $context->getViewMode()
                         )
                     );
                 }
@@ -235,7 +236,9 @@ class NavController extends Controller
                 'navigation' => $navigation,
                 'navigationSlug' => $slug,
                 'navigationCssClass' => $cssClass,
-                'root' => true
+                'root' => true,
+                'kitCmsViewMode' => $context->getViewMode(),
+                'kitpages_target' => $_SERVER["REQUEST_URI"]
             )
         );
     }
