@@ -156,6 +156,7 @@ class PageController extends Controller
             'next_sibling_slug' => $next_sibling_slug,
             'prev_sibling_slug' => $prev_sibling_slug,
             'parent_id' => $page->getParent()->getId(),
+            'page_id' => $page->getId(),
             'kitpages_target' => $target
         ));
     }
