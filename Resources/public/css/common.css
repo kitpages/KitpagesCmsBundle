@@ -387,8 +387,8 @@ textarea.kit-cms-rte-advanced {
         position:absolute;
         display:inline;
         z-index:500;
-        top:40%;
-        left:90%;
+        top:0%;
+        right:0%;
         opacity:0.7;
 }
 .kit-cms-nav-button-add-first{
