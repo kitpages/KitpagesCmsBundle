@@ -383,21 +383,21 @@ textarea.kit-cms-rte-advanced {
     background-position: left top;
 }
 
-.kit-cms-nav-button-add{
-        position:absolute;
-        display:inline;
-        z-index:500;
-        top:0%;
-        right:0%;
-        opacity:0.7;
+a.kit-cms-nav-button-add{
+    padding:0px!important;
+    margin:0px!important;
+    position:absolute!important;
+    display:inline!important;
+    z-index:500;
+    top:0%;
+    right:0%;
+    opacity:0.7!important;
+    background: none!important;
 }
-.kit-cms-nav-button-add-first{
+a.kit-cms-nav-button-add-first{
     left:0%;
 }
-.kit-cms-navigation-main li a, .kitpages-cms-navigation-footer li a{
-    position:relative;
-}
-.kit-cms-navigation-main li div.kit-cms-navigation-nolink, .kitpages-cms-navigation-footer li div.kit-cms-navigation-nolink{
+.kit-cms-navigation-main li, .kitpages-cms-navigation-footer li{
     position:relative;
 }
 
