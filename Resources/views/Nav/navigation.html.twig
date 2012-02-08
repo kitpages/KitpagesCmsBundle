@@ -4,21 +4,21 @@
             {% if navigationElem.url == '' %}
                 <div class="kit-cms-navigation-nolink">
                     {%if loop.first and kitCmsViewMode == 3 %}
-                        <img data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'prev_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add kit-cms-nav-button-add-first' src="/bundles/kitpagescms/icon/add-small.png">
+                        <img alt="create page" data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'prev_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add kit-cms-nav-button-add-first' src="/bundles/kitpagescms/icon/add-small.png">
                     {%endif%}
                     {{navigationElem.title}}
                     {%if kitCmsViewMode == 3%}
-                        <img data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'next_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add' src="/bundles/kitpagescms/icon/add-small.png">
+                        <img alt="create page" data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'next_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add' src="/bundles/kitpagescms/icon/add-small.png">
                     {%endif%}
                 </div>
             {% else %}
                 <a href="{{navigationElem.url}}" >
                     {%if loop.first and kitCmsViewMode == 3 %}
-                        <img data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'prev_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add kit-cms-nav-button-add-first' src="/bundles/kitpagescms/icon/add-small.png">
+                        <img alt="create page" data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'prev_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add kit-cms-nav-button-add-first' src="/bundles/kitpagescms/icon/add-small.png">
                     {%endif%}
                     {{navigationElem.title}}
                     {%if kitCmsViewMode == 3%}
-                        <img data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'next_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add' src="/bundles/kitpagescms/icon/add-small.png">
+                        <img alt="create page" data-cms-nav-page-add="{{ path('kitpages_cms_page_choice_create', { 'next_sibling_slug': navigationElem.slug, 'kitpages_target': kitpages_target })}}" class='kit-cms-nav-button-add' src="/bundles/kitpagescms/icon/add-small.png">
                     {%endif%}
                 </a>
             {% endif %}
