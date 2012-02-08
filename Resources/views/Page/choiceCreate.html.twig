@@ -2,21 +2,21 @@
 
 {% block body %}
 <div class="kit-cms-edit kit-cms kit-cms-action-button">
-    <h1>choose the type of page to create</h1>
+    <h1>Choose the type of page to create</h1>
     <ul>
         <li>
             <a href="{{ path('kitpages_cms_page_create', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug }) }}">
-                create <strong>page</strong> on the <strong>same level</strong> in the navigation
+                Create <strong>page</strong> on the <strong>same level</strong> in the navigation
             </a>
         </li>
         <li>
             <a href="{{ path('kitpages_cms_page_create_link', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug, 'kitpages_target': kitpages_target }) }}">
-                create <strong>page link</strong> on the <strong>same level</strong> in the navigation
+                Create <strong>page link</strong> on the <strong>same level</strong> in the navigation
             </a>
         </li>
         <li class="kit-cms-advanced">
             <a href="{{ path('kitpages_cms_page_create_technical', { 'parent_id': parent_id, 'next_sibling_slug' : next_sibling_slug, 'prev_sibling_slug' : prev_sibling_slug, 'kitpages_target': kitpages_target }) }}">
-                create <strong>page technical</strong> on the <strong>same level</strong> in the navigation
+                Create <strong>page technical</strong> on the <strong>same level</strong> in the navigation
             </a>
         </li>
     </ul>
@@ -24,17 +24,17 @@
     <ul>
         <li>
             <a href="{{ path('kitpages_cms_page_create', { 'parent_id': page_id }) }}">
-                create <strong>page</strong> on the <strong>lower level</strong> in the navigation
+                Create <strong>page</strong> on the <strong>lower level</strong> in the navigation
             </a>
         </li>
         <li>
             <a href="{{ path('kitpages_cms_page_create_link', { 'parent_id': page_id, 'kitpages_target': kitpages_target }) }}">
-                create <strong>page link</strong> on the <strong>lower level</strong> in the navigation
+                Create <strong>page link</strong> on the <strong>lower level</strong> in the navigation
             </a>
         </li>
         <li class="kit-cms-advanced">
             <a href="{{ path('kitpages_cms_page_create_technical', { 'parent_id': page_id, 'kitpages_target': kitpages_target }) }}">
-                create <strong>page technical</strong> on the <strong>lower level</strong> in the navigation
+                Create <strong>page technical</strong> on the <strong>lower level</strong> in the navigation
             </a>
         </li>
     </ul>
