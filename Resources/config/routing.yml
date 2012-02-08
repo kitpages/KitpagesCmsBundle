@@ -160,9 +160,9 @@ kitpages_cms_nav_publish_all:
     pattern:  /nav/publishAll
     defaults: { _controller: KitpagesCmsBundle:Nav:publishAll }
 
-kitpages_cms_nav_arbo:
-    pattern:  /arbo
-    defaults: { _controller: KitpagesCmsBundle:Nav:arbo }
+kitpages_cms_nav_tree:
+    pattern:  /tree
+    defaults: { _controller: KitpagesCmsBundle:Nav:tree }
 
 kitpages_cms_nav_moveup:
     pattern:  /nav/moveup/{id}

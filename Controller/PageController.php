@@ -893,7 +893,7 @@ class PageController extends Controller
         if ($target) {
             return $this->redirect($target);
         }
-        return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
+        return $this->redirect($this->generateUrl('kitpages_cms_nav_tree'));
     }
 
     public function delete(Page $page, $childrenDelete)

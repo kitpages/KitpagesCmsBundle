@@ -1,0 +1,28 @@
+    <ul class="kit-cms-tree-node-container">
+        {% for kitCmsTreePage in tree %}
+            <li class="kit-cms-tree-node ">
+                <div class="kit-cms-tree-line">
+                    <a href="{{kitCmsTreePage.url}}">
+                        <span class="kit-cms-tree-page-id {% if kitCmsTreePage.id %}kit-cms-advanced{% endif %}">[{{kitCmsTreePage.id}}]</span>
+                        <span class="kit-cms-tree-page-title">{{kitCmsTreePage.menuTitle|raw}}</span>
+                        <span class="kit-cms-tree-page-slug {% if kitCmsTreePage.menuTitle %}kit-cms-advanced{% endif %}">{{kitCmsTreePage.slug}}</span>
+                        <img class="kit-cms-tree-edit-button" src="{{asset("bundles/kitpagescms/icon/edit.png")}}"/>
+                    </a>
+                    <ul class="kit-cms-tree-actions kit-cms-menu">
+                    {% for kitCmsTreePageAction in kitCmsTreePage.actionList %}
+                        <li class="{{kitCmsTreePageAction.class|default()}}" >
+                        {% if kitCmsTreePageAction.icon is defined %}
+                            <a href="{{kitCmsTreePageAction.url}}" title="{{kitCmsTreePageAction.label}}">{% if kitCmsTreePageAction.id == 'publish' and kitCmsTreePage.isPublished != 1 %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}">{% endif %}<img src="{{asset("bundles/kitpagescms/" ~ kitCmsTreePageAction.icon)}}"></a>
+                        {% else %}
+                            <a href="{{kitCmsTreePageAction.url}}">{% if kitCmsTreePageAction.id == 'publish' and kitCmsTreePage.isPublished != 1 %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}">{% endif %}{{kitCmsTreePageAction.label}}</a>
+                        {% endif %}
+                        </li>
+
+                    {% endfor %}
+                    </ul>
+                    <div style="clear:both"></div>
+                </div>
+                {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': kitCmsTreePage.children } %}
+            </li>
+        {% endfor %}
+    </ul>

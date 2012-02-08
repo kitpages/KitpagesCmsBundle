@@ -227,6 +227,6 @@ by
 Test the result
 ===============
 
-* try the URL /cms/arbo
+* try the URL /cms/tree
 * click on the "edit" button in the top toolbar
 * click on one of the home page to edit the page

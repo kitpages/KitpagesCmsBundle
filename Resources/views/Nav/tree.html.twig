@@ -7,9 +7,9 @@
             $('a.kit-cms-modal-open').kitCmsModal({closable:false});
         });
     </script>
-    <div class="kit-cms-arbo kit-cms">
-        <h1>Arbo</h1>
-        <a class="kit-cms-modal-open kit-cms-publish-all" href="{{ path('kitpages_cms_nav_publish_all', { 'kitpages_target' : path('kitpages_cms_nav_arbo') }) }}">
+    <div class="kit-cms-tree kit-cms">
+        <h1>Tree</h1>
+        <a class="kit-cms-modal-open kit-cms-publish-all" href="{{ path('kitpages_cms_nav_publish_all', { 'kitpages_target' : path('kitpages_cms_nav_tree') }) }}">
             <img src="{{asset("bundles/kitpagescms/icon/publish.png")}}"/> Publish all pages and navigation
         </a>
         <script>
@@ -22,6 +22,6 @@
         </script>
 
         {% set cycle = 0 %}
-    {% include 'KitpagesCmsBundle:Nav:arboChildren.html.twig' with {'arbo': arbo } %}
+    {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': tree } %}
     </div>
 {% endblock body %}

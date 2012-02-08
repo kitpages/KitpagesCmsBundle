@@ -57,7 +57,7 @@ class NavController extends Controller
         if ($target) {
             return $this->redirect($target);
         }
-        return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
+        return $this->redirect($this->generateUrl('kitpages_cms_nav_tree'));
 
     }
 
@@ -72,7 +72,7 @@ class NavController extends Controller
         if ($target) {
             return $this->redirect($target);
         }
-        return $this->redirect($this->generateUrl('kitpages_cms_nav_arbo'));
+        return $this->redirect($this->generateUrl('kitpages_cms_nav_tree'));
     }
 
 
@@ -289,15 +289,15 @@ class NavController extends Controller
     }
 
 
-    public function arboAction(){
+    public function treeAction(){
 
-        $arbo = $this->arboChildren();
-        return $this->render('KitpagesCmsBundle:Nav:arbo.html.twig', array('arbo' => $arbo));
+        $tree = $this->treeChildren();
+        return $this->render('KitpagesCmsBundle:Nav:tree.html.twig', array('tree' => $tree));
     }
 
 
 
-    public function arboChildren($pageParent = null){
+    public function treeChildren($pageParent = null){
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -309,11 +309,11 @@ class NavController extends Controller
 
         $pageListRenderer = array();
         foreach($pageList as $page) {
-            $pageArbo = array();
-            $pageArbo['id'] = $page->getId();
-            $pageArbo['slug'] = $page->getSlug();
-            $pageArbo['menuTitle'] = $page->getMenuTitle();
-            $pageArbo['isPublished'] = $page->getIsPublished();
+            $pageTree = array();
+            $pageTree['id'] = $page->getId();
+            $pageTree['slug'] = $page->getSlug();
+            $pageTree['menuTitle'] = $page->getMenuTitle();
+            $pageTree['isPublished'] = $page->getIsPublished();
             $paramUrl = array(
                 'id' => $page->getId(),
                 'kitpages_target' => $_SERVER["REQUEST_URI"]
@@ -331,19 +331,19 @@ class NavController extends Controller
 
             if ($page->getIsPendingDelete() == 1) {
                 if ($pageParent->getIsPendingDelete() == 0) {
-                    $pageArbo['actionList'][] = array(
+                    $pageTree['actionList'][] = array(
                         'id' => '',
                         'label' => 'undelete',
                         'url' => $this->generateUrl('kitpages_cms_page_undelete', $paramUrl),
                     );
-                    $pageArbo['actionList'][] = array(
+                    $pageTree['actionList'][] = array(
                         'id' => '',
                         'label' => 'confirm delete',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                         'class' => 'kit-cms-modal-open'
                     );
                 } else {
-                    $pageArbo['actionList'][] = array(
+                    $pageTree['actionList'][] = array(
                         'id' => '',
                         'label' => 'publish all',
                         'url' => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
@@ -352,20 +352,20 @@ class NavController extends Controller
                 }
             } else {
 
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => 'publish',
                     'label' => 'publish',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrl),
                     'class' => ($page->getIsPublished() == '1')?'kit-cms-advanced':'',
                     'icon' => 'icon/publish.png'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'publish all',
                     'url'  => $this->generateUrl('kitpages_cms_page_publish', $paramUrlWithChild),
                     'class' => 'kit-cms-advanced kit-cms-modal-open'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'up',
                     'url'  => $this->generateUrl('kitpages_cms_nav_moveup', $paramUrl),
@@ -373,32 +373,32 @@ class NavController extends Controller
                     'icon' => 'icon/arrow-up.png'
 
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'down',
                     'url'  => $this->generateUrl('kitpages_cms_nav_movedown', $paramUrl),
                     'class' => ($page->getPageType() == 'technical')?'kit-cms-advanced':'',
                     'icon' => 'icon/arrow-down.png'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'add page',
                     'url'  => $this->generateUrl('kitpages_cms_page_create', $paramUrlCreate),
                     'icon' => 'icon/add.png'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'add page technical',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_technical', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'add page link',
                     'url'  => $this->generateUrl('kitpages_cms_page_create_link', $paramUrlCreate),
                     'class' => 'kit-cms-advanced'
                 );
-                $pageArbo['actionList'][] = array(
+                $pageTree['actionList'][] = array(
                     'id' => '',
                     'label' => 'delete',
                     'url'  => $this->generateUrl('kitpages_cms_page_delete', $paramUrl),
@@ -411,7 +411,7 @@ class NavController extends Controller
 
 
             if ($page->getPageType() == 'edito') {
-                $pageArbo['url'] = $this->generateUrl(
+                $pageTree['url'] = $this->generateUrl(
                     'kitpages_cms_page_view_lang',
                     array(
                         'id' => $page->getId(),
@@ -420,14 +420,14 @@ class NavController extends Controller
                     )
                 );
             } elseif($page->getPageType() == 'technical') {
-                $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_technical', $paramUrl);
+                $pageTree['url'] = $this->generateUrl('kitpages_cms_page_edit_technical', $paramUrl);
             } elseif($page->getPageType() == 'link') {
-                $pageArbo['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
-                //$pageArbo['actionList']['link'] = $page->getLinkUrl();
-                $pageArbo['menuTitle'] .= ' <span class="kit-cms-arbo-indicator-link">[ -&gt; '.$this->getPageLink($page).']<span>';
+                $pageTree['url'] = $this->generateUrl('kitpages_cms_page_edit_link', $paramUrl);
+                //$pageTree['actionList']['link'] = $page->getLinkUrl();
+                $pageTree['menuTitle'] .= ' <span class="kit-cms-tree-indicator-link">[ -&gt; '.$this->getPageLink($page).']</span>';
             }
-            $pageArbo['children'] = $this->arboChildren($page);
-            $pageListRenderer[] = $pageArbo;
+            $pageTree['children'] = $this->treeChildren($page);
+            $pageListRenderer[] = $pageTree;
         }
         return $pageListRenderer;
     }

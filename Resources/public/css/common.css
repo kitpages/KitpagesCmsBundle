@@ -261,13 +261,13 @@ textarea.kit-cms-rte-advanced {
 
 
 /*
- *  arbo
+ *  tree
  */
-.kit-cms-arbo {
+.kit-cms-tree {
     position: relative;
     background-color: #FFF;
 }
-.kit-cms-arbo .kit-cms-publish-all {
+.kit-cms-tree .kit-cms-publish-all {
     display: block;
     position: absolute;
     right: 0px;
@@ -280,33 +280,33 @@ textarea.kit-cms-rte-advanced {
     text-decoration: none;
     color: #333;
 }
-.kit-cms-arbo .kit-cms-publish-all:hover {
+.kit-cms-tree .kit-cms-publish-all:hover {
     background-color: #EEE;
 }
-.kit-cms-arbo .kit-cms-publish-all img {
+.kit-cms-tree .kit-cms-publish-all img {
     vertical-align: middle;
 }
 
-.kit-cms-arbo > .kit-cms-arbo-node-container:first-child {
+.kit-cms-tree > .kit-cms-tree-node-container:first-child {
     margin: 0px;
 }
-.kit-cms-arbo > .kit-cms-arbo-node-container:first-child > .kit-cms-arbo-node:first-child > .kit-cms-arbo-line:first-child {
+.kit-cms-tree > .kit-cms-tree-node-container:first-child > .kit-cms-tree-node:first-child > .kit-cms-tree-line:first-child {
     border-top: 1px solid #D0D0D0;
 }
-.kit-cms .kit-cms-arbo-node-container {
+.kit-cms .kit-cms-tree-node-container {
     margin-left: 20px;
     list-style: none;
 }
-.kit-cms-arbo-line {
+.kit-cms-tree-line {
     background-color: #F0F0F0;
     border-bottom: 1px solid #D0D0D0;
     border-left: 1px solid #D0D0D0;
     border-right: 1px solid #D0D0D0;
 }
-.kit-cms-arbo-line:hover {
+.kit-cms-tree-line:hover {
     background-color: #FFFF80;
 }
-.kit-cms-arbo-line > a {
+.kit-cms-tree-line > a {
     display: block;
     color: #313131;
     text-decoration: none;
@@ -314,47 +314,47 @@ textarea.kit-cms-rte-advanced {
     padding-left: 3px;
     padding-top: 5px;
 }
-.kit-cms-arbo-page-id {
+.kit-cms-tree-page-id {
     font-size: 0.7em;
     color: #808080;
 }
-.kit-cms-arbo-page-title {
+.kit-cms-tree-page-title {
 }
-.kit-cms-arbo-page-slug {
+.kit-cms-tree-page-slug {
     font-weight: bold;
 }
-.kit-cms-arbo-page-slug:before {
+.kit-cms-tree-page-slug:before {
     content: "(";
 }
-.kit-cms-arbo-page-slug:after {
+.kit-cms-tree-page-slug:after {
     content: ")";
 }
-.kit-cms-arbo-actions {
+.kit-cms-tree-actions {
     display: block;
     float:right;
 }
 
-.kit-cms-arbo-actions.kit-cms-menu {
+.kit-cms-tree-actions.kit-cms-menu {
     height: auto;
     background-color: transparent;
     border-radius: 0;
     border: none;
 }
-.kit-cms-arbo-actions.kit-cms-menu > li {
+.kit-cms-tree-actions.kit-cms-menu > li {
     top: 0px;
 }
-.kit-cms-arbo-actions.kit-cms-menu > li > a {
+.kit-cms-tree-actions.kit-cms-menu > li > a {
     margin: 2px 2px;
     border-radius: 3px;
     border: 0px;
 }
 
-.kit-cms-arbo-indicator-link {
+.kit-cms-tree-indicator-link {
     font-style: italic;
     color: #808080;
     font-size: 0.9em;
 }
-.kit-cms-arbo-edit-button {
+.kit-cms-tree-edit-button {
     vertical-align: middle;
 }
 
