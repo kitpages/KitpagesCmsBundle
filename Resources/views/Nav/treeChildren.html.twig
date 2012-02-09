@@ -1,9 +1,13 @@
     <ul class="kit-cms-tree-node-container">
         {% for kitCmsTreePage in tree %}
             <li class="kit-cms-tree-node ">
+                {% if kitCmsTreePage.children|length > 0 %}
+                    <img title="collapse" alt="expanded" class="kit-cms-tree-expanded-collapsed {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) == false %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/expanded.gif")}}" data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'expanded' }) }}"  />
+                    <img title="expand" alt="collapsed" class="kit-cms-tree-expanded-collapsed {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/collapsed.gif")}}"  data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'collapsed' }) }}" />
+                {% endif %}
                 <div class="kit-cms-tree-line">
                     <a href="{{kitCmsTreePage.url}}">
-                        <span class="kit-cms-tree-page-id {% if kitCmsTreePage.id %}kit-cms-advanced{% endif %}">[{{kitCmsTreePage.id}}]</span>
+                        <span class="kit-cms-tree-page-id kit-cms-advanced">[{{kitCmsTreePage.id}}]</span>
                         <span class="kit-cms-tree-page-title">{{kitCmsTreePage.menuTitle|raw}}</span>
                         <span class="kit-cms-tree-page-slug {% if kitCmsTreePage.menuTitle %}kit-cms-advanced{% endif %}">{{kitCmsTreePage.slug}}</span>
                         <img class="kit-cms-tree-edit-button" src="{{asset("bundles/kitpagescms/icon/edit.png")}}"/>
@@ -22,7 +26,10 @@
                     </ul>
                     <div style="clear:both"></div>
                 </div>
-                {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': kitCmsTreePage.children } %}
+                <div style="clear:both" ></div>
+                <div class="kit-cms-tree-state-node{% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) == false %} kit-cms-tree-hide{% endif %}">
+                    {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': kitCmsTreePage.children, 'kitCmsUserPreferenceTree': kitCmsUserPreferenceTree } %}
+                </div>
             </li>
         {% endfor %}
     </ul>

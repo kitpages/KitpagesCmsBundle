@@ -290,9 +290,16 @@ class NavController extends Controller
 
 
     public function treeAction(){
-
+        $userPreferenceManager = $this->get('kitpages.cms.manager.userPreference');
+        $userPreference = $userPreferenceManager->getPreference($this->get('security.context')->getToken()->getUserName());
         $tree = $this->treeChildren();
-        return $this->render('KitpagesCmsBundle:Nav:tree.html.twig', array('tree' => $tree));
+        return $this->render(
+            'KitpagesCmsBundle:Nav:tree.html.twig',
+            array(
+                'tree' => $tree,
+                'kitCmsUserPreferenceTree' => $userPreference->getDataTree()
+            )
+        );
     }
 
 
@@ -519,5 +526,34 @@ class NavController extends Controller
         return $url;
 
     }
+
+    public function saveUserPreferenceTreeAction(){
+        $userPreferenceManager = $this->get('kitpages.cms.manager.userPreference');
+        $request = $this->getRequest();
+
+        $pageId = $request->query->get("id", null);
+        $statePageTree = $request->query->get("state", null);
+        $userPreferenceManager->setPreferenceDataTree(
+            $this->get('security.context')->getToken()->getUserName(),
+            $pageId,
+            $statePageTree
+        );
+
+        return new Response(null);
+    }
+
+    public function saveUserPreferenceTreeScrollAction(){
+        $userPreferenceManager = $this->get('kitpages.cms.manager.userPreference');
+        $request = $this->getRequest();
+
+        $scroll = $request->query->get("scroll", 0);
+        $userPreferenceManager->setPreferenceDataTreeScroll(
+            $this->get('security.context')->getToken()->getUserName(),
+            $scroll
+        );
+
+        return new Response(null);
+    }
+
 
 }

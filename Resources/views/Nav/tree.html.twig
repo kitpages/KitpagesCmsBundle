@@ -22,6 +22,33 @@
         </script>
 
         {% set cycle = 0 %}
-    {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': tree } %}
+    {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': tree, 'kitCmsUserPreferenceTree': kitCmsUserPreferenceTree } %}
+    <script>
+    (function(){
+
+        $('.kit-cms-tree-hide').hide();
+        $(window).scrollTop({{kitCmsUserPreferenceTree.scrollTree|default(0)}});
+        var timer;
+        $(window).scroll(function () {
+            clearTimeout(timer);
+            timer = setTimeout(
+                function(){$.ajax({
+                  url: "{{ path('kitpages_cms_nav_userpreference_tree_scroll')}}?scroll="+$(window).scrollTop()
+                })},
+                1000
+            );
+        });
+        $('.kit-cms-tree').delegate('.kit-cms-tree-expanded-collapsed', 'click', function(event){
+            $(this).nextAll('div.kit-cms-tree-state-node').toggle();
+            $(this).siblings('.kit-cms-tree-expanded-collapsed').toggle();
+            $(this).toggle();
+            $.ajax({
+              url: $(this).attr('data-cms-tree-action-url'),
+              success: function(){
+              }
+            });
+        })
+    })();
+    </script>
     </div>
 {% endblock body %}

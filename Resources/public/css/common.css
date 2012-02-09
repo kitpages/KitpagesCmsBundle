@@ -298,6 +298,7 @@ textarea.kit-cms-rte-advanced {
     list-style: none;
 }
 .kit-cms-tree-line {
+    margin-left:15px;
     background-color: #F0F0F0;
     border-bottom: 1px solid #D0D0D0;
     border-left: 1px solid #D0D0D0;
@@ -423,4 +424,10 @@ textarea.kit-cms-rte-advanced {
 .kit-cms-action-button > ul > li > a:hover {
     background-color: #BB092D;
     color: #FFF;
+}
+
+.kit-cms-tree-expanded-collapsed{
+    cursor: pointer;
+    float:left;
+    margin-top:10px;
 }

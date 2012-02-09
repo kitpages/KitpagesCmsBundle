@@ -176,6 +176,13 @@ kitpages_cms_nav_movedown:
     requirements:
         id: \d+
 
+kitpages_cms_nav_userpreference_tree:
+    pattern:  /nav/userPreference/tree
+    defaults: { _controller: KitpagesCmsBundle:Nav:saveUserPreferenceTree }
+
+kitpages_cms_nav_userpreference_tree_scroll:
+    pattern:  /nav/userPreference/treeScroll
+    defaults: { _controller: KitpagesCmsBundle:Nav:saveUserPreferenceTreeScroll }
 ###
 # Media
 ###

@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="kitpages_cms.cms.context">Kitpages\CmsBundle\Controller\Context</parameter>
+        <parameter key="kitpages_cms.userPreferenceManager">Kitpages\CmsBundle\Model\UserPreferenceManager</parameter>
         <parameter key="kitpages_cms.pageListener.class">Kitpages\CmsBundle\EventListener\PageListener</parameter>
         <parameter key="kitpages_cms.cms.navManager">Kitpages\CmsBundle\Model\NavManager</parameter>
         <parameter key="kitpages_cms.cms.pageManager">Kitpages\CmsBundle\Model\PageManager</parameter>
@@ -83,6 +84,9 @@
             <argument type="service" id="kitpages.cms.controller.context"/>
             <argument type="service" id="router"/>
             <argument type="service" id="logger"/>
+        </service>
+        <service id="kitpages.cms.manager.userPreference" class="%kitpages_cms.userPreferenceManager%">
+            <argument type="service" id="doctrine"/>
         </service>
         <service id="kitpages_cms.doctrineListener" class="%kitpages_cms.doctrineListener.class%">
             <argument type="service" id="doctrine"/>
