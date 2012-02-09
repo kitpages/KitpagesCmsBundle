@@ -5,7 +5,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Kitpages\CmsBundle\Entity\UserPreference" repository-class="Kitpages\CmsBundle\Repository\UserPreference" table="cms_user_preference">
+    <entity name="Kitpages\CmsBundle\Entity\UserPreference" table="cms_user_preference">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
