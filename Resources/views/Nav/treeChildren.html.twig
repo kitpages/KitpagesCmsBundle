@@ -2,8 +2,8 @@
         {% for kitCmsTreePage in tree %}
             <li class="kit-cms-tree-node ">
                 {% if kitCmsTreePage.children|length > 0 %}
-                    <img title="collapse" alt="expanded" class="kit-cms-tree-expanded-collapsed {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) == false %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/expanded.gif")}}" data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'expanded' }) }}"  />
-                    <img title="expand" alt="collapsed" class="kit-cms-tree-expanded-collapsed {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/collapsed.gif")}}"  data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'collapsed' }) }}" />
+                    <img title="collapse" alt="expanded" class="kit-cms-tree-expanded-collapsed kit-cms-tree-expanded {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) == false %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/expanded.gif")}}" data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'expanded' }) }}"  />
+                    <img title="expand" alt="collapsed" class="kit-cms-tree-expanded-collapsed kit-cms-tree-collapsed {% if attribute(kitCmsUserPreferenceTree.stateTree, kitCmsTreePage.id)|default(false) %}kit-cms-tree-hide{% endif %}" src="{{asset("bundles/kitpagescms/icon/collapsed.gif")}}"  data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'id' : kitCmsTreePage.id, state: 'collapsed' }) }}" />
                 {% endif %}
                 <div class="kit-cms-tree-line">
                     <a href="{{kitCmsTreePage.url}}">

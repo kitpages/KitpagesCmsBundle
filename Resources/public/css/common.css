@@ -264,6 +264,7 @@ textarea.kit-cms-rte-advanced {
  *  tree
  */
 .kit-cms-tree {
+    display:none;
     position: relative;
     background-color: #FFF;
 }
