@@ -532,11 +532,14 @@ class NavController extends Controller
         $request = $this->getRequest();
 
         $pageId = $request->query->get("id", null);
-        $statePageTree = $request->query->get("state", null);
-        $userPreferenceManager->setPreferenceDataTree(
+        $actionTree = $request->query->get("action", null);
+        $targetTree = $request->query->get("target", null);
+
+        $userPreferenceManager->setPreferenceDataTreeState(
             $this->get('security.context')->getToken()->getUserName(),
             $pageId,
-            $statePageTree
+            $actionTree,
+            $targetTree
         );
 
         return new Response(null);

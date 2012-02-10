@@ -2,7 +2,9 @@
 namespace Kitpages\CmsBundle\Model;
 
 use Symfony\Bundle\DoctrineBundle\Registry;
+
 use Kitpages\CmsBundle\Entity\UserPreference;
+use Kitpages\CmsBundle\Entity\Page;
 
 class UserPreferenceManager
 {
@@ -41,15 +43,29 @@ class UserPreferenceManager
         return $userPreference;
     }
 
-    public function setPreferenceDataTree($userName, $pageId, $statePage){
+    public function setPreferenceDataTreeState($userName, $pageId, $action, $target){
         $em = $this->doctrine->getEntityManager();
         $userPreference = $em->getRepository('KitpagesCmsBundle:UserPreference')->findOneByUserName($userName);
+
+
+
         if ($userPreference instanceof UserPreference) {
             $dataTree = $userPreference->getDataTree();
-            if ($statePage == 'collapsed') {
-                $dataTree['stateTree'][$pageId] = true;
-            } else {
-                $dataTree['stateTree'][$pageId] = false;
+            if ($target == 'tree' && $pageId == null) {
+                if ($action == 'expand') {
+                    $pageList = $em->getRepository('KitpagesCmsBundle:Page')->findAll();
+                    foreach($pageList as $page) {
+                        $dataTree['stateTree'][$page->getId()] = true;
+                    }
+                } else {
+                    $dataTree['stateTree'] = array();
+                }
+            } elseif ($target == 'page' && $pageId != null) {
+                if ($action == 'expand') {
+                    $dataTree['stateTree'][$pageId] = true;
+                } else {
+                    $dataTree['stateTree'][$pageId] = false;
+                }
             }
             $userPreference->setDataTree($dataTree);
             $em->persist($userPreference);

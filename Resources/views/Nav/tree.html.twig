@@ -22,8 +22,8 @@
         </script>
 
         {% set cycle = 0 %}
-    <img class="kit-cms-tree-collapse-all" src="{{asset("bundles/kitpagescms/icon/collapse_all.gif")}}"/>
-    <img class="kit-cms-tree-expand-all" src="{{asset("bundles/kitpagescms/icon/expand_all.gif")}}"/>
+    <img class="kit-cms-tree-collapse-all" src="{{asset("bundles/kitpagescms/icon/collapse_all.gif")}}"  data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'action': 'collapse', 'target': 'tree' }) }}" />
+    <img class="kit-cms-tree-expand-all" src="{{asset("bundles/kitpagescms/icon/expand_all.gif")}}"  data-cms-tree-action-url="{{ path('kitpages_cms_nav_userpreference_tree', { 'action': 'expand', 'target': 'tree' }) }}" />
     {% include 'KitpagesCmsBundle:Nav:treeChildren.html.twig' with {'tree': tree, 'kitCmsUserPreferenceTree': kitCmsUserPreferenceTree } %}
     <script>
     (function(){
@@ -44,11 +44,21 @@
             $('.kit-cms-tree-collapsed').show();
             $('.kit-cms-tree-expanded').hide();
             $('div.kit-cms-tree-state-node').hide();
+            $.ajax({
+              url: $(this).attr('data-cms-tree-action-url'),
+              success: function(){
+              }
+            });
         });
         $('.kit-cms-tree-expand-all').click(function(){
             $('.kit-cms-tree-collapsed').hide();
             $('.kit-cms-tree-expanded').show();
             $('div.kit-cms-tree-state-node').show();
+            $.ajax({
+              url: $(this).attr('data-cms-tree-action-url'),
+              success: function(){
+              }
+            });
         });
         $('.kit-cms-tree').delegate('.kit-cms-tree-expanded-collapsed', 'click', function(event){
             $(this).nextAll('div.kit-cms-tree-state-node').toggle();
