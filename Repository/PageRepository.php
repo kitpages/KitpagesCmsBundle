@@ -43,11 +43,13 @@ class PageRepository extends NestedTreeRepository
                 WHERE p.right < :right
                   AND p.left > :left
                   AND p.level = :level
+                  AND p.isInNavigation = :isInNavigation
                 ORDER BY p.left
                 ")
             ->setParameter("level", $page->getLevel()+$depth)
             ->setParameter("right", $page->getRight())
             ->setParameter("left", $page->getLeft())
+            ->setParameter("isInNavigation", 1)
             ->getResult();
         return $listPage;
      }
@@ -71,12 +73,14 @@ class PageRepository extends NestedTreeRepository
                   AND p.left < :left
                   AND p.level >= :levelMin
                   AND p.level <= :levelMax
+                  AND p.isInNavigation = :isInNavigation
                 ORDER BY p.left
               ")
             ->setParameter("right", $page->getRight())
             ->setParameter("left", $page->getLeft())
             ->setParameter("levelMin", $startLevel)
             ->setParameter("levelMax", $endLevel)
+            ->setParameter("isInNavigation", 1)
             ->getResult();
         return $listPage;
     }
@@ -92,12 +96,14 @@ class PageRepository extends NestedTreeRepository
                   AND p.right <= :rightParent
                   AND p.left >= :leftParent
                   AND p.level = :level
+                  AND p.isInNavigation = :isInNavigation
               ")
             ->setParameter("level", $pageParent->getLevel()+$depth)
             ->setParameter("rightChild", $pageChild->getRight())
             ->setParameter("leftChild", $pageChild->getLeft())
             ->setParameter("rightParent", $pageParent->getRight())
             ->setParameter("leftParent", $pageParent->getLeft())
+            ->setParameter("isInNavigation", 1)
             ->getResult();
         if (count($listPage) == 1) {
             return $listPage[0];
