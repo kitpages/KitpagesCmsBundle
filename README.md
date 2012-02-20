@@ -3,7 +3,7 @@ Kitpages Cms Bundle
 
 This bundle is used to manage editorial content in a website.
 
-This is a beta version.
+This is a stable version.
 
 Author : Philippe Le Van (twitter @plv) http://www.kitpages.fr
 
@@ -21,13 +21,13 @@ The goals of this CMS are :
 
 State of the project
 ====================
-In beta state.
+In production state.
 
 * a lot of documentation is missing
 * no unit test
 * only works on unix/linux hosting
 
-We are begining to use it at Kitpages for small websites.
+We are are using this CMS at Kitpages for websites.
 
 Features
 ========

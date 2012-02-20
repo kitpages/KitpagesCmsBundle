@@ -1,7 +1,7 @@
 VERSIONS
 ========
 
-future v1.3.0 (master)
+future v1.4.0 (master)
 =====================
 NEW features
 
@@ -9,8 +9,37 @@ DEBUG
 
 MIGRATION
 
-v1.2.0
-======
+current v1.3.0 (Feb 20, 2012)
+=============================
+
+NEW features
+* [NEW] add page creation buttons in the navigation
+* [NEW] tree is expandable and collapsable
+* [NEW] remember Tree state (which node are opened ? scroll level of the page) for each user
+* page link to the first child (for nav entries that goes to the 1st page of the category)
+* inherited values in the tree => you can set a page value for a specific branch of the site tree
+* remove dependecy with KitpagesRedirectionBundle
+* new CSS classes in the navigation code to ease CSS designer work
+*
+
+DEBUG
+* minor fix in navigation display
+* fix in adding technical page
+* correction of the filter of RTE values
+* change ROLE_ADMIN to ROLE_CMS_ADMIN
+* fix bug when URL title was null
+
+MIGRATION
+* you should add something like that in your security.yml :
+    role_hierarchy:
+        ROLE_ADMIN: [ ROLE_USER, ROLE_CMS_ADMIN]
+
+* you need to run : ./app/console doctrine:schema:update --force
+and click on "publish all pages and navigation" in the tree page
+
+
+v1.2.0 (oct 21, 2011)
+=====================
 NEW features
 * action render for 404 page for easing navigation for admins
 * canonical URL for zones and block
