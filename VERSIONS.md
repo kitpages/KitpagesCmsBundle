@@ -13,6 +13,7 @@ current v1.3.0 (Feb 20, 2012)
 =============================
 
 NEW features
+
 * [NEW] add page creation buttons in the navigation
 * [NEW] tree is expandable and collapsable
 * [NEW] remember Tree state (which node are opened ? scroll level of the page) for each user
@@ -23,6 +24,7 @@ NEW features
 *
 
 DEBUG
+
 * minor fix in navigation display
 * fix in adding technical page
 * correction of the filter of RTE values
@@ -30,6 +32,7 @@ DEBUG
 * fix bug when URL title was null
 
 MIGRATION
+
 * you should add something like that in your security.yml :
     role_hierarchy:
         ROLE_ADMIN: [ ROLE_USER, ROLE_CMS_ADMIN]
@@ -41,6 +44,7 @@ and click on "publish all pages and navigation" in the tree page
 v1.2.0 (oct 21, 2011)
 =====================
 NEW features
+
 * action render for 404 page for easing navigation for admins
 * canonical URL for zones and block
 * title for zones
@@ -50,6 +54,7 @@ NEW features
 * add a breadcrumb system
 
 DEBUG
+
 * add forceUrl and linkUrl in navPublish and use a published version of forceUrl
 * add an error message on a duplication of slug
 * add an error message on a duplication of the forceUrl
@@ -63,6 +68,7 @@ and click on "publish all pages and navigation" in the tree page
 v1.1.0
 ------
 NEW features
+
 * add page parameters inheritance
 * add modal progress bar on publish all to prevent multiple publish all by the user
 * template and form reorganisation to ease code understanding
@@ -74,9 +80,11 @@ NEW features
 * added a big "Publish all pages and navigation" button
 
 REFACTORING
+
 * directory reorganization for templates
 
 CORRECTED
+
 * remove unused date picker (and we miss informations on license)
 * correction on the navigation when the current page was outsite the displayed navigation
 * corrections on the flags displayed when the publication is needed (navigation and page)
@@ -85,6 +93,7 @@ CORRECTED
 
 v1.0.0
 ------
+
 * in config.yml, name of configuration changed
 
 In page.layout_list.default
