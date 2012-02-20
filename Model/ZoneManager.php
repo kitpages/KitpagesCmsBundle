@@ -113,6 +113,38 @@ class ZoneManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZonePublish, $event);
     }
 
+    public function updateBlockPublishId(Block $block)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        // remove old zonePublish
+        $zoneList = $em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block);
+
+        foreach($zoneList as $zone) {
+            $em->remove($zone->getZonePublish());
+            $em->flush();
+           // create zone publish
+            $blockPublishList = array();
+            $zoneIsPublished = 1;
+            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZone($zone) as $blockPublish){
+                $blockPublishList[$blockPublish->getRenderer()][] = $blockPublish->getId();
+                $isPublished = $blockPublish->getBlock()->getIsPublished();
+                if (!$isPublished) {
+                    $zoneIsPublished = 0;
+                }
+            }
+            $zonePublishNew = new ZonePublish();
+            $zonePublishNew->initByZone($zone);
+            $zonePublishNew->setData(array("blockPublishList"=>$blockPublishList));
+            if (!$zoneIsPublished) {
+                $zone->setIsPublished(true);
+            }
+            $zone->setZonePublish($zonePublishNew);
+            $em->persist($zonePublishNew);
+            $em->persist($zone);
+            $em->flush();
+        }
+    }
+
     public function unpublish($zone){
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZoneUnpublish, $event);
@@ -242,7 +274,5 @@ class ZoneManager
         }
         $em->flush();
     }
-
-
 
 }

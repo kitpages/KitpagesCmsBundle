@@ -395,6 +395,9 @@ class BlockController extends Controller
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer.'.$block->getTemplate());
         $blockManager->publish($block, $dataRenderer);
 
+        $zoneManager = $this->get('kitpages.cms.manager.zone');
+        $zoneManager->updateBlockPublishId($block);
+
         $this->getRequest()->getSession()->setFlash('notice', 'Block published');
 
         $target = $this->getRequest()->query->get('kitpages_target');
