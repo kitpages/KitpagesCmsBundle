@@ -15,6 +15,8 @@
 tinyMCE.init({
     mode : "textareas",
     theme : "simple",
+    plugins : "paste",
+    paste_auto_cleanup_on_paste : true,
     editor_selector : "kit-cms-rte-simple",
     entity_encoding : '',
     safari_warning: false
@@ -24,6 +26,8 @@ tinyMCE.init({
 tinyMCE.init({
     mode : "textareas",
     theme : "advanced",
+    plugins : "paste",
+    paste_auto_cleanup_on_paste : true,
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,sub,sup,separator,undo,redo,separator,cleanup,separator,bullist,numlist,outdent,indent",
     theme_advanced_buttons2 : "justifyleft,justifycenter,justifyright,justifyfull,separator,link,unlink",
     theme_advanced_buttons3 : "",
