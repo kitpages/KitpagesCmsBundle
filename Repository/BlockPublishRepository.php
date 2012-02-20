@@ -25,6 +25,25 @@ class BlockPublishRepository extends EntityRepository
         }
     }
 
+    public function findBySlugAndRenderer($slug, $renderer)
+    {
+        $blockPublish = $this->_em
+            ->createQuery("
+                SELECT bp
+                FROM KitpagesCmsBundle:BlockPublish bp
+                WHERE bp.slug = :slug
+                  AND bp.renderer = :renderer
+            ")
+            ->setParameter("slug", $slug)
+            ->setParameter("renderer", $renderer)
+            ->getResult();
+        if (count($blockPublish) == 1) {
+            return $blockPublish[0];
+        } else {
+            return null;
+        }
+    }
+
     public function findByBlockAndZone($block, $zone)
     {      
         $listBlockPublish = $this->_em

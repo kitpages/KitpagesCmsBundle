@@ -193,6 +193,8 @@ class BlockManager
                         $blockPublish->setData(array("html"=>$resultingHtml, "media" => $listMediaUrl));
                         $blockPublish->setRenderer($nameRenderer);
                         $em->persist($blockPublish);
+                        $event->set("blockPublish", $blockPublish);
+                        $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockPublishRenderer, $event);
                     }
                 }
             }
@@ -200,6 +202,7 @@ class BlockManager
             $em->persist($block);
             $em->flush();
         }
+        $event->set("blockPublish", null);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockPublish, $event);
     }
 
