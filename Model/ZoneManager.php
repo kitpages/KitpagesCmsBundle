@@ -135,7 +135,7 @@ class ZoneManager
             $zonePublishNew = new ZonePublish();
             $zonePublishNew->initByZone($zone);
             $zonePublishNew->setData(array("blockPublishList"=>$blockPublishList));
-            if (!$zoneIsPublished) {
+            if ($zoneIsPublished) {
                 $zone->setIsPublished(true);
             }
             $zone->setZonePublish($zonePublishNew);
