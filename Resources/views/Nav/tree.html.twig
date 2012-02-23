@@ -28,6 +28,9 @@
     <script>
     (function(){
         $('.kit-cms-tree-hide').hide();
+        {% if kitCmsUserPreferenceTree.stateTree is not defined %}
+            treeExpandAll('{{ path('kitpages_cms_nav_userpreference_tree', { 'action': 'expand', 'target': 'tree' })|raw }}');
+        {% endif %}
         $('.kit-cms-tree').show();
         $(window).scrollTop({{kitCmsUserPreferenceTree.scrollTree|default(0)}});
         var timer;
@@ -41,14 +44,7 @@
             );
         });
         $('.kit-cms-tree-collapse-all').click(function(){
-            $('.kit-cms-tree-collapsed').show();
-            $('.kit-cms-tree-expanded').hide();
-            $('div.kit-cms-tree-state-node').hide();
-            $.ajax({
-              url: $(this).attr('data-cms-tree-action-url'),
-              success: function(){
-              }
-            });
+            treeExpandAll($(this).attr('data-cms-tree-action-url'));
         });
         $('.kit-cms-tree-expand-all').click(function(){
             $('.kit-cms-tree-collapsed').hide();
@@ -70,6 +66,19 @@
               }
             });
         })
+
+        function treeExpandAll(url) {
+            $('.kit-cms-tree-collapsed').hide();
+            $('.kit-cms-tree-expanded').show();
+            $('div.kit-cms-tree-state-node').show();
+            $.ajax({
+              url: url,
+              success: function(){
+              }
+            });
+        }
+
+
     })();
     </script>
     </div>
