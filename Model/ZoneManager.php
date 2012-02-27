@@ -125,9 +125,11 @@ class ZoneManager
            // create zone publish
             $blockPublishList = array();
             $zoneIsPublished = 1;
-            foreach($em->getRepository('KitpagesCmsBundle:BlockPublish')->findByZone($zone) as $blockPublish){
-                $blockPublishList[$blockPublish->getRenderer()][] = $blockPublish->getId();
-                $isPublished = $blockPublish->getBlock()->getIsPublished();
+            foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
+                foreach($block->getBlockPublishList() as $blockPublish) {
+                    $blockPublishList[$blockPublish->getRenderer()][] = $blockPublish->getId();
+                }
+                $isPublished = $block->getIsPublished();
                 if (!$isPublished) {
                     $zoneIsPublished = 0;
                 }
