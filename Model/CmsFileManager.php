@@ -58,9 +58,11 @@ class CmsFileManager extends FileManager {
         if (isset($blockData['root']) && count($blockData['root'])>0 ) {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
-                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                    if ($file != null) {
-                        $fileManager->publish($file);
+                    foreach($this->valueMedia($value) as $idMedia) {
+                        $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                        if ($file != null) {
+                            $fileManager->publish($file);
+                        }
                     }
                 }
             }
@@ -73,9 +75,11 @@ class CmsFileManager extends FileManager {
         if (isset($blockData['root']) && count($blockData['root'])>0 ) {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
-                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                    if ($file != null) {
-                        $fileManager->delete($file);
+                    foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                        $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                        if ($file != null) {
+                            $fileManager->delete($file);
+                        }
                     }
                 }
             }
@@ -97,12 +101,16 @@ class CmsFileManager extends FileManager {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     if ($publish) {
-                        $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                        if ($file != null) {                            
-                            $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                        foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                            $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                            if ($file != null) {
+                                $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                            }
                         }
                     } else {
-                        $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($value);
+                        foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                            $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFileLocation($idMedia);
+                        }
                     }
                 }
             }
@@ -118,15 +126,26 @@ class CmsFileManager extends FileManager {
         if (isset($blockData['root']) && count($blockData['root'])>0 ) {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
-                    $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                    if ($file != null) {
-                        $file->setStatus(File::STATUS_VALID);
-                        $em->persist($file);
-                        $em->flush();
+                    foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                        $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                        if ($file != null) {
+                            $file->setStatus(File::STATUS_VALID);
+                            $em->persist($file);
+                            $em->flush();
+                        }
                     }
                 }
             }
         }
     }
-    
+
+    public function valueMedia($value)
+    {
+        if (!is_array($value)) {
+            return array($value);
+        }  else {
+            return $value;
+        }
+    }
+
 }
