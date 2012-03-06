@@ -116,7 +116,7 @@ class CmsFileManager extends FileManager {
                         }
                     } else {
                         if (!is_array($value)) {
-                            $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($idMedia);
+                            $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($value);
                         } else {
                             foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
                                 $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFileLocation($idMedia);
