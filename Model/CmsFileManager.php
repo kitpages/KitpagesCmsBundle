@@ -101,15 +101,26 @@ class CmsFileManager extends FileManager {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     if ($publish) {
-                        foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
-                            $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                        if (!is_array($value)) {
+                            $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
                             if ($file != null) {
-                                $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                                $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                            }
+                        } else {
+                            foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                                $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                                if ($file != null) {
+                                    $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                                }
                             }
                         }
                     } else {
-                        foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
-                            $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFileLocation($idMedia);
+                        if (!is_array($value)) {
+                            $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($idMedia);
+                        } else {
+                            foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                                $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFileLocation($idMedia);
+                            }
                         }
                     }
                 }
