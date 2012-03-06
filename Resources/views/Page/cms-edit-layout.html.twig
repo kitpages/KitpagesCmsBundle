@@ -9,6 +9,7 @@
 {% block kitpages_cms_javascripts %}
 {{ parent() }}
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/swfobject.js") }}"></script>
+{% include 'KitpagesFileBundle:Upload:pluginJs.html.twig' ignore missing %}
 <script type="text/javascript" src="{{ asset ("bundles/kitpagesfile/uploadify/jquery.uploadify.v2.1.4.min.js") }}"></script>
 <script type="text/javascript" src="{{ asset ("bundles/kitpagescms/js/tiny_mce/tiny_mce.js") }}" ></script>
 <script language="javascript" type="text/javascript">
