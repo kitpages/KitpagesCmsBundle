@@ -256,7 +256,6 @@ class BlockController extends Controller
                 $this->getRequest()->getSession()->setFlash('error', $msg);
             }
         }
-        $view = $form->createView();
 
         $fileManager = $this->get('kitpages.cms.manager.file');
         $mediaUrlList = $fileManager->urlListInBlockData($block->getData(), false);
