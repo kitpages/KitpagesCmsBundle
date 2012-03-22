@@ -218,15 +218,9 @@ class CmsFileManager {
                         if (!isset($mediaIdList[$idMedia])) {
                             $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
                             if ($file != null) {
-//                                $file->setStatus(FileInterface::STATUS_PENDING_DELETE);
-//                                $em->persist($file);
-//                                $em->flush();
                                 $fileParent = $file->getParent();
                                 if($fileParent instanceof FileInterface) {
                                     if (!isset($mediaIdList[$fileParent->getId()])) {
-//                                        $fileParent->setStatus(FileInterface::STATUS_PENDING_DELETE);
-//                                        $em->persist($fileParent);
-//                                        $em->flush();
                                         $this->fileManager->delete($fileParent);
                                     }
                                 }
@@ -245,6 +239,10 @@ class CmsFileManager {
     public function valueMedia($value)
     {
         if (!is_array($value)) {
+            if ($value == null)
+            {
+                return array();
+            }
             return array($value);
         }  else {
             return $value;
