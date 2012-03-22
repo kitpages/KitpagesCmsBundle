@@ -153,7 +153,7 @@ class CmsFileManager {
             'type' => '',
             'mime' => '',
             'url' => $url,
-            'html' => '',
+            'fileName' => $file->getFileName(),
             'isPublished' => $isPublished,
             'absolutePath' => $this->getFileManager()->getFilePublicAbsolute($file),
             'info' => array()

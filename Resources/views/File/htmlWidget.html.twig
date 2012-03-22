@@ -1,0 +1,6 @@
+{% if fileInfo.type == 'image' %}
+<img class="{{parameterList.class|default('')}}" src="{{fileInfo.url}}" />
+{% elseif fileInfo.type == 'application' %}
+<a class="{{parameterList.class|default('')}}" href="{{fileInfo.url}}">{{fileInfo.fileName|default('')}}</a>
+{% elseif fileInfo.type == 'video' %}
+{% endif %}
