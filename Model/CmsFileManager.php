@@ -12,19 +12,23 @@ use Symfony\Component\EventDispatcher\Event;
 use Kitpages\FileBundle\Model\FileManager;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 use Kitpages\FileBundle\Entity\File;
+use Kitpages\FileBundle\Entity\FileInterface;
 
-class CmsFileManager extends FileManager {
+class CmsFileManager {
 
     ////
     // dependency injection
     ////
     protected $dispatcher = null;
     protected $doctrine = null;
+    protected $fileManager = null;
+    protected $itemClassBlock = null;
     
     public function __construct(Registry $doctrine, EventDispatcher $dispatcher, FileManager $fileManager) {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->fileManager = $fileManager;
+        $this->itemClassBlock = 'KitpagesCmsBundle:Block';
     }
 
     /**
@@ -33,7 +37,14 @@ class CmsFileManager extends FileManager {
     public function getFileManager() {
         return $this->fileManager;
     }    
-    
+
+    /**
+     * @return $itemClassBlock
+     */
+    public function getItemClassBlock() {
+        return $this->itemClassBlock;
+    }
+
     /**
      * @return EventDispatcher $dispatcher
      */
@@ -51,7 +62,7 @@ class CmsFileManager extends FileManager {
     ////
     // action function
     ////
-    
+
     public function publishInBlockData($blockData) {
         $fileManager = $this->getFileManager();
         $em = $this->getDoctrine()->getEntityManager();
@@ -86,41 +97,37 @@ class CmsFileManager extends FileManager {
         }
     }
 
-    public function deletePublishedInBlockData($mediaList) { 
-        $fileManager = $this->getFileManager();        
-        foreach($mediaList as $field => $url) {
-            $fileManager->unpublish(dirname($url));
-        }
-    }
-    
-    public function urlListInBlockData($blockData, $publish) {
-        $fileManager = $this->getFileManager();          
+
+
+    public function mediaListInBlockData($blockData, $publish) {
         $em = $this->getDoctrine()->getEntityManager();
-        $listMediaUrl = array();
+        $listMediaUrl = array('urlList' => array(), 'media' => array());
         if (isset($blockData['root']) && count($blockData['root'])>0 ) {
             foreach($blockData['root'] as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
-                    if ($publish) {
-                        if (!is_array($value)) {
-                            $file = $em->getRepository('KitpagesFileBundle:File')->find($value);
-                            if ($file != null) {
-                                $listMediaUrl['url_'.$field] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+                    foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                        $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                        if ($file != null && $file instanceof FileInterface) {
+                            $mediaInfo = array();
+
+                            $url = $this->mediaUrl($file, $publish);
+                            $mediaInfo['default'] = $this->mediaInfo($file, $url);
+
+                            if(method_exists($file,'getParent')){
+                                    $fileOriginal = $file->getParent();
+                                    if ($fileOriginal instanceof FileInterface) {
+                                        $urlOriginal = $this->mediaUrl($fileOriginal, $publish);
+                                        $mediaInfo['original'] = $this->mediaInfo(
+                                            $fileOriginal,
+                                            $urlOriginal,
+                                            $file->getPublishParent()
+                                        );
+                                    } else {
+                                        $mediaInfo['original'] = $mediaInfo['default'];
+                                    }
                             }
-                        } else {
-                            foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
-                                $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
-                                if ($file != null) {
-                                    $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
-                                }
-                            }
-                        }
-                    } else {
-                        if (!is_array($value)) {
-                            $listMediaUrl['url_'.$field] = $fileManager->getFileLocation($value);
-                        } else {
-                            foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
-                                $listMediaUrl['url_'.$field][$indexMedia] = $fileManager->getFileLocation($idMedia);
-                            }
+
+                            $listMediaUrl['media'][substr($field, '6')][$indexMedia] = $mediaInfo;
                         }
                     }
                 }
@@ -128,7 +135,56 @@ class CmsFileManager extends FileManager {
         }
         return $listMediaUrl;
     }
-    
+
+
+    public function mediaUrl($file, $publish){
+        $fileManager = $this->getFileManager();
+        if ($publish) {
+            $url = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+        } else {
+            $url = $fileManager->getFileLocation($file->getId());
+        }
+        return $url;
+    }
+
+    public function mediaInfo($file, $url, $isPublished = true) {
+        $fileInfo = array(
+            'id' => $file->getId(),
+            'type' => '',
+            'mime' => '',
+            'url' => $url,
+            'html' => '',
+            'isPublished' => $isPublished,
+            'absolutePath' => $this->getFileManager()->getFilePublicAbsolute($file),
+            'info' => array()
+        );
+
+        if(method_exists($file,'getHtml')){
+            $fileInfo['html'] = $file->getHtml();
+        }
+        if(method_exists($file,'getType')){
+            $fileInfo['type'] = $file->getType();
+        }
+        if(method_exists($file,'getMimeType')){
+            $fileInfo['mime'] = $file->getMimeType();
+        }
+        $fileData = $file->getData();
+        if(isset($fileData['info'])){
+            $fileInfo['info'] = $fileData['info'];
+        }
+        return $fileInfo;
+    }
+
+    public function fileValidate($file, $id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $file->setStatus(FileInterface::STATUS_VALID);
+        $file->setItemClass($this->itemClassBlock);
+        $file->setItemId($id);
+        $em->persist($file);
+        $em->flush();
+    }
+
     public function afterBlockModify(Event $event)
     {
         $block = $event->getBlock();
@@ -140,14 +196,50 @@ class CmsFileManager extends FileManager {
                     foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
                         if ($file != null) {
-                            $file->setStatus(File::STATUS_VALID);
-                            $em->persist($file);
-                            $em->flush();
+                            $mediaIdList[$idMedia] = 1;
+                            $this->fileValidate($file, $block->getId());
+
+                            $fileParent = $file->getParent();
+                            if($fileParent instanceof FileInterface) {
+                                $mediaIdList[$fileParent->getId()] = 1;
+                                $this->fileValidate($fileParent, $block->getId());
+                            }
                         }
                     }
                 }
             }
         }
+        //delete old file with status = Valid
+        $oldBlockData = $event->getData('oldBlockData');
+        if (isset($oldBlockData['root']) && count($oldBlockData['root'])>0 ) {
+            foreach($oldBlockData['root'] as $field => $value) {
+                if (substr($field, '0', '6') == 'media_') {
+                    foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
+                        if (!isset($mediaIdList[$idMedia])) {
+                            $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
+                            if ($file != null) {
+//                                $file->setStatus(FileInterface::STATUS_PENDING_DELETE);
+//                                $em->persist($file);
+//                                $em->flush();
+                                $fileParent = $file->getParent();
+                                if($fileParent instanceof FileInterface) {
+                                    if (!isset($mediaIdList[$fileParent->getId()])) {
+//                                        $fileParent->setStatus(FileInterface::STATUS_PENDING_DELETE);
+//                                        $em->persist($fileParent);
+//                                        $em->flush();
+                                        $this->fileManager->delete($fileParent);
+                                    }
+                                }
+                                $this->fileManager->delete($file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $this->fileManager->deleteTemp($this->itemClassBlock, $block->getId());
+
+
     }
 
     public function valueMedia($value)

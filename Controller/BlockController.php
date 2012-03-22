@@ -20,6 +20,7 @@ use Kitpages\FileBundle\Entity\File;
 use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Model\CmsManager;
+use Kitpages\CmsBundle\Model\CmsFileManager;
 
 class BlockController extends Controller
 {
@@ -28,6 +29,21 @@ class BlockController extends Controller
     public function viewAction()
     {
         return $this->render('KitpagesCmsBundle:Block:view.html.twig');
+    }
+
+    public function uploadWidgetAction($blockId, $fieldId, $parameterList)
+    {
+        $cmsFileManager = $this->get('kitpages.cms.manager.file');
+        $resultingHtml = $this->get('templating.helper.actions')->render(
+            'KitpagesFileBundle:Upload:widget',
+            array(
+                'fieldId' => $fieldId,
+                'itemClass' => $cmsFileManager->getItemClassBlock(),
+                'itemId' => $blockId,
+                'parameterList' => $parameterList
+            )
+        );
+        return new Response($resultingHtml);
     }
 
     public function createAction()
@@ -257,8 +273,8 @@ class BlockController extends Controller
             }
         }
 
-        $fileManager = $this->get('kitpages.cms.manager.file');
-        $mediaUrlList = $fileManager->urlListInBlockData($block->getData(), false);
+        $cmsFileManager = $this->get('kitpages.cms.manager.file');
+        $mediaUrlList = $cmsFileManager->mediaListInBlockData($block->getData(), false);
 
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),

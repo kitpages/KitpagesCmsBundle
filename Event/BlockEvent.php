@@ -13,6 +13,17 @@ class BlockEvent extends AbstractEvent
     {
         $this->block = $block;
         $this->listRenderer = $listRenderer;
+        $this->data = array();
+    }
+
+    public function setData($index, $value)
+    {
+        $this->data[$index]=$value;
+    }
+
+    public function getData($index)
+    {
+        return $this->data[$index];
     }
 
     public function getBlock()
