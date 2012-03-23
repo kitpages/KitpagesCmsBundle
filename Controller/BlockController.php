@@ -31,7 +31,7 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:view.html.twig');
     }
 
-    public function uploadWidgetAction($blockId, $fieldId, $parameterList)
+    public function uploadWidgetAction($blockId, $fieldId, $parameterList = array())
     {
         $cmsFileManager = $this->get('kitpages.cms.manager.file');
         $resultingHtml = $this->get('templating.helper.actions')->render(
