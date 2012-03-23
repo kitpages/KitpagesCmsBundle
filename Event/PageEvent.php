@@ -15,6 +15,17 @@ class PageEvent extends AbstractEvent
     {
         $this->page = $page;
         $this->listLayout = $listLayout;        
+        $this->data = array();
+    }
+
+    public function setData($index, $value)
+    {
+        $this->data[$index]=$value;
+    }
+
+    public function getData($index)
+    {
+        return $this->data[$index];
     }
 
     public function getPage()

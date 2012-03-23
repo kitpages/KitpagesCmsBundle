@@ -29,6 +29,7 @@ class CmsFileManager {
         $this->doctrine = $doctrine;
         $this->fileManager = $fileManager;
         $this->itemClassBlock = 'KitpagesCmsBundle:Block';
+        $this->itemClassPage = 'KitpagesCmsBundle:Page';
     }
 
     /**
@@ -37,6 +38,13 @@ class CmsFileManager {
     public function getFileManager() {
         return $this->fileManager;
     }    
+
+    /**
+     * @return $itemClassPage
+     */
+    public function getItemClassPage() {
+        return $this->itemClassPage;
+    }
 
     /**
      * @return $itemClassBlock
@@ -63,11 +71,11 @@ class CmsFileManager {
     // action function
     ////
 
-    public function publishInBlockData($blockData) {
+    public function publishDataMediaList($data) {
         $fileManager = $this->getFileManager();
         $em = $this->getDoctrine()->getEntityManager();
-        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
-            foreach($blockData['root'] as $field => $value) {
+        if (count($data)>0 ) {
+            foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     foreach($this->valueMedia($value) as $idMedia) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
@@ -80,11 +88,11 @@ class CmsFileManager {
         }
     }
 
-    public function deleteInBlockData($blockData) { 
+    public function delete($data) {
         $fileManager = $this->getFileManager();        
         $em = $this->getDoctrine()->getEntityManager();
-        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
-            foreach($blockData['root'] as $field => $value) {
+        if (count($data)>0 ) {
+            foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
@@ -97,13 +105,34 @@ class CmsFileManager {
         }
     }
 
-
-
-    public function mediaListInBlockData($blockData, $publish) {
+    public function unpublishFileList($mediaList)
+    {
         $em = $this->getDoctrine()->getEntityManager();
-        $listMediaUrl = array('urlList' => array(), 'media' => array());
-        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
-            foreach($blockData['root'] as $field => $value) {
+        $repositoryFileBundle = $em->getRepository('KitpagesFileBundle:File');
+        $fileManager = $this->getFileManager();
+        foreach($mediaList as $media) {
+            foreach($media as $mediaVersionList) {
+                foreach($mediaVersionList as $mediaVersion) {
+                    $file = $repositoryFileBundle->find($mediaVersion['id']);
+                    // delete file published only if file has been deleted in the database
+                    if (!($file instanceof FileInterface)) {
+                        $fileManager->unpublish($mediaVersion['absolutePath']);
+                        if(isset($mediaVersion['fileList']) && count($mediaVersion['fileList'])>0){
+                            foreach($mediaVersion['fileList'] as $fileListInfo) {
+                                $fileManager->unpublish($fileListInfo['absolutePath']);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function mediaList($data, $publish) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $listMedia = array();
+        if (count($data)>0 ) {
+            foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
@@ -127,13 +156,13 @@ class CmsFileManager {
                                     }
                             }
 
-                            $listMediaUrl['media'][substr($field, '6')][$indexMedia] = $mediaInfo;
+                            $listMedia[substr($field, '6')][$indexMedia] = $mediaInfo;
                         }
                     }
                 }
             }
         }
-        return $listMediaUrl;
+        return $listMedia;
     }
 
 
@@ -175,52 +204,52 @@ class CmsFileManager {
         return $fileInfo;
     }
 
-    public function fileValidate($file, $id)
+    public function validateFile($file, $itemClass, $id)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $file->setStatus(FileInterface::STATUS_VALID);
-        $file->setItemClass($this->itemClassBlock);
+        $file->setItemClass($itemClass);
         $file->setItemId($id);
         $em->persist($file);
         $em->flush();
     }
 
-    public function afterBlockModify(Event $event)
+    public function validateFileMediaList($data, $itemClass, $id)
     {
-        $block = $event->getBlock();
-        $blockData = $block->getData();
         $em = $this->getDoctrine()->getEntityManager();
-        if (isset($blockData['root']) && count($blockData['root'])>0 ) {
-            foreach($blockData['root'] as $field => $value) {
+        if (count($data)>0 ) {
+            foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
                         $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
                         if ($file != null) {
                             $mediaIdList[$idMedia] = 1;
-                            $this->fileValidate($file, $block->getId());
-
+                            $this->validateFile($file, $itemClass, $id);
                             $fileParent = $file->getParent();
                             if($fileParent instanceof FileInterface) {
                                 $mediaIdList[$fileParent->getId()] = 1;
-                                $this->fileValidate($fileParent, $block->getId());
+                                $this->validateFile($fileParent, $itemClass, $id);
                             }
                         }
                     }
                 }
             }
         }
-        //delete old file with status = Valid
-        $oldBlockData = $event->getData('oldBlockData');
-        if (isset($oldBlockData['root']) && count($oldBlockData['root'])>0 ) {
-            foreach($oldBlockData['root'] as $field => $value) {
+        return $mediaIdList;
+    }
+    public function deleteFileMediaList($data, $idNoDeleteList)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        if (count($data)>0 ) {
+            foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
                     foreach($this->valueMedia($value) as $indexMedia => $idMedia) {
-                        if (!isset($mediaIdList[$idMedia])) {
+                        if (!isset($idNoDeleteList[$idMedia])) {
                             $file = $em->getRepository('KitpagesFileBundle:File')->find($idMedia);
                             if ($file != null) {
                                 $fileParent = $file->getParent();
                                 if($fileParent instanceof FileInterface) {
-                                    if (!isset($mediaIdList[$fileParent->getId()])) {
+                                    if (!isset($idNoDeleteList[$fileParent->getId()])) {
                                         $this->fileManager->delete($fileParent);
                                     }
                                 }
@@ -231,9 +260,42 @@ class CmsFileManager {
                 }
             }
         }
-        $this->fileManager->deleteTemp($this->itemClassBlock, $block->getId());
+    }
 
+    public function afterBlockModify(Event $event)
+    {
+        $block = $event->getBlock();
+        $blockData = $block->getData();
+        $oldBlockData = $event->getData('oldBlockData');
+        $entityId = $block->getId();
+        $mediaIdList = array();
+        if (isset($blockData['root'])){
+            $mediaIdList = $this->validateFileMediaList($blockData['root'], $this->itemClassBlock, $entityId);
+        }
 
+        //delete old file with status = Valid
+        if (isset($oldBlockData['root'])){
+            $this->deleteFileMediaList($oldBlockData['root'], $mediaIdList);
+        }
+        $this->fileManager->deleteTemp($this->itemClassBlock, $entityId);
+    }
+
+    public function afterPageModify(Event $event)
+    {
+        $page = $event->getPage();
+        $pageData = $page->getData();
+        $oldPageData = $event->getData('oldPageData');
+        $entityId = $page->getId();
+        $mediaIdList = array();
+        if (isset($pageData['root'])){
+            $mediaIdList = $this->validateFileMediaList($pageData['root'], $this->itemClassPage, $entityId);
+        }
+
+        //delete old file with status = Valid
+        if (isset($oldPageData['root'])){
+            $this->deleteFileMediaList($oldPageData['root'], $mediaIdList);
+        }
+        $this->fileManager->deleteTemp($this->itemClassPage, $entityId);
     }
 
     public function valueMedia($value)

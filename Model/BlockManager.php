@@ -68,13 +68,8 @@ class BlockManager
     }
 
     /**
-     * @return $cmsFileManager
+     * @return CmsFileManager $cmsFileManager
      */
-    //TDO: depreceated
-    public function getFileManager() {
-        return $this->cmsFileManager;
-    }
-
     public function getCmsFileManager() {
         return $this->cmsFileManager;
     }
@@ -103,7 +98,11 @@ class BlockManager
         // preventable action
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $cmsFileManager->deleteInBlockData($block->getData());
+            $blockData=$block->getData();
+            if (!isset($blockData['root'])) {
+                $blockData['root'] = array();
+            }
+            $cmsFileManager->deleteFile($blockData['root']);
             $em->remove($block);
             $em->flush();
         }
@@ -115,44 +114,9 @@ class BlockManager
     public function deletePublished(BlockPublish $blockPublish)
     {
         $data = $blockPublish->getData();
-        $this->unpublishFileList($data['media']);
+        $this->getCmsFileManager()->unpublishFileList($data['media']);
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($blockPublish);
-    }
-
-    public function unpublishFileList($mediaList)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $repositoryFileBundle = $em->getRepository('KitpagesFileBundle:File');
-        $fileManager = $this->getCmsFileManager()->getFileManager();
-        foreach($mediaList as $media) {
-            foreach($media as $mediaVersionList) {
-                foreach($mediaVersionList as $mediaVersion) {
-                    $file = $repositoryFileBundle->find($mediaVersion['id']);
-
-                    if (!($file instanceof FileInterface)) {
-                        $fileManager->unpublish($mediaVersion['absolutePath']);
-                        if(isset($mediaVersion['fileList']) && count($mediaVersion['fileList'])>0){
-                            foreach($mediaVersion['fileList'] as $fileListInfo) {
-                                $fileManager->unpublish($mediaVersion['absolutePath']);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    public function deletePendingDelete($file)
-    {
-        $cmsFileManager = $this->cmsFileManager;
-        if($file instanceof FileInterface) {
-            $fileStatus = $file->getStatus();
-            if ($fileStatus == FileInterface::STATUS_PENDING_DELETE) {
-                $cmsFileManager->getFileManager()->delete($file);
-            }
-        }
     }
 
     /**
@@ -163,7 +127,7 @@ class BlockManager
      * @param array|null $listMediaUrl
      * @return type
      */
-    public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
+    public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMedia = null) {
         $blockData = $block->getData();
         $blockData['block']['slug'] = $block->getSlug();
         $blockData['block']['blockId'] = $block->getId();
@@ -174,15 +138,15 @@ class BlockManager
         if ($viewMode === Context::VIEW_MODE_PROD) {
             $publish = true;
         }
-        $cmsFileManager = $this->cmsFileManager;
-        if (is_null($listMediaUrl)) {
-            $listMediaUrl = $cmsFileManager->mediaListInBlockData($blockData, $publish);
-        }
         if (!isset($blockData['root'])) {
             $blockData['root'] = array();
         }
+        $cmsFileManager = $this->cmsFileManager;
+        if (is_null($listMedia)) {
+            $listMedia = $cmsFileManager->mediaList($blockData['root'], $publish);
+        }
 
-        $blockData['media'] = $listMediaUrl['media'];
+        $blockData['media'] = $listMedia;
 
         if ($renderer['type'] == 'twig') {
             $instance = new TwigRenderer();
@@ -214,7 +178,6 @@ class BlockManager
                 $this->deletePublished($blockPublish);
             }
 
-            // Vraimetn necessaire ???
             $em->persist($block);
             $em->flush();
             $em->refresh($block);
@@ -223,18 +186,20 @@ class BlockManager
                 if (!is_null($blockData) && isset($blockData['root'])) {
                     foreach($listRenderer as $nameRenderer => $renderer) {
 
-                        $cmsFileManager->publishInBlockData($blockData);
+                        if (!isset($blockData['root'])) {
+                            $blockData['root'] = array();
+                        }
+                        $cmsFileManager->publishDataMediaList($blockData['root']);
+                        $listMedia = $cmsFileManager->mediaList($blockData['root'], true);
 
-                        $listMediaUrl = $cmsFileManager->mediaListInBlockData($blockData, true);
-
-                        $blockData['media'] = $listMediaUrl['media'];
+                        $blockData['media'] = $listMedia;
 
                         $resultingHtml = $this->render($renderer, $block, Context::VIEW_MODE_PROD);
 
                         $blockPublish = new BlockPublish();
                         $blockPublish->initByBlock($block);
 
-                        $blockPublish->setData(array("html"=>$resultingHtml, "media" => $listMediaUrl['media']));
+                        $blockPublish->setData(array("html"=>$resultingHtml, "media" => $listMedia));
                         $blockPublish->setRenderer($nameRenderer);
                         $em->persist($blockPublish);
                         $event->set("blockPublish", $blockPublish);

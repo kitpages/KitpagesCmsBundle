@@ -29,6 +29,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="kitpages.file.manager"/>
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterBlockModify" />
+            <tag name="kernel.event_listener" event="kitpages.cms.page.after.modify" method="afterPageModify" />
         </service>
         <service id="kitpages.cms.manager.block" class="%kitpages_cms.cms.blockManager%">
             <argument type="service" id="doctrine"/>
@@ -59,6 +60,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="kitpages.cms.manager.zone"/>
+            <argument type="service" id="kitpages.cms.manager.file"/>
             <argument type="service" id="logger"/>
         </service>
         <service id="kitpages.cms.manager.nav" class="%kitpages_cms.cms.navManager%">

@@ -200,7 +200,8 @@ class PagePublish
         $this->setForcedUrl($page->getForcedUrl());
         $this->setPage($page);
         $this->setData(array(
-            'root' => $data,
+            'root' => $data['root'],
+            'media' => $data['media'],
             'page' => $page->getDataPage()
         ));
     }

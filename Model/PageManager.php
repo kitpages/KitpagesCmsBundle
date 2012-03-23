@@ -31,18 +31,21 @@ class PageManager
     protected $dispatcher = null;
     protected $doctrine = null;
     protected $zoneManager = null;
+    protected $cmsFileManager = null;
     protected $logger = null;
 
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
         ZoneManager $zoneManager,
+        CmsFileManager $cmsFileManager,
         LoggerInterface $logger
     )
     {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->zoneManager = $zoneManager;
+        $this->cmsFileManager = $cmsFileManager;
         $this->logger = $logger;
     }
 
@@ -61,7 +64,14 @@ class PageManager
     }
 
     /**
-     * @return $zoneManager
+     * @return CmsFileManager $cmsFileManager
+     */
+    public function getCmsFileManager() {
+        return $this->cmsFileManager;
+    }
+
+    /**
+     * @return ZoneManager $zoneManager
      */
     public function getZoneManager() {
         return $this->zoneManager;
@@ -127,6 +137,12 @@ class PageManager
                     $zoneManager->delete($zone);
                 }
             }
+            $pageData=$page->getData();
+            if (!isset($pageData['root'])) {
+                $pageData['root'] = array();
+            }
+            $cmsFileManager = $this->cmsFileManager;
+            $cmsFileManager->deleteFile($pageData['root']);
             $em->remove($page);
             $em->flush();
         }
@@ -138,6 +154,7 @@ class PageManager
     {
         $event = new PageEvent($page, $listLayout);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
+        $cmsFileManager = $this->getCmsFileManager();
         if (! $event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
             if ($page->getIsPendingDelete()) {
@@ -145,6 +162,8 @@ class PageManager
                 $eventPublish = new PagePublishEvent($pagePublish);
                 $this->getDispatcher()->dispatch(KitpagesCmsEvents::onModifyPagePublish, $eventPublish);
                 if (!is_null($pagePublish)) {
+                    $pagePublishData = $pagePublish->getData();
+                    $cmsFileManager->unpublishFileList($pagePublishData['media']);
                     $em->remove($pagePublish);
                     $em->flush();
                 }
@@ -173,7 +192,11 @@ class PageManager
                     $zoneList[] = $zone->getId();
                 }
 
-                $data = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+                $data['root'] = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
+
+                $cmsFileManager->publishDataMediaList($data['root']);
+                $listMedia = $cmsFileManager->mediaList($data['root'], true);
+                $data['media'] = $listMedia;
 
                 $pagePublishNew = new PagePublish();
                 $pagePublishNew->initByPage($page, $data);
@@ -214,6 +237,7 @@ class PageManager
             $em->flush();
             $this->unpublish($page);
             $event = new PageEvent($page);
+            $event->setData('oldPageData', $oldPage->getData());
             $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageModify, $event);
         }
     }

@@ -274,12 +274,17 @@ class BlockController extends Controller
         }
 
         $cmsFileManager = $this->get('kitpages.cms.manager.file');
-        $mediaUrlList = $cmsFileManager->mediaListInBlockData($block->getData(), false);
+
+        $blockData = $block->getData();
+        if (!isset($blockData['root'])) {
+            $blockData['root'] = array();
+        }
+        $mediaList = $cmsFileManager->mediaList($blockData['root'], false);
 
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),
             'id' => $block->getId(),
-            'mediaList' => $mediaUrlList,
+            'mediaList' => $mediaList,
             'kitpages_target' => $request->query->get('kitpages_target', null)
         ));
     }
