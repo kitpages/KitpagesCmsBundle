@@ -14,10 +14,10 @@ class updateForFileBundleCommand extends ContainerAwareCommand
         $this
             ->setName('kitCms:updateForFileBundle')
             ->setHelp(<<<EOT
-The <info>kitCms:updateForFileBundle</info> command updates for the fileBundle Version1.2.0.
+The <info>kitCms:updateForFileBundle</info> command updates for the fileBundle Version2.0.
 EOT
             )
-            ->setDescription('update for kitFileBundle v1.2.0')
+            ->setDescription('update for kitFileBundle v2.0')
             ;
     }
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -43,8 +43,6 @@ EOT
                     if (substr($field, '0', '6') == 'media_') {
                         if ($idMedia != null) {
                             $file = $em->getRepository('KitpagesFileBundle:File')->findById($idMedia);
-//                            echo var_dump($idMedia);exit();
-//                            echo var_dump();
                             if ($file instanceof FileInterface) {
                                 $file->setStatus(FileInterface::STATUS_VALID);
                                 $file->setItemClass('KitpagesCmsBundle:Block');
@@ -68,12 +66,25 @@ EOT
         foreach ($fileTempList as $fileTemp) {
             $fileManager->delete($fileTemp);
         }
-        $dir = $fileManager->getFilePublicAbsoluteRootDir();
+
+        //delete public directory
+        $dir = realpath(__DIR__.'/../../../../web/data/bundle/kitpagesfile');
         if (is_dir($dir)) {
-            $fileManager->getUtil()->rmdirr($fileManager->getFilePublicAbsoluteRootDir());
+            $this->rmdirr($fileManager->getFilePublicAbsoluteRootDir());
         }
 
-        $output->writeln('Your version is compatible with the version1.2 of FileBundle');
+        $output->writeln('Your version is compatible with the version2.0 of FileBundle');
 
     }
+
+    function rrmdir($dir) {
+        foreach(glob($dir . '/*') as $file) {
+            if(is_dir($file))
+                $this->rrmdir($file);
+            else
+                unlink($file);
+        }
+        rmdir($dir);
+    }
+
 }

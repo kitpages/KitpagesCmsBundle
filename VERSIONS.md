@@ -11,9 +11,12 @@ DEBUG
 
 MIGRATION
 * upgrade fileBundle in version 2.0.0
+* (See UPGRADE2.0)
+* php app/console kitCms:updateForFileBundle
+* follow instructions in the kitpagesFileBundle and kitpagesFileSystemBundle
 * you need to run : ./app/console doctrine:schema:update --force
 and click on "publish all pages and navigation" in the tree page
-* php app/console kitCms:updateForFileBundle
+
 
 current v1.3.0 (Feb 20, 2012)
 =============================
