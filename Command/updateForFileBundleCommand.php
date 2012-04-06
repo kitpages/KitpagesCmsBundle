@@ -70,7 +70,7 @@ EOT
         //delete public directory
         $dir = realpath(__DIR__.'/../../../../web/data/bundle/kitpagesfile');
         if (is_dir($dir)) {
-            $this->rrmdir($fileManager->getFilePublicAbsoluteRootDir());
+            $this->rrmdir($dir);
         }
 
         $output->writeln('Your version is compatible with the version2.0 of FileBundle');
