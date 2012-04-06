@@ -116,10 +116,10 @@ class CmsFileManager {
                     $file = $repositoryFileBundle->find($mediaVersion['id']);
                     // delete file published only if file has been deleted in the database
                     if (!($file instanceof FileInterface)) {
-                        $fileManager->unpublish($mediaVersion['absolutePath']);
+                        $fileManager->unpublish($mediaVersion['filePath'], false);
                         if(isset($mediaVersion['fileList']) && count($mediaVersion['fileList'])>0){
                             foreach($mediaVersion['fileList'] as $fileListInfo) {
-                                $fileManager->unpublish($fileListInfo['absolutePath']);
+                                $fileManager->unpublish($fileListInfo['filePath'], false);
                             }
                         }
                     }
@@ -169,14 +169,15 @@ class CmsFileManager {
     public function mediaUrl($file, $publish){
         $fileManager = $this->getFileManager();
         if ($publish) {
-            $url = $fileManager->getFilePublicLocation($file)."/".$file->getFileName();
+            $url = $fileManager->getFileLocationPublic($file, false);
         } else {
-            $url = $fileManager->getFileLocation($file->getId());
+            $url = $fileManager->getFileLocationPrivate($file->getId());
         }
         return $url;
     }
 
     public function mediaInfo($file, $url, $isPublished = true) {
+        $private = !$isPublished;
         $fileInfo = array(
             'id' => $file->getId(),
             'type' => '',
@@ -184,7 +185,7 @@ class CmsFileManager {
             'url' => $url,
             'fileName' => $file->getFileName(),
             'isPublished' => $isPublished,
-            'absolutePath' => $this->getFileManager()->getFilePublicAbsolute($file),
+            'filePath' => $this->getFileManager()->getFilePath($file, $private),
             'info' => array()
         );
 
@@ -217,6 +218,7 @@ class CmsFileManager {
     public function validateFileMediaList($data, $itemClass, $id)
     {
         $em = $this->getDoctrine()->getEntityManager();
+        $mediaIdList = array();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
