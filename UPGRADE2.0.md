@@ -44,11 +44,6 @@ $bundles = array(
     new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
 );
 
-
-VENDORS UPDATE
-=====================
-php bin/vendors update
-
 Configuration
 =====================
 kitpages_file:
@@ -76,6 +71,13 @@ kitpages_file_system:
                 bucket_name: %kitpagesFile_amazons3_bucketname%
                 key: %kitpagesFile_amazons3_key%
                 secret_key: %kitpagesFile_amazons3_secretkey%
+
+
+VENDORS UPDATE
+=====================
+php bin/vendors update
+
+php app/console doctrine:schema:update --force
 
 launch command
 =====================
