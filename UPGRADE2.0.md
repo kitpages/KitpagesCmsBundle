@@ -92,6 +92,11 @@ replace
     {% render 'KitpagesCmsBundle:Block:uploadWidget' with {'blockId':id, 'fieldId': 'form_data_root_media_mainImage', parameterList:{'multi': false, 'publishParent': false} } %}
 
 replace
+    data.root.media_mainImage
+    By
+    data.media.mainImage.0.default
+
+replace
     data.root.url_media_mainImage
     By
-    data.root.media_mainImage.0.url
+    data.media.mainImage.0.default.url
