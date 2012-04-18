@@ -83,3 +83,15 @@ launch command
 =====================
 php app/console kitCms:updateForFileBundle
 php app/console kitFile:updateDatabase
+
+update BLOCK and PAGE
+=====================
+replace
+    {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_mainImage'} %}
+    By
+    {% render 'KitpagesCmsBundle:Block:uploadWidget' with {'blockId':id, 'fieldId': 'form_data_root_media_mainImage', parameterList:{'multi': false, 'publishParent': false} } %}
+
+replace
+    data.root.url_media_mainImage
+    By
+    data.root.media_mainImage.0.url
