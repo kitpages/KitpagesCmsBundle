@@ -43,6 +43,9 @@ EOT
                     if (substr($field, '0', '6') == 'media_') {
                         if ($idMedia != null) {
                             $file = $em->getRepository('KitpagesFileBundle:File')->findById($idMedia);
+                            if (is_array($file)) {
+                                $file = $file[0];
+                            }
                             if ($file instanceof FileInterface) {
                                 $file->setStatus(FileInterface::STATUS_VALID);
                                 $file->setItemClass('KitpagesCmsBundle:Block');
