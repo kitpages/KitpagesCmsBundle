@@ -142,7 +142,7 @@ class PageManager
                 $pageData['root'] = array();
             }
             $cmsFileManager = $this->cmsFileManager;
-            $cmsFileManager->deleteFile($pageData['root']);
+            $cmsFileManager->delete($pageData['root']);
             $em->remove($page);
             $em->flush();
         }

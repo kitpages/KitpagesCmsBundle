@@ -102,7 +102,7 @@ class BlockManager
             if (!isset($blockData['root'])) {
                 $blockData['root'] = array();
             }
-            $cmsFileManager->deleteFile($blockData['root']);
+            $cmsFileManager->delete($blockData['root']);
             $em->remove($block);
             $em->flush();
         }
