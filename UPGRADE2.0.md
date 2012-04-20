@@ -26,6 +26,7 @@ DEPS
 [aws-sdk]
     git=http://github.com/amazonwebservices/aws-sdk-for-php
     target=aws-sdk
+    version=1.5.4
 
 app/autoload.php
 =====================
