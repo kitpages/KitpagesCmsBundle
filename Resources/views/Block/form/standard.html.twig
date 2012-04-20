@@ -11,7 +11,7 @@
     <label>Image</label>
     {{ form_widget(form.data.root.media_mainImage) }}
     {% render 'KitpagesCmsBundle:Block:uploadWidget' with {'blockId':id, 'fieldId': 'form_data_root_media_mainImage', parameterList:{'multi': false, 'publishParent': false} } %}
-    <div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:mediaField:mainImage:NUM]]</div>
+    <div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:mediaField:mainImage.NUM.default.url]]</div>
 </div>
 
 {{ form_row(
