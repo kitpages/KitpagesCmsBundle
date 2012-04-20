@@ -1,17 +1,17 @@
 {% autoescape false %}
 <div class="app-block-standard [[cms:parameter:firstLastClass]]">
 <a name="{{data.block.slug}}"></a>
-    {% set img = data.root.media_mainImage|default('') %}
+    {% set img = data.media.mainImage.0.default|default('') %}
     {% set imgPos = data.root.imagePosition|default('top') %}
 
     {% if data.root.title|default('') %}<h2>{{data.root.title}}</h2>{% endif %}
 
     {% if imgPos == "top" %}
-        {% if img %}<img src="{{data.root.url_media_mainImage}}"/>{% endif %}
+        {% if img %}<img src="{{img.url}}"/>{% endif %}
     {% endif %}
 
     {% if (imgPos == "left") or (imgPos == "right") %}
-        {% if img %}<img src="{{data.root.url_media_mainImage}}" style="display: block; float: {{imgPos}};"/>{% endif %}
+        {% if img %}<img src="{{img.url}}" style="display: block; float: {{imgPos}};"/>{% endif %}
     {% endif %}
 
     {% if data.root.mainContent|default('') %}<div>{{data.root.mainContent}}</div>{%endif%}
@@ -21,7 +21,7 @@
     {% endif %}
 
     {% if imgPos == "bottom" %}
-        {% if img %}<img src="{{data.root.url_media_mainImage}}"/>{% endif %}
+        {% if img %}<img src="{{img.url}}"/>{% endif %}
     {% endif %}
 
     {% if data.root.subContent|default('') %}<div>{{data.root.subContent}}</div>{%endif%}
