@@ -43,6 +43,14 @@ class BlockController extends Controller
                 'parameterList' => $parameterList
             )
         );
+
+        // add a help message
+        $fieldName = str_replace('form_data_root_media_', '', $fieldId);
+        if ($parameterList['multi']) {
+            $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.NUM.default.url]], you must replace NUM by the correct number File</div>';
+        } else {
+            $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.0.default.url]]</div>';
+        }
         return new Response($resultingHtml);
     }
 
