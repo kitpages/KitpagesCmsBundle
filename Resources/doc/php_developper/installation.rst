@@ -1,6 +1,15 @@
 KitpagesCmsBundle Installation
 ==============================
 
+The easy way
+============
+
+Go to the Kitpages Cms symfony2 distribution : https://github.com/kitpages/symfony-kitpages-cms-edition
+and follow the readme.
+
+The complicated way
+===================
+
 This page describes the installation procedure to integrate the Kitpages CMS Bundle in an existing website
 
 Download all the source code
