@@ -27,7 +27,7 @@
         "kitpages/simple-cache-bundle": ">=v1.0.0"
     },
     "autoload": {
-        "psr-0": { "Kitpages\\FileSystemBundle": "" }
+        "psr-0": { "Kitpages\\CmsBundle": "" }
     },
-    "target-dir": "Kitpages/FileSystemBundle"
+    "target-dir": "Kitpages/CmsBundle"
 }
