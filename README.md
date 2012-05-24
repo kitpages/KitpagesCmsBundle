@@ -39,4 +39,9 @@ Features
 * manage navigation
 * small news/blog system integrated
 
+Installation
+============
+* documentations are very light for the moment. The better is to use the Kitpages CMS symfony distribution :
+https://github.com/kitpages/symfony-kitpages-cms-edition to install the CMS.
+
 See directory Resources/doc for a documentation
