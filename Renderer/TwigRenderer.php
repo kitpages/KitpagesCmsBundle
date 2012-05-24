@@ -43,22 +43,37 @@ class TwigRenderer {
     public function parse($output, $data)
     {
         $tag = preg_match_all(
-            '/\[\[cms\:mediaField\:(\w+)\]\]/',
+            '/\[\[cms\:media\:([a-zA-Z0-9_\.]+)\]\]/',
             $output,
             $matches
         );
 
-        $mediaFieldList = $matches[1];
-        foreach ($mediaFieldList as $mediaFieldName) {
-            $fieldName = 'url_media_'.$mediaFieldName;
-            if (isset($data['root']) && isset($data['root']) && isset($data['root'][$fieldName]) ) {
-                $replacement = $data['root'][$fieldName];
-                $output = preg_replace(
-                    '/\[\[cms\:mediaField\:'.$mediaFieldName.'\]\]/',
-                    $replacement,
-                    $output
-                );
+        $mediaFieldStringList = $matches[1];
+        foreach ($mediaFieldStringList as $mediaFieldString) {
+            $mediaFieldList = explode('.', $mediaFieldString);
+            $fieldName = array_shift($mediaFieldList);
+            $fieldIndex = array_shift($mediaFieldList);
+            $info = '';
+            if (isset($data['media']) && isset($data['media'][$fieldName]) && isset($data['media'][$fieldName][$fieldIndex]) ) {
+
+                $info = $data['media'][$fieldName][$fieldIndex];
+                foreach($mediaFieldList as $mediaField) {
+                    if(isset($info[$mediaField])) {
+                        $info = $info[$mediaField];
+                    }else{
+                        $info = '';
+                        break 1;
+                    }
+                }
             }
+            if (!is_string($info)) {
+                $info = '';
+            }
+            $output = preg_replace(
+                '/\[\[cms\:media\:'.$mediaFieldString.'\]\]/',
+                $info,
+                $output
+            );
         }
         return $output;
     }

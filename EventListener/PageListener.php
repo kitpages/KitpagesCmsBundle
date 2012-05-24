@@ -66,9 +66,11 @@ class PageListener {
             return;
         }
         $request = $event->getRequest();
-        $baseUrl = rtrim($request->getBaseUrl(), '/');
+        //$baseUrl = rtrim($request->getBaseUrl(), '/');
         $requestUri = $request->getRequestUri();
-        $relativeRequestUri = str_replace($baseUrl, '', $requestUri);
+        $requestUriParse = parse_url($requestUri);
+        $relativeRequestUri = $requestUriParse['path'];
+        //$relativeRequestUri = str_replace($baseUrl, '', $requestUri);
         $relativeRequestUri = '/'.ltrim($relativeRequestUri, '/');
 
         $viewMode = $this->getContext()->getViewMode();

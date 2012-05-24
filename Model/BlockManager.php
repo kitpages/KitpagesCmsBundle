@@ -29,20 +29,20 @@ class BlockManager
     protected $dispatcher = null;
     protected $doctrine = null;
     protected $templating = null;
-    protected $fileManager = null;
+    protected $cmsFileManager = null;
     protected $util = null;
 
     public function __construct(
         Registry $doctrine,
         EventDispatcher $dispatcher,
         $templating,
-        CmsFileManager $fileManager,
+        CmsFileManager $cmsFileManager,
         Util $util
     ){
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->templating = $templating;
-        $this->fileManager = $fileManager;
+        $this->cmsFileManager = $cmsFileManager;
         $this->util = $util;
     }
 
@@ -68,10 +68,10 @@ class BlockManager
     }
 
     /**
-     * @return $fileManager
+     * @return CmsFileManager $cmsFileManager
      */
-    public function getFileManager() {
-        return $this->fileManager;
+    public function getCmsFileManager() {
+        return $this->cmsFileManager;
     }
 
     /**
@@ -91,14 +91,18 @@ class BlockManager
     public function delete(Block $block)
     {
         // throw on event
-        $fileManager = $this->getFileManager();
+        $cmsFileManager = $this->cmsFileManager;
         $event = new BlockEvent($block);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockDelete, $event);
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $fileManager->deleteInBlockData($block->getData());
+            $blockData=$block->getData();
+            if (!isset($blockData['root'])) {
+                $blockData['root'] = array();
+            }
+            $cmsFileManager->delete($blockData['root']);
             $em->remove($block);
             $em->flush();
         }
@@ -109,9 +113,8 @@ class BlockManager
 
     public function deletePublished(BlockPublish $blockPublish)
     {
-        $fileManager = $this->getFileManager();
         $data = $blockPublish->getData();
-        $fileManager->deletePublishedInBlockData($data['media']);
+        $this->getCmsFileManager()->unpublishFileList($data['media']);
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($blockPublish);
     }
@@ -124,7 +127,7 @@ class BlockManager
      * @param array|null $listMediaUrl
      * @return type
      */
-    public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMediaUrl = null) {
+    public function render($renderer, $block, $viewMode = Context::VIEW_MODE_PROD, $listMedia = null) {
         $blockData = $block->getData();
         $blockData['block']['slug'] = $block->getSlug();
         $blockData['block']['blockId'] = $block->getId();
@@ -135,14 +138,15 @@ class BlockManager
         if ($viewMode === Context::VIEW_MODE_PROD) {
             $publish = true;
         }
-        $fileManager = $this->getFileManager();
-        if (is_null($listMediaUrl)) {
-            $listMediaUrl = $fileManager->urlListInBlockData($blockData, $publish);
-        }
         if (!isset($blockData['root'])) {
             $blockData['root'] = array();
         }
-        $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
+        $cmsFileManager = $this->cmsFileManager;
+        if (is_null($listMedia)) {
+            $listMedia = $cmsFileManager->mediaList($blockData['root'], $publish);
+        }
+
+        $blockData['media'] = $listMedia;
 
         if ($renderer['type'] == 'twig') {
             $instance = new TwigRenderer();
@@ -161,7 +165,7 @@ class BlockManager
     {
         $event = new BlockEvent($block, $listRenderer);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockPublish, $event);
-        $fileManager = $this->getFileManager();
+        $cmsFileManager = $this->cmsFileManager;
         if (!$event->isDefaultPrevented()) {
             $em = $this->getDoctrine()->getEntityManager();
             $query = $em->createQuery("
@@ -173,6 +177,7 @@ class BlockManager
             foreach($blockPublishList as $blockPublish){
                 $this->deletePublished($blockPublish);
             }
+
             $em->persist($block);
             $em->flush();
             $em->refresh($block);
@@ -181,16 +186,20 @@ class BlockManager
                 if (!is_null($blockData) && isset($blockData['root'])) {
                     foreach($listRenderer as $nameRenderer => $renderer) {
 
-                        $fileManager->publishInBlockData($blockData);
+                        if (!isset($blockData['root'])) {
+                            $blockData['root'] = array();
+                        }
+                        $cmsFileManager->publishDataMediaList($blockData['root']);
+                        $listMedia = $cmsFileManager->mediaList($blockData['root'], true);
 
-                        $listMediaUrl = $fileManager->urlListInBlockData($blockData, true);
-                        $blockData['root'] = array_merge($blockData['root'], $listMediaUrl);
+                        $blockData['media'] = $listMedia;
 
                         $resultingHtml = $this->render($renderer, $block, Context::VIEW_MODE_PROD);
 
                         $blockPublish = new BlockPublish();
                         $blockPublish->initByBlock($block);
-                        $blockPublish->setData(array("html"=>$resultingHtml, "media" => $listMediaUrl));
+
+                        $blockPublish->setData(array("html"=>$resultingHtml, "media" => $listMedia));
                         $blockPublish->setRenderer($nameRenderer);
                         $em->persist($blockPublish);
                         $event->set("blockPublish", $blockPublish);
@@ -214,6 +223,7 @@ class BlockManager
             $em = $this->getDoctrine()->getEntityManager();
             $em->flush();
             $event = new BlockEvent($block);
+            $event->setData('oldBlockData', $oldBlockData);
             $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterBlockModify, $event);
         }
     }

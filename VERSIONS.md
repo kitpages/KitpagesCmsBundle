@@ -1,13 +1,22 @@
 VERSIONS
 ========
 
-future v1.4.0 (master)
+future v2.0.0 (master)
 =====================
 NEW features
 
+* display the html file in a twig {% render 'KitpagesFileBundle:Render:htmlWidget' with {'fileInfo':data.media.mainImage.0.default, 'parameterList':{'class':cssClassFile } %}
 DEBUG
+* use KitpagesFileBundle 2.0.0 and KitpagesFileSystemBundle
 
 MIGRATION
+* upgrade fileBundle in version 2.0.0
+* (See UPGRADE2.0)
+* php app/console kitCms:updateForFileBundle
+* follow instructions in the kitpagesFileBundle and kitpagesFileSystemBundle
+* you need to run : ./app/console doctrine:schema:update --force
+and click on "publish all pages and navigation" in the tree page
+
 
 current v1.3.0 (Feb 20, 2012)
 =============================

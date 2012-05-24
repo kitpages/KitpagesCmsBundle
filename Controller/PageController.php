@@ -17,6 +17,7 @@ use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\PagePublish;
 use Kitpages\CmsBundle\Entity\Zone;
 use Kitpages\CmsBundle\Entity\PageZone;
+use Kitpages\CmsBundle\Model\CmsFileManager;
 
 class PageController extends Controller
 {
@@ -29,6 +30,21 @@ class PageController extends Controller
             'target' => $_SERVER["REQUEST_URI"]
         );
         return $this->render('KitpagesCmsBundle:Page:toolbar.html.twig', $dataRender);
+    }
+
+    public function uploadWidgetAction($pageId, $fieldId, $parameterList)
+    {
+        $cmsFileManager = $this->get('kitpages.cms.manager.file');
+        $resultingHtml = $this->get('templating.helper.actions')->render(
+            'KitpagesFileBundle:Upload:widget',
+            array(
+                'fieldId' => $fieldId,
+                'itemClass' => $cmsFileManager->getItemClassPage(),
+                'itemId' => $pageId,
+                'parameterList' => $parameterList
+            )
+        );
+        return new Response($resultingHtml);
     }
 
     public function viewAction(Page $page, $lang, $urlTitle)
@@ -55,14 +71,14 @@ class PageController extends Controller
             $pageLayout = $pagePublish->getLayout();
             $forcedUrl = $pagePublish->getForcedUrl();
             $data = $pagePublish->getData();
-
         } else {
-
             $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
             $dataRoot = $em->getRepository('KitpagesCmsBundle:Page')->getDataWithInheritance($page, $dataInheritanceList);
             $data['root'] = $dataRoot;
             $data['page'] = $page->getDataPage();
-
+            $cmsFileManager = $cmsFileManager = $this->get('kitpages.cms.manager.file');
+            $listMedia = $cmsFileManager->mediaList($data['root'], false);
+            $data['media'] = $listMedia;
         }
 
         if ($pageType == "technical") {

@@ -20,6 +20,7 @@ use Kitpages\FileBundle\Entity\File;
 use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Model\CmsManager;
+use Kitpages\CmsBundle\Model\CmsFileManager;
 
 class BlockController extends Controller
 {
@@ -28,6 +29,29 @@ class BlockController extends Controller
     public function viewAction()
     {
         return $this->render('KitpagesCmsBundle:Block:view.html.twig');
+    }
+
+    public function uploadWidgetAction($blockId, $fieldId, $parameterList = array())
+    {
+        $cmsFileManager = $this->get('kitpages.cms.manager.file');
+        $resultingHtml = $this->get('templating.helper.actions')->render(
+            'KitpagesFileBundle:Upload:widget',
+            array(
+                'fieldId' => $fieldId,
+                'itemClass' => $cmsFileManager->getItemClassBlock(),
+                'itemId' => $blockId,
+                'parameterList' => $parameterList
+            )
+        );
+
+        // add a help message
+        $fieldName = str_replace('form_data_root_media_', '', $fieldId);
+        if (isset($parameterList['multi']) && $parameterList['multi'] ) {
+            $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.NUM.default.url]], you must replace NUM by the correct number File</div>';
+        } else {
+            $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.0.default.url]]</div>';
+        }
+        return new Response($resultingHtml);
     }
 
     public function createAction()
@@ -256,15 +280,19 @@ class BlockController extends Controller
                 $this->getRequest()->getSession()->setFlash('error', $msg);
             }
         }
-        $view = $form->createView();
 
-        $fileManager = $this->get('kitpages.cms.manager.file');
-        $mediaUrlList = $fileManager->urlListInBlockData($block->getData(), false);
+        $cmsFileManager = $this->get('kitpages.cms.manager.file');
+
+        $blockData = $block->getData();
+        if (!isset($blockData['root'])) {
+            $blockData['root'] = array();
+        }
+        $mediaList = $cmsFileManager->mediaList($blockData['root'], false);
 
         return $this->render($twigTemplate, array(
             'form' => $form->createView(),
             'id' => $block->getId(),
-            'mediaList' => $mediaUrlList,
+            'mediaList' => $mediaList,
             'kitpages_target' => $request->query->get('kitpages_target', null)
         ));
     }
