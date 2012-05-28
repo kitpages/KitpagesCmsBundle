@@ -5,7 +5,7 @@ This bundle is used to manage editorial content in a website.
 
 This is a stable version.
 
-Author : Philippe Le Van (twitter @plv) http://www.kitpages.fr
+Author : Philippe Le Van (twitter @plv) [http://www.kitpages.fr](http://www.kitpages.fr)
 
 Why this CMS ?
 ==============
@@ -42,6 +42,6 @@ Features
 Installation
 ============
 * documentations are very light for the moment. The better is to use the Kitpages CMS symfony distribution :
-https://github.com/kitpages/symfony-kitpages-cms-edition to install the CMS.
+[https://github.com/kitpages/symfony-kitpages-cms-edition](https://github.com/kitpages/symfony-kitpages-cms-edition) to install the CMS.
 
-See directory Resources/doc for a documentation
+See directory [Resources/doc](Resources/doc) for a documentation
