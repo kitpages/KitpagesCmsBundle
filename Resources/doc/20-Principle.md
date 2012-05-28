@@ -13,7 +13,7 @@ Exemple d'utilisation
 
 Let's see how it works.
 
-[principles of the Kitpages cms](http://www.kitpages.fr/fr/cms/134/principles-of-the-kitpages-cms) (3min)
+[principles of the Kitpages cms in video -on kitpages.fr website-](http://www.kitpages.fr/fr/cms/134/principles-of-the-kitpages-cms) (3min)
 
 (If someone better than me in english could add a better audio speech on this video, it would be great ! contact me on twitter (@plv).)
 
