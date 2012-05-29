@@ -76,9 +76,9 @@
         })
 
         function treeExpandAll(url) {
-            $('.kit-cms-tree-collapsed').hide();
-            $('.kit-cms-tree-expanded').show();
-            $('div.kit-cms-tree-state-node').show();
+            $('.kit-cms-tree-collapsed').show();
+            $('.kit-cms-tree-expanded').hide();
+            $('div.kit-cms-tree-state-node').hide();
             $.ajax({
               url: url,
               success: function(){
