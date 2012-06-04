@@ -163,7 +163,9 @@ class PageManager
                 $this->getDispatcher()->dispatch(KitpagesCmsEvents::onModifyPagePublish, $eventPublish);
                 if (!is_null($pagePublish)) {
                     $pagePublishData = $pagePublish->getData();
-                    $cmsFileManager->unpublishFileList($pagePublishData['media']);
+                    if (isset($pagePublishData['media'])) {
+                        $cmsFileManager->unpublishFileList($pagePublishData['media']);
+                    }
                     $em->remove($pagePublish);
                     $em->flush();
                 }
