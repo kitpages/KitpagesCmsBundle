@@ -8,6 +8,7 @@ use Kitpages\CmsBundle\Entity\Site;
 use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\PageZone;
 use Kitpages\CmsBundle\Entity\Zone;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadSiteData implements FixtureInterface, ContainerAwareInterface
 {
@@ -17,7 +18,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
     {
         $this->container = $container;
     }    
-    public function load($em)
+    public function load(ObjectManager $em)
     {
         $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
         
