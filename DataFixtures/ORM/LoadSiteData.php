@@ -2,6 +2,7 @@
 namespace Kitpages\CmsBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Kitpages\CmsBundle\Entity\Site;
@@ -17,7 +18,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
     {
         $this->container = $container;
     }    
-    public function load($em)
+    public function load(ObjectManager $em)
     {
         $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
         
