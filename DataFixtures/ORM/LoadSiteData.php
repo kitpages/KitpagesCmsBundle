@@ -9,6 +9,7 @@ use Kitpages\CmsBundle\Entity\Site;
 use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\PageZone;
 use Kitpages\CmsBundle\Entity\Zone;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadSiteData implements FixtureInterface, ContainerAwareInterface
 {
