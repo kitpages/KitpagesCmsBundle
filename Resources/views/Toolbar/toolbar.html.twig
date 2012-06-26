@@ -5,28 +5,32 @@
         </li>
         <li>
             <a href="{{ path('kitpages_cms_nav_publish', { 'kitpages_target' : target }) }}">
-                {% if isNavPublished == false %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}"/>{%endif%}
+                {% if isNavPublished == false %}<img src="{{asset("bundles/kitpagescms/icon/warning.png")}}" height="14"/>{%endif%}
                 Publish Navigation
             </a>
         </li>
-
-        <li>
-            <a class="kit-cms-advanced-mode-button">Advanced Mode</a>
-        </li>
-        <script>
-            $(".kit-cms-advanced-mode-button").click(function() {
-                $(".kit-cms-advanced").toggle();
-                $(".kit-cms-form .kit-cms-advanced").parent().toggle();
-                $(this).toggleClass('kit-cms-advanced-mode-button-selected');
-            });
-            {% if is_granted('ROLE_CMS_SUPERADMIN') is empty %}
-            $(document).ready(function() {
-                $(".kit-cms-advanced").hide();
-                $(".kit-cms-form .kit-cms-advanced").parent().hide();
-            });
-            {% endif %}
-        </script>
     </ul>
+    <a class="kit-cms-advanced-mode-button">Advanced mode off</a>
+    <script>
+        $(".kit-cms-advanced-mode-button").click(function() {
+            var el = $(this);
+            $(".kit-cms-advanced").toggle();
+            $(".kit-cms-form .kit-cms-advanced").parent().toggle();
+            $(this).toggleClass('kit-cms-advanced-mode-button-selected');
+            if (el.hasClass("kit-cms-advanced-mode-button-selected")) {
+                el.html("Advanced mode on");
+            } else {
+                el.html("Advanced mode off");
+            }
+        });
+        {% if is_granted('ROLE_CMS_SUPERADMIN') is empty %}
+        $(document).ready(function() {
+            $(".kit-cms-advanced").hide();
+            $(".kit-cms-form .kit-cms-advanced").parent().hide();
+        });
+        {% endif %}
+    </script>
+
     <ul class="kit-cms-toolbar-top-context-switch">
         <li {% if kitCmsViewMode == 1 %}class="kit-cms-selected"{% endif %}>
             <a href="{{ path('kitpages_cms_admin_view_mode_change', { 'viewMode': 1, 'kitpages_target' : target , 'context': 'production'}) }}">Production</a>
