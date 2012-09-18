@@ -4,6 +4,8 @@ MIGRATION
 
 DEPS
 =====================
+
+```
 [KitpagesCmsBundle]
     git=http://github.com/kitpages/KitpagesCmsBundle.git
     target=Kitpages/CmsBundle
@@ -27,9 +29,12 @@ DEPS
     git=http://github.com/amazonwebservices/aws-sdk-for-php
     target=aws-sdk
     version=1.5.4
+```
 
 app/autoload.php
 =====================
+
+```
 $loader->registerNamespaces(array(
     // ...
     'Imagine'          => __DIR__.'/../vendor/imagine/lib',
@@ -37,16 +42,23 @@ $loader->registerNamespaces(array(
 
 // AWS SDK needs a special autoloader
 require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
+```
+
 
 app/AppKernel.php
 =====================
+
+```
 $bundles = array(
 ...
     new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
 );
+```
 
 Configuration
 =====================
+
+```
 kitpages_file:
     tmp_dir: %kernel.root_dir%/data/tmp
     type_list:
@@ -72,21 +84,29 @@ kitpages_file_system:
                 bucket_name: %kitpagesFile_amazons3_bucketname%
                 key: %kitpagesFile_amazons3_key%
                 secret_key: %kitpagesFile_amazons3_secretkey%
-
+```
 
 VENDORS UPDATE
 =====================
+
+```
 php bin/vendors update
 
 php app/console doctrine:schema:update --force
+```
 
 launch command
 =====================
+
+```
 php app/console kitCms:updateForFileBundle
 php app/console kitFile:updateDatabase
+```
 
 update BLOCK and PAGE
 =====================
+
+```
 replace
     {% render 'KitpagesFileBundle:Upload:widget' with {'fieldId': 'form_data_root_media_mainImage'} %}
     By
@@ -101,3 +121,4 @@ replace
     data.root.url_media_mainImage
     By
     data.media.mainImage.0.default.url
+```
