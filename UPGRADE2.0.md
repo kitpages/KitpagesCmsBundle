@@ -14,7 +14,7 @@ DEPS
 [KitpagesFileBundle]
     git=http://github.com/kitpages/KitpagesFileBundle.git
     target=Kitpages/FileBundle
-    version=origin/multiUpload
+    version=origin/master
 
 ; KitFileBundle
 [Imagine]
