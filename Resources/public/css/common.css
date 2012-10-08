@@ -100,10 +100,10 @@ textarea.kit-cms-rte-advanced {
 }
 .kit-cms-toolbar-top {
     display: block;
-    height: 42px;
-    background-image: url('common/bg-toolbar.jpg');
-    background-repeat: repeat-x;
+    height: 36px;
+    background-color: #CCC;
     width: 100%;
+    border-bottom: 1px solid #DDD;
 }
 
 .kit-cms-toolbar-top > ul {
@@ -113,31 +113,79 @@ textarea.kit-cms-rte-advanced {
     display: inline-block;
 }
 .kit-cms-toolbar-top > ul > li > a {
-    display: block;
-    margin: 7px 10px;
-    padding: 3px 10px;
-    background-color: #F0F0F0;
-    border: 1px solid #CCCCCC;
-    border-radius: 5px;
-    box-shadow: 3px 3px 5px rgba(128,128,128,0.7);
+    display: inline-block;
+    zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+    *display: inline;
+    vertical-align: baseline;
+    margin: 6px;
+    outline: none;
+    cursor: pointer;
     text-align: center;
-    color: #000;
+    text-decoration: none;
+    font: 12px/100% Arial, Helvetica, sans-serif;
+    padding: 5px 1.5em;
+    height: 12px;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    color: #606060;
+    border: solid 1px #b7b7b7;
+    background: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+    background: -moz-linear-gradient(top,  #fff,  #ededed);
+    filter:  progid:DXImageTransform.kit-cms-Microsoft.kit-cms-gradient(startColorstr='#ffffff', endColorstr='#ededed');
 }
 
 .kit-cms-toolbar-top > ul > li > a:hover {
-    background-color: #BB092D;
-    color: #FFF;
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+    background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+    filter:  progid:DXImageTransform.kit-cms-Microsoft.kit-cms-gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
 }
 .kit-cms-toolbar-top > ul > li.kit-cms-selected > a {
-    background-color: #BB092D;
-    color: #FFF;
+    color: #fef4e9;
+    border: solid 1px #da7c0c;
+    background: #f78d1d;
+    background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+    background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+    filter:  progid:DXImageTransform.kit-cms-Microsoft.kit-cms-gradient(startColorstr='#faa51a', endColorstr='#f47a20');
 }
 
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-top-actions > li > a,
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-page-top-actions > li > a {
+    color: #e9e9e9;
+    border: solid 1px #555;
+    background: #6e6e6e;
+    background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#575757));
+    background: -moz-linear-gradient(top,  #888,  #575757);
+    filter:  progid:DXImageTransform.kit-cms-Microsoft.kit-cms-gradient(startColorstr='#888888', endColorstr='#575757');
+}
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-top-actions > li > a:hover,
+.kit-cms-toolbar-top > ul.kit-cms-toolbar-page-top-actions > li > a:hover {
+    background: #616161;
+    background: -webkit-gradient(linear, left top, left bottom, from(#757575), to(#4b4b4b));
+    background: -moz-linear-gradient(top,  #757575,  #4b4b4b);
+    filter:  progid:DXImageTransform.kit-cms-Microsoft.kit-cms-gradient(startColorstr='#757575', endColorstr='#4b4b4b');
+}
 .kit-cms-toolbar-top > ul.kit-cms-toolbar-top-context-switch {
     float: right;
 }
 .kit-cms-toolbar-top > ul.kit-cms-toolbar-top-actions {
     float: left;
+}
+.kit-cms-toolbar-top .kit-cms-advanced-mode-button {
+    display: inline-block;
+    *display: block;
+    color: #666;
+    font-size: 10px;
+    text-decoration: underline;
+    margin-top: 10px;
+    margin-left: 10px;
+    cursor: pointer;
 }
 
 .kit-cms-toolbar-top > ul > li > a.kit-cms-advanced-mode-button-selected {

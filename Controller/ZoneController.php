@@ -248,8 +248,8 @@ class ZoneController extends Controller
             ($context->getViewMode() == Context::VIEW_MODE_EDIT) ||
             ($context->getViewMode() == Context::VIEW_MODE_PREVIEW)
         ) {
-            // PAGER
-            if (!is_null($paginator)) {
+            // PAGINATOR
+            if ($paginator instanceof Paginator) {
                 $blockRepository = $em->getRepository('KitpagesCmsBundle:Block');
                 $totalBlockCount = $blockRepository->getBlockCountByZone($zone);
                 $paginator->setTotalItemCount($totalBlockCount);
@@ -324,7 +324,7 @@ class ZoneController extends Controller
                 }
 
                 // PAGER
-                if (!is_null($paginator)) {
+                if ($paginator instanceof Paginator ) {
                     $paginator->setTotalItemCount(count($blockList));
                     $paginatorHtml .= $this->renderView(
                         "KitpagesCmsBundle:Zone:pager.html.twig",
