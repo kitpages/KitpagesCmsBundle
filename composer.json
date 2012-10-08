@@ -17,9 +17,7 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "2.1.*",
-        "symfony/doctrine-bundle": "2.0.*",
         "sensio/framework-extra-bundle": "2.0.*",
-        "doctrine/orm": "*",
         "stof/doctrine-extensions-bundle" : "1.x",
         "kitpages/file-bundle": ">=v2.0.0",
         "kitpages/util-bundle": ">=v1.0.0",
