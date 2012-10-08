@@ -19,9 +19,13 @@
         "symfony/framework-bundle": "2.1.*",
         "sensio/framework-extra-bundle": "2.1.*",
         "stof/doctrine-extensions-bundle" : "1.x",
-        "kitpages/file-bundle": "*",
-        "kitpages/util-bundle": "*",
-        "kitpages/simple-cache-bundle": "*"
+        "kitpages/file-bundle": "2.1.*",
+        "kitpages/util-bundle": "2.1.*",
+        "kitpages/simple-cache-bundle": "2.1.*"
+    },
+    "require-dev": {
+        "kitpages/file-bundle": "dev-master",
+        "kitpages/util-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Kitpages\\CmsBundle": "" }
