@@ -30,5 +30,6 @@
     "autoload": {
         "psr-0": { "Kitpages\\CmsBundle": "" }
     },
+    "target-dir": "Kitpages/CmsBundle",
     "minimum-stability": "dev"
 }
