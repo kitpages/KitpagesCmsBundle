@@ -1,7 +1,7 @@
 <?php
 namespace Kitpages\CmsBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class Context
 {
