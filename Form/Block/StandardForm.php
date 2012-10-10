@@ -2,7 +2,7 @@
 namespace Kitpages\CmsBundle\Form\Block;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Kitpages\CmsBundle\Validator\Generic;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\MaxLength;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Email;
 
 class StandardForm extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add(
