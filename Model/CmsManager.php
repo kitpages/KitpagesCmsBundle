@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -26,6 +27,7 @@ class CmsManager
     public function __construct(
         Session $session            ,
         Registry $doctrine,
+        Request $request,
         $defaultLayout,
         LoggerInterface $logger
     )
@@ -33,6 +35,7 @@ class CmsManager
         $this->session = $session;
         $this->layout = $defaultLayout;
         $this->doctrine = $doctrine;
+        $this->request = $request;
         $this->logger = $logger;
     }
     /**
@@ -76,7 +79,7 @@ class CmsManager
 
     public function getCurrentLanguage()
     {
-        return $this->getSession()->getLocale();
+        return $this->request->getLocale();
     }
 
 }
