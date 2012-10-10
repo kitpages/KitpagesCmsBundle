@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Session;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;

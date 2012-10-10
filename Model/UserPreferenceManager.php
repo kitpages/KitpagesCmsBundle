@@ -1,7 +1,7 @@
 <?php
 namespace Kitpages\CmsBundle\Model;
 
-use Symfony\Bundle\DoctrineBundle\Registry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 use Kitpages\CmsBundle\Entity\UserPreference;
 use Kitpages\CmsBundle\Entity\Page;
