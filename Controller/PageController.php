@@ -228,7 +228,7 @@ class PageController extends Controller
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $page->setPageType('edito');
@@ -349,7 +349,7 @@ class PageController extends Controller
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $page->setPageType('technical');
@@ -439,7 +439,7 @@ class PageController extends Controller
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $page->setPageType('link');
@@ -583,7 +583,7 @@ class PageController extends Controller
         // persist form if needed
         if ($request->getMethod() == 'POST') {
             $oldPage = clone $page;
-            $form->bindRequest($request);
+            $form->bind($request);
             $errorList = $validator->validate($page);
             if (count($errorList) == 0) {
                 $em = $this->get('doctrine')->getEntityManager();
@@ -707,7 +707,7 @@ class PageController extends Controller
 
         // persist form if needed
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $em = $this->get('doctrine')->getEntityManager();
@@ -833,7 +833,7 @@ class PageController extends Controller
 
         // persist form if needed
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $em = $this->get('doctrine')->getEntityManager();

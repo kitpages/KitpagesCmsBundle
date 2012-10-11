@@ -12,10 +12,10 @@ class BlockType extends AbstractType
         $builder->add('template', 'text');
     }
     
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'data_class' => 'Kitpages\CmsBundle\Entity\Block',
-        );
+        ));
     }
 }

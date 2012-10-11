@@ -135,7 +135,7 @@ class BlockController extends Controller
 
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 $block->setBlockType('edito');
@@ -252,7 +252,7 @@ class BlockController extends Controller
 
             $oldBlockData = $block->getData();
 
-            $form->bindRequest($request);
+            $form->bind($request);
 
             $formChildren = $form->getChildren();
             $blockData = $block->getData();
