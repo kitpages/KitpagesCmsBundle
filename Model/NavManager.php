@@ -82,7 +82,7 @@ class NavManager
         $event = new NavEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavMove, $event);
         if (! $event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->getRepository('KitpagesCmsBundle:Page')->moveUp($page, $nbrPosition);
         }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavMove, $event);
@@ -92,7 +92,7 @@ class NavManager
         $event = new NavEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavMove, $event);
         if (! $event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->getRepository('KitpagesCmsBundle:Page')->moveDown($page, $nbrPosition);
         }
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterNavMove, $event);
@@ -103,7 +103,7 @@ class NavManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavPublish, $event);
         if (! $event->isDefaultPrevented()) {
             $this->cacheManager->clear('kit-cms-navigation-%');
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery('DELETE Kitpages\CmsBundle\Entity\NavPublish np');
             $resultDelete = $query->getResult();
             $query = $em->getConnection()->executeUpdate("
@@ -135,7 +135,7 @@ class NavManager
         $event = new NavEvent();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavPublish, $event);
         if (! $event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
             $em->flush();
         }
@@ -158,7 +158,7 @@ class NavManager
         $navPublish = $page->getNavPublish();
         if ($navPublish != null) {
             $navPublish->setForcedUrl($page->getForcedUrl());
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->cacheManager->clear('kit-cms-navigation-%');
         }

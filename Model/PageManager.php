@@ -97,7 +97,7 @@ class PageManager
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $page->setIsPendingDelete(0);
             $em->flush();
         }
@@ -113,7 +113,7 @@ class PageManager
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $page->setIsPendingDelete(1);
             $em->flush();
         }
@@ -129,7 +129,7 @@ class PageManager
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $zoneManager = $this->getZoneManager();
             foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
                 $nbr = $em->getRepository('KitpagesCmsBundle:PageZone')->nbrPageZoneByZoneWithPageDiff($zone, $page);
@@ -156,7 +156,7 @@ class PageManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPagePublish, $event);
         $cmsFileManager = $this->getCmsFileManager();
         if (! $event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             if ($page->getIsPendingDelete()) {
                 $pagePublish = $em->getRepository('KitpagesCmsBundle:PagePublish')->findByPage($page);
                 $eventPublish = new PagePublishEvent($pagePublish);
@@ -172,7 +172,7 @@ class PageManager
                 $this->delete($page);
             } else {
                 // publish zone
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByPage($page) as $zone){
                     $this->getZoneManager()->publish($zone, $listRenderer);
                 }
@@ -219,7 +219,7 @@ class PageManager
         $event = new PageEvent($page, $layoutList);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onMultiplePagePublish, $event);
         if ($childrenPublish) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             //$pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, false, 'level', 'DESC');
             foreach($pageChildren as $pageChild) {
@@ -235,7 +235,7 @@ class PageManager
     {
         if ($oldPage != $page) {
             $page->setRealUpdatedAt(new \DateTime());
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->unpublish($page);
             $event = new PageEvent($page);
@@ -247,7 +247,7 @@ class PageManager
     public function unpublish($page){
         $event = new PageEvent($page);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onPageUnpublish, $event);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $page->setIsPublished(false);
         $em->flush();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterPageUnpublish, $event);
@@ -255,7 +255,7 @@ class PageManager
 
     public function createZoneInPage(Page $page, $locationInPage)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zone = new Zone();
         $zone->setSlug('');
         $zone->setIsPublished(false);
@@ -275,7 +275,7 @@ class PageManager
     public function afterZoneUnpublish(Event $event)
     {
         $zone = $event->getZone();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach($em->getRepository('KitpagesCmsBundle:Page')->findByZone($zone) as $page) {
             $this->unpublish($page);
         }
@@ -291,7 +291,7 @@ class PageManager
             return true;
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $pagePublishConflictList = $em->getRepository('KitpagesCmsBundle:PagePublish')->findBy(array('forcedUrl' => $page->getForcedUrl()));
         // there is no conflictual user
         if (empty($pagePublishConflictList)) {

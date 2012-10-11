@@ -97,7 +97,7 @@ class BlockManager
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $blockData=$block->getData();
             if (!isset($blockData['root'])) {
                 $blockData['root'] = array();
@@ -115,7 +115,7 @@ class BlockManager
     {
         $data = $blockPublish->getData();
         $this->getCmsFileManager()->unpublishFileList($data['media']);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($blockPublish);
     }
 
@@ -167,7 +167,7 @@ class BlockManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockPublish, $event);
         $cmsFileManager = $this->cmsFileManager;
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery("
                 SELECT bp FROM KitpagesCmsBundle:BlockPublish bp
                 WHERE bp.block = :block
@@ -220,7 +220,7 @@ class BlockManager
         if ($oldBlockData != $block->getData()) {
             $block->setRealUpdatedAt(new \DateTime());
             $block->setIsPublished(false);
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $event = new BlockEvent($block);
             $event->setData('oldBlockData', $oldBlockData);

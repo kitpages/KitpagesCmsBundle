@@ -53,11 +53,11 @@ class GenericValidator extends ConstraintValidator
      * @param Entity     $value
      * @param Constraint $constraint
      */
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $method = $constraint->method;
         if (!$this->getManager()->$method($value, $constraint)) {
-            $this->setMessage($constraint->message, array(
+            $this->context->addViolation($constraint->message, array(
                 '%property%' => $constraint->property
             ));
             return false;

@@ -23,7 +23,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $em = $this->getContainer()->get('doctrine')->getEntityManager('default');
+        $em = $this->getContainer()->get('doctrine')->getManager('default');
 
         $fileManager = $this->getContainer()->get('kitpages.file.manager');
 

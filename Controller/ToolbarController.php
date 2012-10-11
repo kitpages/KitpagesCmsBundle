@@ -11,7 +11,7 @@ class ToolbarController extends Controller
 
     public function widgetToolbarAction() {
         $context = $this->get('kitpages.cms.controller.context');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $dataRender = array(
             'isNavPublished' => $em->getRepository('KitpagesCmsBundle:Site')->get(Site::IS_NAV_PUBLISHED),
             'kitCmsViewMode' => $context->getViewMode(),
@@ -32,7 +32,7 @@ class ToolbarController extends Controller
 
         $request = $this->getRequest();
         $router = $this->get('router');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         if($this->get('security.context')->isGranted('ROLE_CMD_ADMIN')) {
 
             try {

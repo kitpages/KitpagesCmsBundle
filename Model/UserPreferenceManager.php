@@ -26,7 +26,7 @@ class UserPreferenceManager
     ////
     public function getPreference($userName)
     {
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
         $userPreference = $em->getRepository('KitpagesCmsBundle:UserPreference')->findOneByUserName($userName);
         if (!($userPreference instanceof UserPreference)) {
             $userPreference = $this->setUserPreference($userName);
@@ -35,7 +35,7 @@ class UserPreferenceManager
     }
 
     public function setUserPreference($userName) {
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
         $userPreference = new UserPreference();
         $userPreference->setUserName($userName);
         $em->persist($userPreference);
@@ -44,7 +44,7 @@ class UserPreferenceManager
     }
 
     public function setPreferenceDataTreeState($userName, $pageId, $action, $target){
-        $em = $this->doctrine->getEntityManager();
+        $em = $this->doctrine->getManager();
         $userPreference = $em->getRepository('KitpagesCmsBundle:UserPreference')->findOneByUserName($userName);
 
 
@@ -74,7 +74,7 @@ class UserPreferenceManager
     }
 
     public function setPreferenceDataTreeScroll($userName, $scroll){
-            $em = $this->doctrine->getEntityManager();
+            $em = $this->doctrine->getManager();
             $userPreference = $em->getRepository('KitpagesCmsBundle:UserPreference')->findOneByUserName($userName);
             if ($userPreference instanceof UserPreference) {
                 $dataTree = $userPreference->getDataTree();

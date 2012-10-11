@@ -20,7 +20,7 @@ class NavController extends Controller
         $layoutList = $this->container->getParameter('kitpages_cms.page.layout_list');
         $listRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
         $dataInheritanceList = $this->container->getParameter('kitpages_cms.page.data_inheritance_list');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $pageManager = $this->get('kitpages.cms.manager.page');
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $blockManager = $this->get('kitpages.cms.manager.block');
@@ -78,7 +78,7 @@ class NavController extends Controller
 
     public function widgetBreadcrumbAction($slug, $page, $homePageSlug = null, $startDepth = 0) {
         if ($page instanceof Page) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $context = $this->get('kitpages.cms.controller.context');
             $dataBreadcrumb = array();
             if ($context->getViewMode() == Context::VIEW_MODE_EDIT || $context->getViewMode() == Context::VIEW_MODE_PREVIEW) {
@@ -137,7 +137,7 @@ class NavController extends Controller
     }
 
     public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $navigation = array();
@@ -181,7 +181,7 @@ class NavController extends Controller
             $response = $cacheManager->get(
                 'kit-cms-navigation-'.$context->getViewMode()."-$slug-$currentPageSlug-$filterString-$startDepth-$endDepth",
                 function() use ($myThis, $em, $slug, $cssClass, $currentPageSlug, $startDepth, $endDepth, $filterByCurrentPage ) {
-                    $em = $myThis->getDoctrine()->getEntityManager();
+                    $em = $myThis->getDoctrine()->getManager();
                     $context = $myThis->get('kitpages.cms.controller.context');
                     $resultingHtml = '';
                     $navigation = array();
@@ -244,7 +244,7 @@ class NavController extends Controller
     }
 
     public function navPublishChildren($navPublish, $viewMode, $currentDepth, $endLevel){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $navPublishList = $em->getRepository('KitpagesCmsBundle:NavPublish')->childrenOfDepth($navPublish, $currentDepth);
         $listNavigationElem = array();
         foreach($navPublishList as $navPublishChild) {
@@ -266,7 +266,7 @@ class NavController extends Controller
     }
 
     public function navPageChildren($page, $viewMode, $currentDepth, $endLevel){
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $pageList = $em->getRepository('KitpagesCmsBundle:Page')->childrenOfDepth($page, $currentDepth);
         $listNavigationElem = array();
         foreach($pageList as $pageChild) {
@@ -306,7 +306,7 @@ class NavController extends Controller
 
     public function treeChildren($pageParent = null){
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if (is_null($pageParent)) {
             $pageList = $em->getRepository('KitpagesCmsBundle:Page')->getRootNodes();
@@ -469,7 +469,7 @@ class NavController extends Controller
         if ($page->getPageType() == 'link' ) {
             $url = $page->getLinkUrl();
             if ($page->getIsLinkUrlFirstChild()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
                 if (count($pageChildren) > 0 && $pageChildren['0'] instanceof Page) {
                     $url = $this->getPageLink($pageChildren['0']);
@@ -501,7 +501,7 @@ class NavController extends Controller
         if ($pagePublish->getPageType() == 'link' ) {
             $url = $navPublish->getLinkUrl();
             if ($navPublish->getIsLinkUrlFirstChild()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $navPublishChildren = $em->getRepository('KitpagesCmsBundle:NavPublish')->children($navPublish, true);
                 if (count($navPublishChildren) > 0 && $navPublishChildren['0'] instanceof NavPublish) {
                     $url = $this->getPagePublishLink($navPublishChildren['0']);

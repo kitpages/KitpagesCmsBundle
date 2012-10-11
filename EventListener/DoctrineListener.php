@@ -93,7 +93,7 @@ class DoctrineListener {
         if ($event->getEntity() instanceof Block) {
             if($entity->getSlug() == 'block_ID') {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
@@ -101,7 +101,7 @@ class DoctrineListener {
         if ($event->getEntity() instanceof Zone) {
             if($entity->getSlug() == 'zone_ID') {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
@@ -109,7 +109,7 @@ class DoctrineListener {
         if ($event->getEntity() instanceof Page) {
             if($entity->getSlug() == 'page_ID') {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
@@ -120,15 +120,14 @@ class DoctrineListener {
     public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
-        $em = $eventArgs->getEntityManager();
-        
+
         /* Event BLOCK */
         if ($entity instanceof Block) {
             $entity->setSlug($this->util->urlPathEncode($entity->getSlug()));
             $slug = $entity->getSlug();
             if(empty($slug)) {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
@@ -141,21 +140,12 @@ class DoctrineListener {
             $slug = $entity->getSlug();
             if(empty($slug)) {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
             
-//            if (($eventArgs->hasChangedField('data')
-//                || $eventArgs->hasChangedField('template'))
-//                && $entity->getIsPublished() == 1
-//            ) {
-//                $entity->setIsPublished(false);
-//                $entity->setUnpublishedAt(new \DateTime());
-//                $uom->recomputeSingleEntityChangeSet($em->getClassMetadata(get_class($entity)), $entity);
-//            }
-            
-        }   
+        }
         /* Event Page */
         if ($entity instanceof Page) {
             $entity->setUrlTitle($this->util->urlPathEncode($entity->getTitle()));
@@ -163,7 +153,7 @@ class DoctrineListener {
             $slug = $entity->getSlug();
             if(empty($slug)) {
                 $entity->defaultSlug();
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entity);
                 $em->flush();
             }
@@ -186,7 +176,7 @@ class DoctrineListener {
         $event = new NavEvent();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onNavPublish, $event);
         if (! $event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->getRepository('KitpagesCmsBundle:Site')->set(Site::IS_NAV_PUBLISHED, 0);
 //            $em->flush();
         }

@@ -76,7 +76,7 @@ class PageListener {
         $viewMode = $this->getContext()->getViewMode();
 
         if ($viewMode == Context::VIEW_MODE_PROD) {
-            $pagePublishRepo = $this->getDoctrine()->getEntityManager()->getRepository('KitpagesCmsBundle:PagePublish');
+            $pagePublishRepo = $this->getDoctrine()->getManager()->getRepository('KitpagesCmsBundle:PagePublish');
             $pagePublish = $pagePublishRepo->findByForcedUrl($relativeRequestUri);
             if ($pagePublish == null) {
                 return;
@@ -93,7 +93,7 @@ class PageListener {
         }
 
         if (($viewMode == Context::VIEW_MODE_EDIT) || ($viewMode == Context::VIEW_MODE_PREVIEW) ) {
-            $pageRepo = $this->getDoctrine()->getEntityManager()->getRepository('KitpagesCmsBundle:Page');
+            $pageRepo = $this->getDoctrine()->getManager()->getRepository('KitpagesCmsBundle:Page');
             $page = $pageRepo->findByForcedUrl($relativeRequestUri);
             if ($page == null) {
                 return;

@@ -73,7 +73,7 @@ class CmsFileManager {
 
     public function publishDataMediaList($data) {
         $fileManager = $this->getFileManager();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
@@ -90,7 +90,7 @@ class CmsFileManager {
 
     public function delete($data) {
         $fileManager = $this->getFileManager();        
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
@@ -107,7 +107,7 @@ class CmsFileManager {
 
     public function unpublishFileList($mediaList)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $repositoryFileBundle = $em->getRepository('KitpagesFileBundle:File');
         $fileManager = $this->getFileManager();
         foreach($mediaList as $media) {
@@ -129,7 +129,7 @@ class CmsFileManager {
     }
 
     public function mediaList($data, $publish) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $listMedia = array();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
@@ -207,7 +207,7 @@ class CmsFileManager {
 
     public function validateFile($file, $itemClass, $id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $file->setStatus(FileInterface::STATUS_VALID);
         $file->setItemClass($itemClass);
         $file->setItemId($id);
@@ -217,7 +217,7 @@ class CmsFileManager {
 
     public function validateFileMediaList($data, $itemClass, $id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $mediaIdList = array();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
@@ -241,7 +241,7 @@ class CmsFileManager {
     }
     public function deleteFileMediaList($data, $idNoDeleteList)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         if (count($data)>0 ) {
             foreach($data as $field => $value) {
                 if (substr($field, '0', '6') == 'media_') {
