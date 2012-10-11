@@ -130,7 +130,7 @@ class PageRepository extends NestedTreeRepository
         $dataReturn = array();
         $fieldInheritanceList = array_flip($fieldInheritanceList);
         foreach($dataList as $data) {
-            $dataFieldList = unserialize($data['data']);
+            $dataFieldList = $data['data'];
             if ($dataFieldList != null && $dataFieldList['root'] != null) {
                 foreach($dataFieldList['root'] as $keyDataField => $dataField) {
                     if ($dataField == null) {
