@@ -23,11 +23,12 @@ class CmsManager
     protected $session = null;
     protected $doctrine = null;
     protected $layout = null;
+    protected $defaultLocale = null;
 
     public function __construct(
-        Session $session            ,
+        Session $session,
         Registry $doctrine,
-        Request $request,
+        $defaultLocale,
         $defaultLayout,
         LoggerInterface $logger
     )
@@ -35,8 +36,8 @@ class CmsManager
         $this->session = $session;
         $this->layout = $defaultLayout;
         $this->doctrine = $doctrine;
-        $this->request = $request;
         $this->logger = $logger;
+        $this->defaultLocale = $defaultLocale;
     }
     /**
      * @return Registry $doctrine
@@ -68,6 +69,20 @@ class CmsManager
         }
     }
 
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+        $request = $event->getRequest();
+        if (!$request->hasPreviousSession()) {
+            return;
+        }
+
+        if ($locale = $request->attributes->get('_locale')) {
+            $request->getSession()->set('_locale', $locale);
+        } else {
+            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        }
+    }
+
     public function getLayout()
     {
         return $this->layout;
@@ -79,7 +94,7 @@ class CmsManager
 
     public function getCurrentLanguage()
     {
-        return $this->request->getLocale();
+        return $this->session->get('_locale');
     }
 
 }
