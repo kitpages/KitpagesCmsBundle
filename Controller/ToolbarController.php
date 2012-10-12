@@ -40,9 +40,8 @@ class ToolbarController extends Controller
             } catch (\Exception $exc) {
                 $route = false;
             }
-
+            $editMode = $router->generate('kitpages_cms_admin_view_mode_change', array('viewMode'=> 3, 'kitpages_target' => $request->getPathInfo(), 'context'=> 'edit'));
             if ($this->get('kitpages.cms.controller.context')->getViewMode() == Context::VIEW_MODE_PROD) {
-                $editMode = $router->generate('kitpages_cms_admin_view_mode_change', array('viewMode'=> 3, 'kitpages_target' => $request->getPathInfo(), 'context'=> 'edit'));
                 if ($route && $route['_controller'] == 'Kitpages\CmsBundle\Controller\PageController::viewAction') {
                     $page = $em->getRepository('KitpagesCmsBundle:Page')->find($route['id']);
                     if ($page != null) {

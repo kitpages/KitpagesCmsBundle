@@ -10,6 +10,8 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Kitpages\CmsBundle\Controller\Context;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class PageListener {
 

@@ -34,7 +34,7 @@ class PagePublishRepository extends EntityRepository
         if ($cnt === 0) {
             return null;
         }
-        throw new Exception("Two pagePublish have the same forced URL");
+        throw new \Exception("Two pagePublish have the same forced URL");
      }
 
 }

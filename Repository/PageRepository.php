@@ -31,7 +31,7 @@ class PageRepository extends NestedTreeRepository
         if ($cnt === 0) {
             return null;
         }
-        throw new Exception("Two pages have the same forced URL");
+        throw new \Exception("Two pages have the same forced URL");
      }
 
     public function childrenOfDepth(Page $page, $depth)

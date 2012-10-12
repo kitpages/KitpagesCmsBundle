@@ -132,7 +132,7 @@ class BlockManager
         $blockData['block']['slug'] = $block->getSlug();
         $blockData['block']['blockId'] = $block->getId();
         if (is_bool($viewMode)) {
-            throw new Exception("boolean viewMode, strange");
+            throw new \Exception("boolean viewMode, strange");
         }
         $publish = false;
         if ($viewMode === Context::VIEW_MODE_PROD) {
