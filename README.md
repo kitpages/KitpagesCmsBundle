@@ -49,5 +49,5 @@ Installation
 There's two installation methods :
 
 * use the Kitpages CMS symfony2 distribution :
-[https://github.com/kitpages/symfony-kitpages-cms-edition](https://github.com/kitpages/symfony-kitpages-cms-edition).
-* See directory [Resources/doc](Resources/doc) for a complete documentation
+[https://github.com/kitpages/kitpages-cms-edition](https://github.com/kitpages/kitpages-cms-edition).
+* See directory [Resources/doc](https://github.com/kitpages/KitpagesCmsBundle/tree/master/Resources/doc) for a complete documentation
