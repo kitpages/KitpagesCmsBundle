@@ -51,17 +51,6 @@ class StandardForm extends AbstractType
         );
 
         $builder->add(
-            'subContent',
-            'textarea',
-            array(
-                'required' => false,
-                'attr' => array(
-                    "class" => "kit-cms-rte-simple"
-                )
-            )
-        );
-
-        $builder->add(
             'displaySeparator',
             'checkbox',
             array(
