@@ -16,20 +16,21 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": "2.1.*",
-        "sensio/framework-extra-bundle": "2.1.*",
-        "stof/doctrine-extensions-bundle" : "1.x",
-        "kitpages/file-bundle": "*",
-        "kitpages/util-bundle": "2.1.*",
-        "kitpages/simple-cache-bundle": "2.1.*"
+        "symfony/framework-bundle": "~2.3",
+        "sensio/framework-extra-bundle": "~2.3",
+        "stof/doctrine-extensions-bundle" : "1.1.*",
+        "kitpages/util-bundle": "~3.0",
+        "kitpages/file-bundle": "~3.0",
+        "kitpages/simple-cache-bundle": "~3.0"
     },
     "require-dev": {
-        "kitpages/file-bundle": "dev-master",
-        "kitpages/util-bundle": "dev-master"
+        "symfony/class-loader": "~2.3",
+        "symfony/yaml": "~2.3",
+        "symfony/finder": "~2.3",
+        "symfony/browser-kit": "~2.3"
     },
     "autoload": {
         "psr-0": { "Kitpages\\CmsBundle": "" }
     },
-    "target-dir": "Kitpages/CmsBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Kitpages/CmsBundle"
 }
