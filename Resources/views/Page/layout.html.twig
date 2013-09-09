@@ -12,9 +12,11 @@
 {% block kitpages_cms_toolbar %}
     {% if is_granted('ROLE_CMS_ADMIN') %}
         <div class="kit-cms kit-cms-toolbar">
-        {% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}
+        {#{% render 'KitpagesCmsBundle:Toolbar:widgetToolbar'%}#}
+        {{ render(controller('KitpagesCmsBundle:Toolbar:widgetToolbar')) }}
         {% if (kitCmsViewMode is defined) and ( (kitCmsViewMode == 2) or (kitCmsViewMode == 3) ) %}
-            {% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':kitCmsPage} %}
+            {#{% render 'KitpagesCmsBundle:Page:widgetToolbar' with {'page':kitCmsPage} %}#}
+            {{ render(controller('KitpagesCmsBundle:Page:widgetToolbar', { 'page':kitCmsPage } )) }}
         {% endif %}
         </div>
         <script>

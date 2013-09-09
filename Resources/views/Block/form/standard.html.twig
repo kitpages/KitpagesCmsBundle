@@ -10,7 +10,16 @@
 <div>
     <label>Image</label>
     {{ form_widget(form.data.root.media_mainImage) }}
-    {% render 'KitpagesCmsBundle:Block:uploadWidget' with {'blockId':id, 'fieldId': 'form_data_root_media_mainImage', parameterList:{'multi': false, 'publishParent': false} } %}
+    {#{% render 'KitpagesCmsBundle:Block:uploadWidget' with {#}
+        {#'blockId':id,#}
+        {#'fieldId': 'form_data_root_media_mainImage',#}
+        {#parameterList:{'multi': false, 'publishParent': false}#}
+    {#} %}#}
+    {{ render(controller('KitpagesCmsBundle:Block:uploadWidget', {
+        'blockId':id,
+        'fieldId': 'form_data_root_media_mainImage',
+        parameterList:{'multi': false, 'publishParent': false}
+    })) }}
 </div>
 
 {{ form_row(
