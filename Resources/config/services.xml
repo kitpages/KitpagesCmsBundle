@@ -79,7 +79,7 @@
             <argument type="service" id="session"/>
             <argument type="service" id="doctrine"/>
             <argument>%locale%</argument>
-            <argument>%kitpages_cms.page.default_layout%</argument>
+            <argument>%kitpages_cms.page.default_twig%</argument>
             <argument type="service" id="logger"/>
         </service>
         <service id="kitpages_cms.pageListener" class="%kitpages_cms.pageListener.class%">
