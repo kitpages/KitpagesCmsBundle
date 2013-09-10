@@ -18,6 +18,7 @@
         "php": ">=5.3.3",
         "symfony/framework-bundle": "~2.3",
         "sensio/framework-extra-bundle": "~2.3",
+        "symfony/validator": "~2.3",
         "stof/doctrine-extensions-bundle" : "1.1.*",
         "kitpages/util-bundle": "~3.0",
         "kitpages/file-bundle": "~3.0",

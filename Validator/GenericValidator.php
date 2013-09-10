@@ -32,7 +32,7 @@ class GenericValidator extends ConstraintValidator
      *
      * @param Manager $manager
      */
-    public function setmanager($manager)
+    public function setManager($manager)
     {
         $this->manager = $manager;
     }
@@ -53,7 +53,7 @@ class GenericValidator extends ConstraintValidator
      * @param Entity     $value
      * @param Constraint $constraint
      */
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $method = $constraint->method;
         if (!$this->getManager()->$method($value, $constraint)) {
