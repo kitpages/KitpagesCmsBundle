@@ -383,7 +383,7 @@ class ZoneController extends Controller
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $dataRenderer = $this->container->getParameter('kitpages_cms.block.renderer');
         $zoneManager->publish($zone, $dataRenderer);
-        $this->getRequest()->getSession()->setFlash('notice', 'Zone published');
+        $this->get('session')->getFlashBag()->add('notice', 'Zone published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -395,14 +395,14 @@ class ZoneController extends Controller
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $zoneManager->moveUpBlock($zone, $block_id);
-        $this->getRequest()->getSession()->setFlash('notice', 'Block moved up');
+        $this->get('session')->getFlashBag()->add('notice', 'Block moved up');
         return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }
     public function moveDownBlockAction(Zone $zone, $block_id)
     {
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $zoneManager->moveDownBlock($zone, $block_id);
-        $this->getRequest()->getSession()->setFlash('notice', 'Block moved down');
+        $this->get('session')->getFlashBag()->add('notice', 'Block moved down');
         return new RedirectResponse($this->getRequest()->query->get('kitpages_target'));
     }
 }

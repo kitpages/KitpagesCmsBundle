@@ -51,7 +51,7 @@ class NavController extends Controller
 
         $navManager->publish();
 
-        $this->getRequest()->getSession()->setFlash('notice', 'Site published');
+        $this->get('session')->getFlashBag()->add('notice', 'Site published');
 
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
@@ -67,7 +67,7 @@ class NavController extends Controller
         $navManager = $this->get('kitpages.cms.manager.nav');
         $navManager->publish();
 
-        $this->getRequest()->getSession()->setFlash('notice', 'Navigation published');
+        $this->get('session')->getFlashBag()->add('notice', 'Navigation published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -444,7 +444,7 @@ class NavController extends Controller
         $navManager = $this->get('kitpages.cms.manager.nav');
         $navManager->moveUp($page, 1);
 
-        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
+        $this->get('session')->getFlashBag()->add('notice', 'Page moved');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -455,7 +455,7 @@ class NavController extends Controller
     public function moveDownAction(Page $page){
         $navManager = $this->get('kitpages.cms.manager.nav');
         $navManager->moveDown($page, 1);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page moved');
+        $this->get('session')->getFlashBag()->add('notice', 'Page moved');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);

@@ -262,7 +262,7 @@ class PageController extends Controller
                     $pageManager->createZoneInPage($page, $locationInPage);
                 }
 
-                $this->getRequest()->getSession()->setFlash('notice', 'Page created');
+                $this->get('session')->getFlashBag()->add('notice', 'Page created');
                 return $this->redirect(
                     $this->generateUrl(
                         'kitpages_cms_page_edit',
@@ -284,7 +284,7 @@ class PageController extends Controller
     {
         $pageManager = $this->get('kitpages.cms.manager.page');
         $pageManager->createZoneInPage($page, $locationInPage);
-        $this->getRequest()->getSession()->setFlash('notice', "Zone $locationInPage created");
+        $this->get('session')->getFlashBag()->add('notice', "Zone $locationInPage created");
         $target = $this->getRequest()->query->get('kitpages_target', null);
         return $this->redirect($target);
     }
@@ -377,7 +377,7 @@ class PageController extends Controller
                 }
                 $em->flush();
 
-                $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');
+                $this->get('session')->getFlashBag()->add('notice', 'Page technical created');
                 $target = $this->getRequest()->query->get('kitpages_target', null);
                 if ($target) {
                     return $this->redirect($target);
@@ -467,7 +467,7 @@ class PageController extends Controller
                 }
                 $em->flush();
 
-                $this->getRequest()->getSession()->setFlash('notice', 'Page technical created');
+                $this->get('session')->getFlashBag()->add('notice', 'Page technical created');
                 $target = $this->getRequest()->query->get('kitpages_target', null);
                 if ($target) {
                     return $this->redirect($target);
@@ -596,14 +596,14 @@ class PageController extends Controller
                 $em->flush();
                 $pageManager = $this->get('kitpages.cms.manager.page');
                 $pageManager->afterModify($page, $oldPage);
-                $this->getRequest()->getSession()->setFlash('notice', 'Page modified');
+                $this->get('session')->getFlashBag()->add('notice', 'Page modified');
                 $forcedUrl = $page->getForcedUrl();
             } else {
                 $msg = 'Page not saved <br />';
                 foreach ($errorList as $err) {
                     $msg.= $err->getMessage() . '<br />';
                 }
-                $this->getRequest()->getSession()->setFlash('error', $msg);
+                $this->get('session')->getFlashBag()->add('error', $msg);
                 $forcedUrl = $oldPage->getForcedUrl();
             }
 
@@ -718,7 +718,7 @@ class PageController extends Controller
                     $page->setParent($pageParent);
                 }
                 $em->flush();
-                $this->getRequest()->getSession()->setFlash('notice', 'Page Technical modified');
+                $this->get('session')->getFlashBag()->add('notice', 'Page Technical modified');
                 if ($target) {
                     return $this->redirect($target);
                 }
@@ -844,7 +844,7 @@ class PageController extends Controller
                     $page->setParent($pageParent);
                 }
                 $em->flush();
-                $this->getRequest()->getSession()->setFlash('notice', 'Page Link modified');
+                $this->get('session')->getFlashBag()->add('notice', 'Page Link modified');
                 if ($target) {
                     return $this->redirect($target);
                 }
@@ -904,7 +904,7 @@ class PageController extends Controller
         $pageManager = $this->get('kitpages.cms.manager.page');
         $childrenPublish = $this->get('request')->query->get('children', false);
         $pageManager->publish($page, $layoutList, $listRenderer, $dataInheritanceList, $childrenPublish);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page published');
+        $this->get('session')->getFlashBag()->add('notice', 'Page published');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -958,7 +958,7 @@ class PageController extends Controller
     {
         $childrenDelete = $this->get('request')->query->get('children', true);
         $this->pendingDelete($page, $childrenDelete);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page pending delete');
+        $this->get('session')->getFlashBag()->add('notice', 'Page pending delete');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -970,7 +970,7 @@ class PageController extends Controller
     {
         $childrenUndelete = $this->get('request')->query->get('children', true);
         $this->unpendingDelete($page, $childrenUndelete);
-        $this->getRequest()->getSession()->setFlash('notice', 'Page unpending delete');
+        $this->get('session')->getFlashBag()->add('notice', 'Page unpending delete');
         $target = $this->getRequest()->query->get('kitpages_target', null);
         if ($target) {
             return $this->redirect($target);
@@ -982,7 +982,7 @@ class PageController extends Controller
 //    {
 //        $childrenDelete = $this->get('request')->query->get('children', false);
 //        $this->delete($page, $childrenDelete);
-//        $this->getRequest()->getSession()->setFlash('notice', 'Page deleted');
+//        $this->get('session')->getFlashBag()->add('notice', 'Page deleted');
 //        $target = $this->getRequest()->query->get('kitpages_target', null);
 //        if ($target) {
 //            return $this->redirect($target);

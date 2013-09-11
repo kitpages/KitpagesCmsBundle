@@ -95,7 +95,7 @@ class BlockController extends Controller
                 $zoneBlock->setPosition($position);
             }
             $em->flush();
-            $this->getRequest()->getSession()->setFlash('notice', 'Block created');
+            $this->get('session')->getFlashBag()->add('notice', 'Block created');
             return $this->redirect(
                 $this->generateUrl(
                     'kitpages_cms_block_edit',
@@ -159,7 +159,7 @@ class BlockController extends Controller
                     $zoneBlock->setPosition($position);
                 }
                 $em->flush();
-                $this->getRequest()->getSession()->setFlash('notice', 'Block created');
+                $this->get('session')->getFlashBag()->add('notice', 'Block created');
                 return $this->redirect(
                     $this->generateUrl(
                         'kitpages_cms_block_edit',
@@ -182,7 +182,7 @@ class BlockController extends Controller
         $blockManager = $this->get('kitpages.cms.manager.block');
         $blockManager->delete($block);
 
-        $this->getRequest()->getSession()->setFlash('notice', 'Block deleted');
+        $this->get('session')->getFlashBag()->add('notice', 'Block deleted');
 
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
@@ -269,7 +269,7 @@ class BlockController extends Controller
                 $em->flush();
 
                 $blockManager->afterModify($block, $oldBlockData);
-                $this->getRequest()->getSession()->setFlash('notice', 'Block modified');
+                $this->get('session')->getFlashBag()->add('notice', 'Block modified');
                 $target = $request->query->get('kitpages_target', null);
                 if ($target) {
                     return $this->redirect($target);
@@ -277,7 +277,7 @@ class BlockController extends Controller
                 return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
             } else {
                 $msg = 'Block not saved <br />';
-                $this->getRequest()->getSession()->setFlash('error', $msg);
+                $this->get('session')->getFlashBag()->add('error', $msg);
             }
         }
 
@@ -426,7 +426,7 @@ class BlockController extends Controller
         $zoneManager = $this->get('kitpages.cms.manager.zone');
         $zoneManager->updateBlockPublishId($block);
 
-        $this->getRequest()->getSession()->setFlash('notice', 'Block published');
+        $this->get('session')->getFlashBag()->add('notice', 'Block published');
 
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
