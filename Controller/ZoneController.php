@@ -60,7 +60,7 @@ class ZoneController extends Controller
 
             if ($form->isValid()) {
                 $zone->setIsPublished(false);
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $em->persist($zone);
                 $em->flush();
                 $target = $request->query->get('kitpages_target', null);
@@ -120,7 +120,7 @@ class ZoneController extends Controller
 
     public function toolbarBlock(Zone $zone, Block $block, $authorizedBlockTemplateList = null)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block);
         $dataRenderer['actionList'][] = array(
             'id' => '',
@@ -205,7 +205,7 @@ class ZoneController extends Controller
         $authorizedBlockTemplateList = null
     )
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
 
         $context = $this->get('kitpages.cms.controller.context');

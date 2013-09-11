@@ -49,7 +49,7 @@ class PageController extends Controller
 
     public function viewAction(Page $page, $lang, $urlTitle)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $context = $this->get('kitpages.cms.controller.context');
         $rendererTwig = $this->container->getParameter('kitpages_cms.page.renderer_twig_main');
         $pageId = $page->getId();
@@ -124,7 +124,7 @@ class PageController extends Controller
     }
 
     public function widgetZoneAction($location_in_page, Page $page) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findByPageAndLocation($page, $location_in_page);
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
         if ($zone == null) {
@@ -157,7 +157,7 @@ class PageController extends Controller
     }
 
     public function choiceCreateAction(){
-        $em = $this->get('doctrine')->getEntityManager();
+        $em = $this->get('doctrine')->getManager();
         $next_sibling_slug = $this->get('request')->query->get('next_sibling_slug', null);
         if ($next_sibling_slug != null) {
             $slug = $next_sibling_slug;
@@ -233,7 +233,7 @@ class PageController extends Controller
             if ($form->isValid()) {
                 $page->setPageType('edito');
                 $page->setIsPublished(false);
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
@@ -354,7 +354,7 @@ class PageController extends Controller
             if ($form->isValid()) {
                 $page->setPageType('technical');
                 $page->setIsPublished(false);
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
@@ -444,7 +444,7 @@ class PageController extends Controller
             if ($form->isValid()) {
                 $page->setPageType('link');
                 $page->setIsPublished(false);
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
@@ -482,7 +482,7 @@ class PageController extends Controller
 
     public function editAction(Page $page, $inToolbar = false, $target = null)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $validator = $this->container->get('validator');
         $request = $this->getRequest();
         if (is_null($target)) {
@@ -586,7 +586,7 @@ class PageController extends Controller
             $form->bind($request);
             $errorList = $validator->validate($page);
             if (count($errorList) == 0) {
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 if (!empty($parent_id)) {
@@ -635,7 +635,7 @@ class PageController extends Controller
 
     public function editTechnicalAction(Page $page)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
         $target = $request->query->get('kitpages_target', null);
 
@@ -710,7 +710,7 @@ class PageController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 if (!empty($parent_id)) {
@@ -742,7 +742,7 @@ class PageController extends Controller
 
     public function editLinkAction(Page $page)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $request = $this->getRequest();
         $target = $request->query->get('kitpages_target', null);
 
@@ -836,7 +836,7 @@ class PageController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $dataForm = $request->request->get('form');
                 $parent_id = $dataForm['parent_id'];
                 if (!empty($parent_id)) {
@@ -917,7 +917,7 @@ class PageController extends Controller
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenDelete) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->delete($pageChild, $childrenDelete);
@@ -931,7 +931,7 @@ class PageController extends Controller
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenDelete) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->pendingDelete($pageChild, $childrenDelete);
@@ -945,7 +945,7 @@ class PageController extends Controller
         $pageManager = $this->get('kitpages.cms.manager.page');
         if ($childrenUndelete) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $pageChildren = $em->getRepository('KitpagesCmsBundle:Page')->children($page, true);
             foreach($pageChildren as $pageChild) {
                 $this->unpendingDelete($pageChild, $childrenUndelete);

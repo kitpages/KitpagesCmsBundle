@@ -76,7 +76,7 @@ class BlockController extends Controller
             $block->setBlockType('edito');
             $block->setIsPublished(false);
             $block->setTemplate($templateKeyList[0]);
-            $em = $this->get('doctrine')->getEntityManager();
+            $em = $this->get('doctrine')->getManager();
             $em->persist($block);
 
             $dataForm = $request->request->get('form');
@@ -140,7 +140,7 @@ class BlockController extends Controller
             if ($form->isValid()) {
                 $block->setBlockType('edito');
                 $block->setIsPublished(false);
-                $em = $this->get('doctrine')->getEntityManager();
+                $em = $this->get('doctrine')->getManager();
                 $em->persist($block);
 
                 $dataForm = $request->request->get('form');
@@ -193,7 +193,7 @@ class BlockController extends Controller
 
     public function editAction(Block $block)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $request = $this->getRequest();
         $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
@@ -341,7 +341,7 @@ class BlockController extends Controller
         $filterParameterList = array()
     )
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
         $blockManager = $this->get('kitpages.cms.manager.block');

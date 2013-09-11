@@ -79,7 +79,7 @@ class ZoneManager
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZonePublish, $event);
         if (! $event->isDefaultPrevented()) {
             // publish blocks
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $this->getBlockManager()->publish($block, $listRenderer[$block->getTemplate()]);
             }
@@ -115,7 +115,7 @@ class ZoneManager
 
     public function updateBlockPublishId(Block $block)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         // remove old zonePublish
         $zoneList = $em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block);
 
@@ -150,14 +150,14 @@ class ZoneManager
     public function unpublish($zone){
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onZoneUnpublish, $event);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zone->setIsPublished(false);
         $em->flush();
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::afterZoneUnpublish, $event);
     }
     public function deletePublished($zonePublish){
         $data = $zonePublish->getData();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach ($data['blockPublishList'] as $renderer => $blockPublishList){
             foreach($blockPublishList as $blockPublishId) {
                 $blockPublish = $em->getRepository('KitpagesCmsBundle:BlockPublish')->find($blockPublishId);
@@ -177,7 +177,7 @@ class ZoneManager
 
         // preventable action
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $blockManager = $this->getBlockManager();
             foreach($em->getRepository('KitpagesCmsBundle:Block')->findByZone($zone) as $block){
                 $nbr = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->nbrZoneBlockByBlockWithZoneDiff($block, $zone);
@@ -196,7 +196,7 @@ class ZoneManager
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockMove, $event);
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
             $position = $zoneBlock->getPosition()-1;
             if ($position >= 0) {
@@ -214,7 +214,7 @@ class ZoneManager
         $event = new ZoneEvent($zone);
         $this->getDispatcher()->dispatch(KitpagesCmsEvents::onBlockMove, $event);
         if (!$event->isDefaultPrevented()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $zoneBlock = $em->getRepository('KitpagesCmsBundle:ZoneBlock')->findByZoneAndBlock($zone, $block_id);
             $position = $zoneBlock->getPosition()+1;
             if ($position >= 0) {
@@ -229,7 +229,7 @@ class ZoneManager
 
     public function reorderBlockList(Zone $zone)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery("
             SELECT zb FROM KitpagesCmsBundle:ZoneBlock zb
             WHERE zb.zone = :zone
@@ -250,7 +250,7 @@ class ZoneManager
     public function afterBlockModify(Event $event)
     {
         $block = $event->getBlock();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach($em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block) as $zone) {
             $this->unpublish($zone);
         }
@@ -259,7 +259,7 @@ class ZoneManager
     public function onBlockDelete(Event $event)
     {
         $block = $event->getBlock();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $zoneList = $em->getRepository('KitpagesCmsBundle:Zone')->findByBlock($block);
         $event->set("zoneList", $zoneList);
         foreach($zoneList as $zone) {
@@ -270,7 +270,7 @@ class ZoneManager
     public function afterBlockDelete(Event $event)
     {
         $zoneList = $event->get('zoneList');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach($zoneList as $zone) {
             $this->reorderBlockList($zone);
         }
