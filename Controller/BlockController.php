@@ -90,9 +90,9 @@ class BlockController extends Controller
                 $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
                 $zoneBlock->setZone($zone);
                 $zoneBlock->setBlock($block);
+                $zoneBlock->setPosition($position);
                 $em->persist($zoneBlock);
                 $em->flush();
-                $zoneBlock->setPosition($position);
             }
             $em->flush();
             $this->get('session')->getFlashBag()->add('notice', 'Block created');
