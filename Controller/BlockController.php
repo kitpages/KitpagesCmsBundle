@@ -21,6 +21,7 @@ use Kitpages\CmsBundle\Form\BlockType;
 use Kitpages\CmsBundle\Controller\Context;
 use Kitpages\CmsBundle\Model\CmsManager;
 use Kitpages\CmsBundle\Model\CmsFileManager;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class BlockController extends Controller
 {
@@ -35,12 +36,14 @@ class BlockController extends Controller
     {
         $cmsFileManager = $this->get('kitpages.cms.manager.file');
         $resultingHtml = $this->get('templating.helper.actions')->render(
-            'KitpagesFileBundle:Upload:widget',
-            array(
-                'fieldId' => $fieldId,
-                'itemClass' => $cmsFileManager->getItemClassBlock(),
-                'itemId' => $blockId,
-                'parameterList' => $parameterList
+            new ControllerReference(
+                'KitpagesFileBundle:Upload:widget',
+                array(
+                    'fieldId' => $fieldId,
+                    'itemClass' => $cmsFileManager->getItemClassBlock(),
+                    'itemId' => $blockId,
+                    'parameterList' => $parameterList
+                )
             )
         );
 

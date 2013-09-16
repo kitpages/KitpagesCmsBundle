@@ -22,6 +22,7 @@ use Kitpages\CmsBundle\Entity\Block;
 use Kitpages\CmsBundle\Entity\BlockPublish;
 use Kitpages\CmsBundle\Model\Paginator;
 use Kitpages\CmsBundle\Controller\Context;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class ZoneController extends Controller
 {
@@ -292,15 +293,16 @@ class ZoneController extends Controller
                 $cnt++;
 
                 $resultingHtml .= $this->get('templating.helper.actions')->render(
-                    "KitpagesCmsBundle:Block:widget",
-                    array(
-                        "slug" => $block->getSlug(),
-                        "renderer" =>$renderer,
-                        "displayToolbar" => $tmpDisplayToobar,
-                        "authorizedBlockTemplateList" => $authorizedBlockTemplateList,
-                        "filterParameterList" => array('firstLastClass' => $firstLastClass)
-                    ),
-                    array()
+                    new ControllerReference(
+                        "KitpagesCmsBundle:Block:widget",
+                        array(
+                            "slug" => $block->getSlug(),
+                            "renderer" =>$renderer,
+                            "displayToolbar" => $tmpDisplayToobar,
+                            "authorizedBlockTemplateList" => $authorizedBlockTemplateList,
+                            "filterParameterList" => array('firstLastClass' => $firstLastClass)
+                        )
+                    )
                 );
             }
             if ($displayToolbar && ($tmpDisplayToobar === false ) && ($context->getViewMode() == Context::VIEW_MODE_EDIT)) {

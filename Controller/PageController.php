@@ -11,6 +11,7 @@ namespace Kitpages\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Kitpages\CmsBundle\Entity\Page;
@@ -36,12 +37,14 @@ class PageController extends Controller
     {
         $cmsFileManager = $this->get('kitpages.cms.manager.file');
         $resultingHtml = $this->get('templating.helper.actions')->render(
-            'KitpagesFileBundle:Upload:widget',
-            array(
-                'fieldId' => $fieldId,
-                'itemClass' => $cmsFileManager->getItemClassPage(),
-                'itemId' => $pageId,
-                'parameterList' => $parameterList
+            new ControllerReference(
+                'KitpagesFileBundle:Upload:widget',
+                array(
+                    'fieldId' => $fieldId,
+                    'itemClass' => $cmsFileManager->getItemClassPage(),
+                    'itemId' => $pageId,
+                    'parameterList' => $parameterList
+                )
             )
         );
         return new Response($resultingHtml);
@@ -141,14 +144,15 @@ class PageController extends Controller
 
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = $this->get('templating.helper.actions')->render(
-            "KitpagesCmsBundle:Zone:widget",
-            array(
-                "slug" => $zone->getSlug(),
-                "renderer" =>$layout['zone_list'][$location_in_page]['renderer'],
-                'displayToolbar' => false,
-                'authorizedBlockTemplateList' => $layout['zone_list'][$location_in_page]['authorized_block_template_list']
-            ),
-            array()
+            new ControllerReference(
+                "KitpagesCmsBundle:Zone:widget",
+                array(
+                    "slug" => $zone->getSlug(),
+                    "renderer" =>$layout['zone_list'][$location_in_page]['renderer'],
+                    'displayToolbar' => false,
+                    'authorizedBlockTemplateList' => $layout['zone_list'][$location_in_page]['authorized_block_template_list']
+                )
+            )
         );
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $resultingHtml = $this->toolbarZone($zone, $resultingHtml, $layout['zone_list'][$location_in_page]['authorized_block_template_list']);
