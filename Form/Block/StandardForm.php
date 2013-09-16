@@ -63,7 +63,7 @@ class StandardForm extends AbstractType
 
     public function filterList() {
         return array(
-            'subContent' => 'stripTagText'
+//            'subContent' => 'stripTagText'
         );
     }
 
