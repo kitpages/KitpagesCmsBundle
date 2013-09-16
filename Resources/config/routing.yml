@@ -31,6 +31,10 @@ kitpages_cms_block_publish:
     requirements:
         id: \d+
 
+kitpages_cms_block_upload_widget:
+    pattern:  /block/uploadWidget/{blockId}/{fieldId}/{parameterList}
+    defaults: { _controller: KitpagesCmsBundle:Block:uploadWidget }
+
 kitpages_cms_zoneblock_delete:
     pattern:  /block/zoneBlockDelete/{id}
     defaults: { _controller: KitpagesCmsBundle:Block:zoneBlockDelete }
