@@ -72,9 +72,6 @@ kitpages_cms_admin_view_mode_change:
     defaults: { _controller: KitpagesCmsBundle:Toolbar:viewModeChange }
     requirements:
         id: \d+
-#kitpages_cms_toolbar_widget_toolbar:
-#    pattern:  /toolbar/widgetToolbar
-#    defaults: { _controller: KitpagesCmsBundle:Toolbar:widgetToolbar }
 
 ###
 # Pages
@@ -152,13 +149,6 @@ kitpages_cms_page_view_lang:
     requirements:
         id: \d+
         lang:  en|fr
-#kitpages_cms_page_widget_toolbar:
-#    pattern:  /page/widgetToolbar/{page}
-#    defaults: { _controller: KitpagesCmsBundle:Page:widgetToolbar }
-
-#kitpages_cms_page_widgetZone:
-#    pattern:  /page/widgetZone/{location_in_page}/{page}
-#    defaults: { _controller: KitpagesCmsBundle:Page:widgetZone }
 
 ###
 # Nav
@@ -195,13 +185,6 @@ kitpages_cms_nav_userpreference_tree_scroll:
     pattern:  /nav/userPreference/treeScroll
     defaults: { _controller: KitpagesCmsBundle:Nav:saveUserPreferenceTreeScroll }
 
-#kitpages_cms_nav_widgetBreadcrumb:
-#    pattern:  /nav/widgetBreadcrumb/{slug}/{startDepth}/{page}/{homePageSlug}
-#    defaults: { _controller: KitpagesCmsBundle:Nav:widgetBreadcrumb }
-#
-#kitpages_cms_nav_widget:
-#    pattern:  /nav/widget/{slug}/{startDepth}/{cssClass}/{currentPageSlug}/{endDepth}
-#    defaults: { _controller: KitpagesCmsBundle:Nav:widget }
 
 ###
 # Media

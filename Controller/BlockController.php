@@ -257,7 +257,6 @@ class BlockController extends Controller
 
             $form->bind($request);
 
-//            $formChildren = $form->getChildren();
             $blockData = $block->getData();
 
             $reflector = new \ReflectionObject($formData);
