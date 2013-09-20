@@ -212,7 +212,7 @@ class PageController extends Controller
             )
         );
         $builder->add('parent_id','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('parent_id')
         ));
         $builder->add('layout', 'choice',array(
@@ -220,11 +220,11 @@ class PageController extends Controller
             'required' => true
         ));
         $builder->add('next_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('next_sibling_slug', null)
         ));
         $builder->add('prev_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('prev_sibling_slug', null)
         ));
         // get form
@@ -337,15 +337,15 @@ class PageController extends Controller
             );
         }
         $builder->add('parent_id','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $parent_id
         ));
         $builder->add('next_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('next_sibling_slug', null)
         ));
         $builder->add('prev_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('prev_sibling_slug', null)
         ));
         // get form
@@ -425,15 +425,15 @@ class PageController extends Controller
             )
         );
         $builder->add('parent_id','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('parent_id')
         ));
         $builder->add('next_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('next_sibling_slug', null)
         ));
         $builder->add('prev_sibling_slug','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('prev_sibling_slug', null)
         ));
 
@@ -556,7 +556,7 @@ class PageController extends Controller
             array(
                 'label' => 'Id of the parent page',
                 'attr' => array('class'=>'kit-cms-advanced'),
-                'property_path' => false,
+                'mapped' => false,
                 'data' => $parentId
             )
         );
@@ -694,7 +694,7 @@ class PageController extends Controller
             array(
                 'label' => 'Id of the parent page',
                 'attr' => array('class'=>'kit-cms-advanced'),
-                'property_path' => false,
+                'mapped' => false,
                 'data' => $parentId
             )
         );
@@ -793,7 +793,7 @@ class PageController extends Controller
             array(
                 'label' => 'Id of the parent page',
                 'attr' => array('class'=>'kit-cms-advanced'),
-                'property_path' => false,
+                'mapped' => false,
                 'data' => $parentId
             )
         );

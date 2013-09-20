@@ -121,12 +121,12 @@ class BlockController extends Controller
             )
         );
         $builder->add('zone_id','hidden',array(
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('zone_id')
         ));
         $builder->add('position','hidden',array(
             'required' => false,
-            'property_path' => false,
+            'mapped' => false,
             'data' => $this->get('request')->query->get('position', null)
         ));
         $builder->add('template', 'choice',array(
