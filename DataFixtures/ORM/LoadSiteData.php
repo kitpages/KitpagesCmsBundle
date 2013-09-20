@@ -44,7 +44,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         
         //pages navigation
         $pageNavMainEn = new Page();
-        $pageNavMainEn->setSlug('en_main');
+        $pageNavMainEn->setSlug('en-main');
         $pageNavMainEn->setIsInNavigation(true);
         $pageNavMainEn->setLanguage('en'); 
         $pageNavMainEn->setParent($pageLangEn);
@@ -53,7 +53,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         $em->flush();
         //pages navigation
         $pageNavFooterEn = new Page();
-        $pageNavFooterEn->setSlug('en_footer');
+        $pageNavFooterEn->setSlug('en-footer');
         $pageNavFooterEn->setIsInNavigation(true);
         $pageNavFooterEn->setLanguage('en'); 
         $pageNavFooterEn->setParent($pageLangEn);
@@ -63,7 +63,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
                 
         //page home
         $pageHomeEn = new Page();
-        $pageHomeEn->setSlug('en_home');
+        $pageHomeEn->setSlug('en-home');
         $pageHomeEn->setTitle('home en');
         $pageHomeEn->setMenuTitle('home');
         $pageHomeEn->setIsInNavigation(true);
@@ -86,7 +86,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         
         //pages navigation
         $pageNavMainFr = new Page();
-        $pageNavMainFr->setSlug('fr_main');
+        $pageNavMainFr->setSlug('fr-main');
         $pageNavMainFr->setIsInNavigation(true);
         $pageNavMainFr->setLanguage('fr'); 
         $pageNavMainFr->setParent($pageLangFr);
@@ -95,7 +95,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
         $em->flush();
         //pages navigation
         $pageNavFooterFr = new Page();
-        $pageNavFooterFr->setSlug('fr_footer');
+        $pageNavFooterFr->setSlug('fr-footer');
         $pageNavFooterFr->setIsInNavigation(true);
         $pageNavFooterFr->setLanguage('fr'); 
         $pageNavFooterFr->setParent($pageLangFr);
@@ -105,7 +105,7 @@ class LoadSiteData implements FixtureInterface, ContainerAwareInterface
                 
         //page home
         $pageHomeFr = new Page();
-        $pageHomeFr->setSlug('fr_home');
+        $pageHomeFr->setSlug('fr-home');
         $pageHomeFr->setTitle('home fr');
         $pageHomeFr->setMenuTitle('home');
         $pageHomeFr->setIsInNavigation(true);
