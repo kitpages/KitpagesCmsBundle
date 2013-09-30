@@ -15,7 +15,7 @@
         <parameter key="kitpages_cms.cms.cmsManager">Kitpages\CmsBundle\Model\CmsManager</parameter>
         <parameter key="kitpages_cms.cms.fileManager">Kitpages\CmsBundle\Model\CmsFileManager</parameter>
         <parameter key="kitpages_cms.doctrineListener.class">Kitpages\CmsBundle\EventListener\DoctrineListener</parameter>
-        <parameter key="kitpages_cms.page.default_layout">::base.html.twig</parameter>
+        <parameter key="kitpages_cms.page.default_twig">::base.html.twig</parameter>
         <parameter key="kitpages_cms.cms.target_parameter">cms_target</parameter>
         <parameter key="kitpages_cms.validator.generic.class">Kitpages\CmsBundle\Validator\GenericValidator</parameter>
     </parameters>

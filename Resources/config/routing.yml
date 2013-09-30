@@ -19,6 +19,12 @@ kitpages_cms_block_edit:
     requirements:
         id: \d+
 
+kitpages_cms_block_delete_published:
+    pattern:  /block/deletePublished/{slug}
+    defaults: { _controller: KitpagesCmsBundle:Block:deletePublished }
+    requirements:
+        slug: \w+
+
 kitpages_cms_block_delete:
     pattern:  /block/delete/{id}
     defaults: { _controller: KitpagesCmsBundle:Block:delete }

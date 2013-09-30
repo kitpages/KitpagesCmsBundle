@@ -194,6 +194,25 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
+    public function deletePublishedAction($slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
+
+        $blockManager = $this->get('kitpages.cms.manager.block');
+        foreach($blockPublishedList as $blockPublished) {
+            $blockManager->deletePublished($blockPublished);
+        }
+
+        $this->get('session')->getFlashBag()->add('notice', 'Block published');
+
+        $target = $this->getRequest()->query->get('kitpages_target');
+        if ($target) {
+            return $this->redirect($target);
+        }
+        return Response(null);
+    }
+
     public function editAction(Block $block)
     {
         $em = $this->getDoctrine()->getManager();
@@ -327,6 +346,19 @@ class BlockController extends Controller
             'class' => ($block->getIsPublished() == '1')?'kit-cms-advanced':'',
             'icon' => 'icon/publish.png'
         );
+        $dataRenderer['actionList'][] = array(
+            'id' => '',
+            'label' => 'delete',
+            'url' => $this->get('router')->generate(
+                'kitpages_cms_block_delete',
+                array(
+                    'id' => $block->getId(),
+                    'kitpages_target' => $_SERVER['REQUEST_URI']
+                )
+            ),
+            'icon' => 'icon/delete.png',
+            'class' => 'kit-cms-delete-button'
+        );
         $dataRenderer['isPublished'] = $block->getIsPublished();
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Block:toolbar.html.twig', $dataRenderer
@@ -350,18 +382,33 @@ class BlockController extends Controller
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
             $block = $em->getRepository('KitpagesCmsBundle:Block')->findOneBy(array('slug' => $slug));
             if ($block == null) {
-                return new Response(
-                    'Please '.
+
+                $responseHtml = 'Please '.
                     '<a href="'.
                     $this->generateUrl(
                         "kitpages_cms_block_create",
                         array(
                             "kitpages_target"=> $_SERVER["REQUEST_URI"],
-                            "kitpagesBlockSlugDefault" => $slug
+                            "kitpagesBlockSlugDefault" => $slug,
+                            "authorized_block_template_list" => $authorizedBlockTemplateList
                         )
                     ).
-                    '">create a block</a> with the slug "'. $slug.'"'
-                );
+                    '">create a block</a> with the slug "'. $slug.'"';
+
+                $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
+                if($blockPublishList != null) {
+                    $responseHtml .= 'Block deleted but no published '.
+                        '<a href="'.
+                        $this->generateUrl(
+                            "kitpages_cms_block_delete_published",
+                            array(
+                                "kitpages_target"=> $_SERVER["REQUEST_URI"],
+                                "kitpagesBlockSlug" => $slug
+                            )
+                        ).
+                        '"><img src="'.$this->container->get('templating.helper.assets')->getUrl("bundles/kitpagescms/icon/publish.png").'"> </a> with the slug "'. $slug.'"';
+                }
+                return new Response($responseHtml);
             }
 
             if ($block->getBlockType() == Block::BLOCK_TYPE_EDITO) {
