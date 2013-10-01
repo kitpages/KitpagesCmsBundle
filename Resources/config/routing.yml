@@ -20,10 +20,10 @@ kitpages_cms_block_edit:
         id: \d+
 
 kitpages_cms_block_delete_published:
-    pattern:  /block/deletePublished/{slug}
+    pattern:  /block/deletePublished/{kitpagesBlockSlug}
     defaults: { _controller: KitpagesCmsBundle:Block:deletePublished }
     requirements:
-        slug: \w+
+        kitpagesBlockSlug: ".+"
 
 kitpages_cms_block_delete:
     pattern:  /block/delete/{id}

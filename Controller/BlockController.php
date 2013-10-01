@@ -194,17 +194,17 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
-    public function deletePublishedAction($slug)
+    public function deletePublishedAction($kitpagesBlockSlug)
     {
         $em = $this->getDoctrine()->getManager();
-        $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
-
+        $blockPublishedList =$em->getRepository('KitpagesCmsBundle:BlockPublish')->findBy(array('slug' => $kitpagesBlockSlug));
         $blockManager = $this->get('kitpages.cms.manager.block');
+
         foreach($blockPublishedList as $blockPublished) {
             $blockManager->deletePublished($blockPublished);
         }
-
-        $this->get('session')->getFlashBag()->add('notice', 'Block published');
+        $em->flush();
+        $this->get('session')->getFlashBag()->add('notice', 'Block deleted');
 
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
@@ -397,7 +397,7 @@ class BlockController extends Controller
 
                 $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
                 if($blockPublishList != null) {
-                    $responseHtml .= 'Block deleted but no published '.
+                    $responseHtml .= '<br />Block deleted but no published '.
                         '<a href="'.
                         $this->generateUrl(
                             "kitpages_cms_block_delete_published",
