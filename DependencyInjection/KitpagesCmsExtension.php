@@ -50,6 +50,25 @@ class KitpagesCmsExtension extends Extension
         $this->remapParameters($config, $container, array(
             'target_parameter'  => 'kitpages_cms.target_parameter'
         ));
+
+        foreach($config['block']['template']['template_list'] as $keyTemplate => $template) {
+            if (!isset($template['class']) && !isset($template['service'])) {
+                throw new \Exception(sprintf('Error configuration template Block "%s", class or service parameter require', $keyTemplate));
+            }
+            if (isset($template['class']) && isset($template['service'])) {
+                throw new \Exception(sprintf('Error configuration template Block "%s", class or service parameter require, but not both', $keyTemplate));
+            }
+        }
+
+        foreach($config['page']['layout_list'] as $keyLayout => $layout) {
+            if (!isset($layout['data_form_class']) && !isset($layout['data_form_service'])) {
+                throw new \Exception(sprintf('Error configuration layout Page "%s", data_form_class or data_form_service parameter require', $keyLayout));
+            }
+            if (isset($layout['data_form_class']) && isset($layout['data_form_service'])) {
+                throw new \Exception(sprintf('Error configuration layout Page "%s", data_form_class or data_form_service parameter require, but not both', $keyLayout));
+            }
+        }
+
     }
 
     public function getAlias()
@@ -102,5 +121,18 @@ class KitpagesCmsExtension extends Extension
             }
         }
     }
+
+    /**
+     *
+     * @param array            $config
+     * @param ContainerBuilder $container
+     * @param array            $namespaces
+     * @return void
+     */
+    protected function remapParametersNamespacesRequire(array $config, ContainerBuilder $container, array $namespaces)
+    {
+
+    }
+
 
 }

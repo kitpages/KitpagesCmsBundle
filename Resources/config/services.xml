@@ -18,11 +18,29 @@
         <parameter key="kitpages_cms.page.default_twig">::base.html.twig</parameter>
         <parameter key="kitpages_cms.cms.target_parameter">cms_target</parameter>
         <parameter key="kitpages_cms.validator.generic.class">Kitpages\CmsBundle\Validator\GenericValidator</parameter>
+        <parameter key="kitpages_cms.formType.createBlock">Kitpages\CmsBundle\Form\Type\CreateBlockType</parameter>
+        <parameter key="kitpages_cms.formHandler.createBlock">Kitpages\CmsBundle\Form\Handler\CreateBlockHandler</parameter>
+        <parameter key="kitpages_cms.formType.editBlock">Kitpages\CmsBundle\Form\Type\EditBlockType</parameter>
+        <parameter key="kitpages_cms.formHandler.editBlock">Kitpages\CmsBundle\Form\Handler\EditBlockHandler</parameter>
+        <parameter key="kitpages_cms.formType.createPage">Kitpages\CmsBundle\Form\Type\CreatePageType</parameter>
+        <parameter key="kitpages_cms.formHandler.createPage">Kitpages\CmsBundle\Form\Handler\CreatePageHandler</parameter>
+        <parameter key="kitpages_cms.formType.createPageTechnical">Kitpages\CmsBundle\Form\Type\CreatePageTechnicalType</parameter>
+        <parameter key="kitpages_cms.formHandler.createPageTechnical">Kitpages\CmsBundle\Form\Handler\CreatePageTechnicalHandler</parameter>
+        <parameter key="kitpages_cms.formType.createPageLink">Kitpages\CmsBundle\Form\Type\CreatePageLinkType</parameter>
+        <parameter key="kitpages_cms.formHandler.createPageLink">Kitpages\CmsBundle\Form\Handler\CreatePageLinkHandler</parameter>
+        <parameter key="kitpages_cms.formType.editPage">Kitpages\CmsBundle\Form\Type\EditPageType</parameter>
+        <parameter key="kitpages_cms.formHandler.editPage">Kitpages\CmsBundle\Form\Handler\EditPageHandler</parameter>
+        <parameter key="kitpages_cms.formType.editPageTechnical">Kitpages\CmsBundle\Form\Type\EditPageTechnicalType</parameter>
+        <parameter key="kitpages_cms.formHandler.editPageTechnical">Kitpages\CmsBundle\Form\Handler\EditPageTechnicalHandler</parameter>
+        <parameter key="kitpages_cms.formType.editPageLink">Kitpages\CmsBundle\Form\Type\EditPageLinkType</parameter>
+        <parameter key="kitpages_cms.formHandler.editPageLink">Kitpages\CmsBundle\Form\Handler\EditPageLinkHandler</parameter>
+        <parameter key="kitpages_cms.formType.createZone">Kitpages\CmsBundle\Form\Type\CreateZoneType</parameter>
+        <parameter key="kitpages_cms.formHandler.createZone">Kitpages\CmsBundle\Form\Handler\CreateZoneHandler</parameter>
     </parameters>
 
     <services>
         <service id="kitpages.cms.controller.context" class="%kitpages_cms.cms.context%">
-            <argument type="service" id="session"/>
+            <argument type="service" id="session" />
         </service>
         <service id="kitpages.cms.manager.file" class="%kitpages_cms.cms.fileManager%">
             <argument type="service" id="doctrine"/>
@@ -103,6 +121,81 @@
         <service id="kitpages_cms.twig.extension.date" class="Kitpages\CmsBundle\Twig\Extension\DateExtension">
             <tag name="twig.extension" />
         </service>
+
+        <!-- FormHandler -->
+        <service id="kitpages_cms.formHandler.createZone" class="%kitpages_cms.formHandler.createZone%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+        </service>
+        <service id="kitpages_cms.formHandler.createBlock" class="%kitpages_cms.formHandler.createBlock%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+        </service>
+        <service id="kitpages_cms.formHandler.editBlock" class="%kitpages_cms.formHandler.editBlock%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="kitpages.cms.manager.block"/>
+        </service>
+        <service id="kitpages_cms.formHandler.createPage" class="%kitpages_cms.formHandler.createPage%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="kitpages.cms.manager.page"/>
+            <argument>%kitpages_cms.page.layout_list%</argument>
+        </service>
+        <service id="kitpages_cms.formHandler.createPageTechnical" class="%kitpages_cms.formHandler.createPageTechnical%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="kitpages.cms.manager.page"/>
+        </service>
+        <service id="kitpages_cms.formHandler.createPageLink" class="%kitpages_cms.formHandler.createPageLink%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="kitpages.cms.manager.page"/>
+        </service>
+        <service id="kitpages_cms.formHandler.editPage" class="%kitpages_cms.formHandler.editPage%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="validator"/>
+            <argument type="service" id="kitpages.cms.manager.page"/>
+        </service>
+        <service id="kitpages_cms.formHandler.editPageTechnical" class="%kitpages_cms.formHandler.editPageTechnical%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+        </service>
+        <service id="kitpages_cms.formHandler.editPageLink" class="%kitpages_cms.formHandler.editPageLink%" scope="request" >
+            <argument type="service" id="request" />
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <!-- FormType -->
+        <service id="kitpages_cms.formType.createZone" class="%kitpages_cms.formType.createZone%">
+            <tag name="form.type" alias="kitpagesCmsCreateZone" />
+        </service>
+        <service id="kitpages_cms.formType.createBlock" class="%kitpages_cms.formType.createBlock%">
+            <tag name="form.type" alias="kitpagesCmsCreateBlock" />
+        </service>
+        <service id="kitpages_cms.formType.editBlock" class="%kitpages_cms.formType.editBlock%">
+            <tag name="form.type" alias="kitpagesCmsEditBlock" />
+        </service>
+        <service id="kitpages_cms.formType.createPage" class="%kitpages_cms.formType.createPage%">
+            <tag name="form.type" alias="kitpagesCmsCreatePage" />
+        </service>
+        <service id="kitpages_cms.formType.createPageTechnical" class="%kitpages_cms.formType.createPageTechnical%">
+            <tag name="form.type" alias="kitpagesCmsCreatePageTechnical" />
+        </service>
+        <service id="kitpages_cms.formType.createPageLink" class="%kitpages_cms.formType.createPageLink%">
+            <tag name="form.type" alias="kitpagesCmsCreatePageLink" />
+        </service>
+        <service id="kitpages_cms.formType.editPage" class="%kitpages_cms.formType.editPage%">
+            <tag name="form.type" alias="kitpagesCmsEditPage" />
+        </service>
+        <service id="kitpages_cms.formType.editPageTechnical" class="%kitpages_cms.formType.editPageTechnical%">
+            <tag name="form.type" alias="kitpagesCmsEditPageTechnical" />
+        </service>
+        <service id="kitpages_cms.formType.editPageLink" class="%kitpages_cms.formType.editPageLink%">
+            <tag name="form.type" alias="kitpagesCmsEditPageLink" />
+        </service>
+
 
 
         <!-- Unique Validator Service -->

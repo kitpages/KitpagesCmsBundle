@@ -269,6 +269,32 @@ class PageManager
         $em->flush();
     }
 
+    public function createNewPage(Page $page, $dataForm)
+    {
+        $page->setIsPublished(false);
+        $em = $this->doctrine->getManager();
+
+        $parent_id = $dataForm['parent_id'];
+        $repositoryPage = $em->getRepository('KitpagesCmsBundle:Page');
+        if (!empty($parent_id)) {
+            $pageParent = $repositoryPage->find($parent_id);
+            $page->setLanguage($pageParent->getLanguage());
+            $page->setParent($pageParent);
+        }
+        $nextSiblingSlug = $dataForm['next_sibling_slug'];
+        $prevSiblingSlug = $dataForm['prev_sibling_slug'];
+        if($nextSiblingSlug != null) {
+            $sibling = $repositoryPage->findOneBySlug($nextSiblingSlug);
+            $repositoryPage->persistAsNextSiblingOf($page, $sibling);
+        }elseif($prevSiblingSlug != null){
+            $sibling = $repositoryPage->findOneBySlug($prevSiblingSlug);
+            $repositoryPage->persistAsPrevSiblingOf($page, $sibling);
+        }
+        $em->persist($page);
+
+        $em->flush();
+    }
+
     ////
     // event listener
     ////

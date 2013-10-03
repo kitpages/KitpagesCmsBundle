@@ -33,44 +33,20 @@ class ZoneController extends Controller
         $request = $this->get('request');
         $zone = new Zone();
         $zone->setSlug($request->query->get('kitpagesZoneSlugDefault', null));
-        // build basic form
-        $builder = $this->createFormBuilder($zone);
-        $builder->add('slug', 'text');
-        $builder->add(
-            'canonicalUrl',
-            'text',
-            array(
-                'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced'),
-            )
-        );
-        $builder->add(
-            'title',
-            'text',
-            array(
-                'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced'),
-            )
-        );
-        // get form
-        $form = $builder->getForm();
 
+        $form = $this->createForm('kitpagesCmsCreateZone', $zone);
 
-        if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+        $formHandler = $this->container->get('kitpages_cms.formHandler.createZone');
 
-            if ($form->isValid()) {
-                $zone->setIsPublished(false);
-                $em = $this->get('doctrine')->getManager();
-                $em->persist($zone);
-                $em->flush();
-                $target = $request->query->get('kitpages_target', null);
-                if ($target) {
-                    return $this->redirect($target);
-                }
-                return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
+        $process = $formHandler->process($form, $zone);
+        if ($process['result'] === true) {
+            $target = $request->query->get('kitpages_target', null);
+            if ($target) {
+                return $this->redirect($target);
             }
+            return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
         }
+
         return $this->render('KitpagesCmsBundle:Zone:create.html.twig', array(
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)

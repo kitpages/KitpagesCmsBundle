@@ -5,7 +5,7 @@
 
 <h1>Create Zone</h1>
 
-<form action="{{ path('kitpages_cms_zone_create', { 'kitpages_target': kitpages_target }) }}" method="post" {{ form_enctype(form) }}>
+<form class="kit-cms-form" action="{{ path('kitpages_cms_zone_create', { 'kitpages_target': kitpages_target }) }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
     <input type="submit" />
