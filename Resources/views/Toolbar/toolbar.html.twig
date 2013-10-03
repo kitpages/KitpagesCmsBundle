@@ -9,9 +9,22 @@
                 Publish Navigation
             </a>
         </li>
+        <li class="kit-cms-advanced">
+            <a class="kit-cms-modal-open kit-cms-publish-all" href="{{ path('kitpages_cms_nav_publish_all', { 'kitpages_target' : path('kitpages_cms_nav_tree') }) }}">
+                <img src="{{asset("bundles/kitpagescms/icon/publish.png")}}" height="14" /> Publish all pages and navigation
+            </a>
+        </li>
     </ul>
     <a class="kit-cms-advanced-mode-button">Advanced mode off</a>
     <script>
+        $('.kit-cms-publish-all').click(function(e) {
+            var response = confirm("Do you confirm you want to publish all pages and the navigation ?");
+            if (!response) {
+                e.preventDefault();
+                $('.kit-cms-modal-open > a').kitCmsModal("close");
+                $('a.kit-cms-modal-open').kitCmsModal("close");
+            }
+        });
         $(".kit-cms-advanced-mode-button").click(function() {
             var el = $(this);
             $(".kit-cms-advanced").toggle();
