@@ -151,7 +151,7 @@ kitpages_cms_page_undelete:
 
 kitpages_cms_page_view_lang:
     pattern:  /{lang}/cms/{id}/{urlTitle}
-    defaults: { _controller: KitpagesCmsBundle:Page:view, lang: fr }
+    defaults: { _controller: KitpagesCmsBundle:Page:view, lang: fr, urlTitle: null }
     requirements:
         id: \d+
         lang:  en|fr
