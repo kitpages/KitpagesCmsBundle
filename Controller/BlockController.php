@@ -48,7 +48,7 @@ class BlockController extends Controller
         );
 
         // add a help message
-        $fieldName = str_replace('form_data_root_media_', '', $fieldId);
+        $fieldName = str_replace('kitpagesCmsEditBlock_data_root_media_', '', $fieldId);
         if (isset($parameterList['multi']) && $parameterList['multi'] ) {
             $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.NUM.default.url]], you must replace NUM by the correct number File</div>';
         } else {
