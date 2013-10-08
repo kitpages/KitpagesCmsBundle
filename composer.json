@@ -21,7 +21,7 @@
         "symfony/validator": "~2.3",
         "stof/doctrine-extensions-bundle" : "1.1.*",
         "kitpages/util-bundle": "~3.0",
-        "kitpages/file-bundle": "dev-master",
+        "kitpages/file-bundle": "~3.0",
         "kitpages/simple-cache-bundle": "~3.0"
     },
     "require-dev": {
