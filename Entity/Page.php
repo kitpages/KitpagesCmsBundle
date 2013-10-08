@@ -762,31 +762,6 @@ class Page
     }
 
     /**
-     * @var boolean $isActive
-     */
-    private $isActive;
-
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-    /**
      * @var string $forcedUrl
      */
     private $forcedUrl;
