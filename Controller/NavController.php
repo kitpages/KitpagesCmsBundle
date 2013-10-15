@@ -180,7 +180,7 @@ class NavController extends Controller
             $myThis = $this;
             $response = $cacheManager->get(
                 'kit-cms-navigation-'.$context->getViewMode()."-$slug-$currentPageSlug-$filterString-$startDepth-$endDepth",
-                function() use ($myThis, $em, $slug, $cssClass, $currentPageSlug, $startDepth, $endDepth, $filterByCurrentPage ) {
+                function() use ($myThis, $em, $slug, $cssClass, $currentPageSlug, $startDepth, $endDepth, $filterByCurrentPage, $renderer) {
                     $em = $myThis->getDoctrine()->getManager();
                     $context = $myThis->get('kitpages.cms.controller.context');
                     $resultingHtml = '';
