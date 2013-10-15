@@ -136,7 +136,7 @@ class NavController extends Controller
         return  new Response('');
     }
 
-    public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true) {
+    public function widgetAction($slug, $cssClass, $currentPageSlug, $startDepth = 1, $endDepth = 10, $filterByCurrentPage = true, $renderer = 'KitpagesCmsBundle:Nav:navigation.html.twig') {
         $em = $this->getDoctrine()->getManager();
         $context = $this->get('kitpages.cms.controller.context');
         $resultingHtml = '';
@@ -213,7 +213,7 @@ class NavController extends Controller
                         }
                     }
                     return $myThis->render(
-                        'KitpagesCmsBundle:Nav:navigation.html.twig',
+                        $renderer,
                         array(
                             'currentPageSlug' => $currentPageSlug,
                             'selectPageSlugList' => $selectPageSlugList,
@@ -229,7 +229,7 @@ class NavController extends Controller
             return $response;
         }
         return $this->render(
-            'KitpagesCmsBundle:Nav:navigation.html.twig',
+            $renderer,
             array(
                 'currentPageSlug' => $currentPageSlug,
                 'selectPageSlugList' => $selectPageSlugList,
