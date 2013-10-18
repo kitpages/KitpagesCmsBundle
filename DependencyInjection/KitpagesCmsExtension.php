@@ -50,6 +50,9 @@ class KitpagesCmsExtension extends Extension
         $this->remapParameters($config, $container, array(
             'target_parameter'  => 'kitpages_cms.target_parameter'
         ));
+        $this->remapParameters($config, $container, array(
+            'view_mode_default'  => 'kitpages_cms.view_mode_default'
+        ));
 
         foreach($config['block']['template']['template_list'] as $keyTemplate => $template) {
             if (!isset($template['class']) && !isset($template['service'])) {

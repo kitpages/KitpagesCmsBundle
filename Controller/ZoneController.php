@@ -53,7 +53,7 @@ class ZoneController extends Controller
         ));
     }
 
-    public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null) {
+    public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null, $title = 'zone') {
         $actionList = array();
         $actionList[] = array(
             'id' => '',
@@ -87,7 +87,8 @@ class ZoneController extends Controller
             'kitCmsZoneSlug' => $zone->getSlug(),
             'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
-            'htmlBlock' => $htmlBlock
+            'htmlBlock' => $htmlBlock,
+            'title' => $title
         );
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer
@@ -179,7 +180,8 @@ class ZoneController extends Controller
         $blockDisplayCount = null,
         $paginator = null,
         $reverseOrder = false,
-        $authorizedBlockTemplateList = null
+        $authorizedBlockTemplateList = null,
+        $title='zone'
     )
     {
         $em = $this->getDoctrine()->getManager();
@@ -282,7 +284,7 @@ class ZoneController extends Controller
                 );
             }
             if ($displayToolbar && ($tmpDisplayToobar === false ) && ($context->getViewMode() == Context::VIEW_MODE_EDIT)) {
-                $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList);
+                $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList, $title);
             }
 
         }

@@ -41,6 +41,7 @@
     <services>
         <service id="kitpages.cms.controller.context" class="%kitpages_cms.cms.context%">
             <argument type="service" id="session" />
+            <argument>%kitpages_cms.view_mode_default%</argument>
         </service>
         <service id="kitpages.cms.manager.file" class="%kitpages_cms.cms.fileManager%">
             <argument type="service" id="doctrine"/>

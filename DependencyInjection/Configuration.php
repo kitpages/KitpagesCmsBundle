@@ -233,6 +233,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('target_parameter')
                     ->defaultValue(null)
                 ->end()
+                ->scalarNode('view_mode_default')
+                    ->defaultValue(null)
+                ->end()
             ->end();
     }
 }

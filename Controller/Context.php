@@ -10,9 +10,10 @@ class Context
     const VIEW_MODE_EDIT = 3;  
     private $_session = null;
     
-    public function __construct(Session $session)
+    public function __construct(Session $session, $viewModeDefault)
     {
         $this->_session = $session;
+        $this->view_mode_default = $viewModeDefault;
     }
 
     /**
@@ -26,8 +27,8 @@ class Context
     {
         $viewMode = $this->getSession()->get('kitpages_cms_context_view_mode');
         if (!$viewMode) {
-            $this->getSession()->set('kitpages_cms_context_view_mode', self::VIEW_MODE_PROD);
-            $viewMode = self::VIEW_MODE_PROD;
+            $viewMode = constant("self::$this->view_mode_default");
+            $this->getSession()->set('kitpages_cms_context_view_mode', $viewMode);
         }
         return $viewMode;
     }

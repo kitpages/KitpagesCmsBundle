@@ -127,7 +127,7 @@ class PageController extends Controller
         );
     }
 
-    public function widgetZoneAction($location_in_page, Page $page) {
+    public function widgetZoneAction($location_in_page, Page $page, $title = 'zone') {
         $em = $this->getDoctrine()->getManager();
         $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findByPageAndLocation($page, $location_in_page);
         $layout = $this->container->getParameter('kitpages_cms.page.layout_list.'.$page->getLayout());
@@ -156,7 +156,7 @@ class PageController extends Controller
             )
         );
         if ($context->getViewMode() == Context::VIEW_MODE_EDIT) {
-            $resultingHtml = $this->toolbarZone($zone, $resultingHtml, $layout['zone_list'][$location_in_page]['authorized_block_template_list']);
+            $resultingHtml = $this->toolbarZone($zone, $resultingHtml, $layout['zone_list'][$location_in_page]['authorized_block_template_list'], $title);
         }
         return new Response($resultingHtml);
     }
@@ -468,7 +468,7 @@ class PageController extends Controller
         ));
     }
 
-    public function toolbarZone(Zone $zone, $htmlZone, $authorizedBlockTemplateList = null) {
+    public function toolbarZone(Zone $zone, $htmlZone, $authorizedBlockTemplateList = null, $title = 'zone') {
         $actionList[] = array(
             'id' => '',
             'label' => 'addBlock',
@@ -488,7 +488,8 @@ class PageController extends Controller
             'kitCmsZoneSlug' => $zone->getSlug(),
             'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
-            'htmlBlock' => $htmlZone
+            'htmlBlock' => $htmlZone,
+            'title' => $title
         );
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer

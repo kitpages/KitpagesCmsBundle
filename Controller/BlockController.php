@@ -54,6 +54,11 @@ class BlockController extends Controller
         } else {
             $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.0.default.url]]</div>';
         }
+
+        if(preg_match("/^form_.*$/", $fieldName)) {
+            $resultingHtml .= '<div style="color:red">Attention votre fieldId est peut être faux !!</div>';
+        }
+
         return new Response($resultingHtml);
     }
 
