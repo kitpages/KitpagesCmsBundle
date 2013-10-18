@@ -234,7 +234,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(null)
                 ->end()
                 ->scalarNode('view_mode_default')
-                    ->defaultValue(null)
+                    ->defaultValue('VIEW_MODE_PROD')
                 ->end()
             ->end();
     }
