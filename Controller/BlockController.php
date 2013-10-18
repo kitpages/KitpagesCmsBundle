@@ -9,6 +9,8 @@
 
 namespace Kitpages\CmsBundle\Controller;
 
+use Kitpages\CmsBundle\Event\BlockEvent;
+use Kitpages\CmsBundle\KitpagesCmsEvents;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,6 +105,8 @@ class BlockController extends Controller
             }
             $em->flush();
             $this->get('session')->getFlashBag()->add('notice', 'Block created');
+            $event = new BlockEvent($block);
+            $this->get('event_dispatcher')->dispatch(KitpagesCmsEvents::afterBlockCreate, $event);
             return $this->redirect(
                 $this->generateUrl(
                     'kitpages_cms_block_edit',
@@ -123,6 +127,8 @@ class BlockController extends Controller
         $process = $formHandler->process($form, $block);
         if ($process['result'] === true) {
             $this->get('session')->getFlashBag()->add('notice', $process['msg']);
+            $event = new BlockEvent($block);
+            $this->get('event_dispatcher')->dispatch(KitpagesCmsEvents::afterBlockCreate, $event);
             return $this->redirect(
                 $this->generateUrl(
                     'kitpages_cms_block_edit',

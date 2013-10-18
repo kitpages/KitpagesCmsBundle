@@ -6,6 +6,7 @@ final class KitpagesCmsEvents
     ////
     // block events
     ////
+    const afterBlockCreate = 'kitpages.cms.block.after.create';
     const afterBlockModify = 'kitpages.cms.block.after.modify';
 
     const onBlockPublish = 'kitpages.cms.block.on.publish';
