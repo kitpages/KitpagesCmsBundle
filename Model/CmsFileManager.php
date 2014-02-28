@@ -3,6 +3,7 @@
 namespace Kitpages\CmsBundle\Model;
 
 // external service
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -24,7 +25,7 @@ class CmsFileManager {
     protected $fileManager = null;
     protected $itemClassBlock = null;
     
-    public function __construct(Registry $doctrine, EventDispatcher $dispatcher, FileManager $fileManager) {
+    public function __construct(Registry $doctrine, EventDispatcherInterface $dispatcher, FileManager $fileManager) {
         $this->dispatcher = $dispatcher;
         $this->doctrine = $doctrine;
         $this->fileManager = $fileManager;

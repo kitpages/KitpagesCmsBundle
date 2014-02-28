@@ -13,6 +13,7 @@ use Kitpages\CmsBundle\Event\PagePublishEvent;
 use Kitpages\CmsBundle\KitpagesCmsEvents;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
@@ -36,7 +37,7 @@ class PageManager
 
     public function __construct(
         Registry $doctrine,
-        EventDispatcher $dispatcher,
+        EventDispatcherInterface $dispatcher,
         ZoneManager $zoneManager,
         CmsFileManager $cmsFileManager,
         LoggerInterface $logger

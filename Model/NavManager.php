@@ -10,6 +10,7 @@ use Kitpages\CmsBundle\KitpagesCmsEvents;
 use Kitpages\SimpleCacheBundle\Model\CacheManager;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
@@ -32,7 +33,7 @@ class NavManager
 
     public function __construct(
         Registry $doctrine,
-        EventDispatcher $dispatcher,
+        EventDispatcherInterface $dispatcher,
         PageManager $pageManager,
         CacheManager $cacheManager,
         LoggerInterface $logger

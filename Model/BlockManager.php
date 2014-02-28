@@ -11,6 +11,7 @@ use Kitpages\CmsBundle\Renderer\TwigRenderer;
 use Kitpages\UtilBundle\Service\Util;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
@@ -34,7 +35,7 @@ class BlockManager
 
     public function __construct(
         Registry $doctrine,
-        EventDispatcher $dispatcher,
+        EventDispatcherInterface $dispatcher,
         $templating,
         CmsFileManager $cmsFileManager,
         Util $util
