@@ -9,6 +9,8 @@
 
 namespace Kitpages\CmsBundle\Controller;
 
+use Kitpages\CmsBundle\Event\BlockEvent;
+use Kitpages\CmsBundle\KitpagesCmsEvents;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,19 +50,23 @@ class BlockController extends Controller
         );
 
         // add a help message
-        $fieldName = str_replace('form_data_root_media_', '', $fieldId);
+        $fieldName = str_replace('kitpagesCmsEditBlock_data_root_media_', '', $fieldId);
         if (isset($parameterList['multi']) && $parameterList['multi'] ) {
             $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.NUM.default.url]], you must replace NUM by the correct number File</div>';
         } else {
             $resultingHtml .= '<div class="kit-cms-form-help">Note : To insert this media in the editor, use [[cms:media:'.$fieldName.'.0.default.url]]</div>';
         }
+
+        if(preg_match("/^form_.*$/", $fieldName)) {
+            $resultingHtml .= '<div style="color:red">Attention votre fieldId est peut être faux !!</div>';
+        }
+
         return new Response($resultingHtml);
     }
 
-    public function createAction()
+    public function createAction(Request $request)
     {
         $block = new Block();
-        $request = $this->getRequest();
 
         $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
 
@@ -99,6 +105,8 @@ class BlockController extends Controller
             }
             $em->flush();
             $this->get('session')->getFlashBag()->add('notice', 'Block created');
+            $event = new BlockEvent($block);
+            $this->get('event_dispatcher')->dispatch(KitpagesCmsEvents::afterBlockCreate, $event);
             return $this->redirect(
                 $this->generateUrl(
                     'kitpages_cms_block_edit',
@@ -110,70 +118,28 @@ class BlockController extends Controller
             );
         }
 
-        // build basic form
-        $builder = $this->createFormBuilder($block);
-        $builder->add(
-            'slug',
-            'text',
-            array(
-                'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced'),
-            )
-        );
-        $builder->add('zone_id','hidden',array(
-            'mapped' => false,
-            'data' => $this->get('request')->query->get('zone_id')
-        ));
-        $builder->add('position','hidden',array(
-            'required' => false,
-            'mapped' => false,
-            'data' => $this->get('request')->query->get('position', null)
-        ));
-        $builder->add('template', 'choice',array(
-            'choices' => $selectTemplateList,
-            'required' => true
-        ));
-        // get form
-        $form = $builder->getForm();
+        $form = $this->createForm('kitpagesCmsCreateBlock', $block, array('templateList' => $selectTemplateList));
+        $form->get('zone_id')->setData($request->query->get('zone_id'));
+        $form->get('position')->setData($request->query->get('position', null));
 
-        $request = $this->get('request');
-        if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+        $formHandler = $this->container->get('kitpages_cms.formHandler.createBlock');
 
-            if ($form->isValid()) {
-                $block->setBlockType('edito');
-                $block->setIsPublished(false);
-                $em = $this->get('doctrine')->getManager();
-                $em->persist($block);
-
-                $dataForm = $request->request->get('form');
-                $zone_id = $dataForm['zone_id'];
-                $position = $dataForm['position'];
-                if ($position == null) {
-                    $position = 0;
-                }
-                if (!empty($zone_id)) {
-                    $zoneBlock = new ZoneBlock();
-                    $zone = $em->getRepository('KitpagesCmsBundle:Zone')->find($zone_id);
-                    $zoneBlock->setZone($zone);
-                    $zoneBlock->setBlock($block);
-                    $em->persist($zoneBlock);
-                    $em->flush();
-                    $zoneBlock->setPosition($position);
-                }
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('notice', 'Block created');
-                return $this->redirect(
-                    $this->generateUrl(
-                        'kitpages_cms_block_edit',
-                        array(
-                            'id' => $block->getId(),
-                            'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
-                        )
+        $process = $formHandler->process($form, $block);
+        if ($process['result'] === true) {
+            $this->get('session')->getFlashBag()->add('notice', $process['msg']);
+            $event = new BlockEvent($block);
+            $this->get('event_dispatcher')->dispatch(KitpagesCmsEvents::afterBlockCreate, $event);
+            return $this->redirect(
+                $this->generateUrl(
+                    'kitpages_cms_block_edit',
+                    array(
+                        'id' => $block->getId(),
+                        'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
                     )
-                );
-            }
+                )
+            );
         }
+
         return $this->render('KitpagesCmsBundle:Block:create.html.twig', array(
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
@@ -194,17 +160,17 @@ class BlockController extends Controller
         return $this->render('KitpagesCmsBundle:Block:publish.html.twig');
     }
 
-    public function deletePublishedAction($slug)
+    public function deletePublishedAction($kitpagesBlockSlug)
     {
         $em = $this->getDoctrine()->getManager();
-        $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
-
+        $blockPublishedList =$em->getRepository('KitpagesCmsBundle:BlockPublish')->findBy(array('slug' => $kitpagesBlockSlug));
         $blockManager = $this->get('kitpages.cms.manager.block');
+
         foreach($blockPublishedList as $blockPublished) {
             $blockManager->deletePublished($blockPublished);
         }
-
-        $this->get('session')->getFlashBag()->add('notice', 'Block published');
+        $em->flush();
+        $this->get('session')->getFlashBag()->add('notice', 'Block deleted');
 
         $target = $this->getRequest()->query->get('kitpages_target');
         if ($target) {
@@ -213,11 +179,9 @@ class BlockController extends Controller
         return Response(null);
     }
 
-    public function editAction(Block $block)
+    public function editAction(Request $request, Block $block)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $request = $this->getRequest();
         $authorizedBlockTemplateList = $request->query->get("authorized_block_template_list", null);
 
         if (!$block->getData()) {
@@ -233,73 +197,33 @@ class BlockController extends Controller
         }
         $twigTemplate = $templateList[$block->getTemplate()]['twig'];
 
-        // build basic form
-        $builder = $this->createFormBuilder($block);
-        $builder->add(
-            'slug',
-            'text',
-            array(
-                'attr' => array('class'=>'kit-cms-advanced'),
-                'error_bubbling' => true
-            )
-        );
-        $builder->add('template', 'choice',array(
-            'attr' => array('class'=>'kit-cms-advanced'),
-            'choices' => $selectTemplateList,
-            'required' => true
-        ));
-
-        $builder->add(
-            'canonicalUrl',
-            'text',
-            array(
-                'attr' => array('class'=>'kit-cms-advanced'),
-                'required' => false
-            )
-        );
-
         // build custom form
-        $className = $templateList[$block->getTemplate()]['class'];
-        $formData = new $className();
-        $builder->add('data', 'collection', array(
-           'type' => $formData,
-        ));
-        // get form
-        $form = $builder->getForm();
+        if (isset($templateList[$block->getTemplate()]['class'])) {
+            $className = $templateList[$block->getTemplate()]['class'];
+            $formData = new $className();
+        } else {
+            $formData = $this->get($templateList[$block->getTemplate()]['service']);
+        }
 
-        // persist form if needed
-        $request = $this->getRequest();
-        if ($request->getMethod() == 'POST') {
-            $blockManager = $this->get('kitpages.cms.manager.block');
+        $form = $this->createForm(
+            'kitpagesCmsEditBlock',
+            $block,
+            array(
+                'templateList' => $selectTemplateList,
+                'formTypeCustom' => $formData
+            )
+        );
 
-            $oldBlockData = $block->getData();
+        $formHandler = $this->container->get('kitpages_cms.formHandler.editBlock');
 
-            $form->bind($request);
-
-            $blockData = $block->getData();
-
-            $reflector = new \ReflectionObject($formData);
-            if ($reflector->hasMethod('filterList')) {
-                foreach($formData->filterList() as $field => $method) {
-                    $blockData['root'][$field] = $blockManager->$method($blockData['root'][$field]);
-                }
+        $process = $formHandler->process($form, $formData, $block);
+        if ($process['result'] === true) {
+            $this->get('session')->getFlashBag()->add('notice', $process['msg']);
+            $target = $request->query->get('kitpages_target', null);
+            if ($target) {
+                return $this->redirect($target);
             }
-            $block->setData($blockData);
-
-            if ($form->isValid()) {
-                $em->flush();
-
-                $blockManager->afterModify($block, $oldBlockData);
-                $this->get('session')->getFlashBag()->add('notice', 'Block modified');
-                $target = $request->query->get('kitpages_target', null);
-                if ($target) {
-                    return $this->redirect($target);
-                }
-                return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
-            } else {
-                $msg = 'Block not saved <br />';
-                $this->get('session')->getFlashBag()->add('error', $msg);
-            }
+            return $this->redirect($this->generateUrl('kitpages_cms_block_edit_success'));
         }
 
         $cmsFileManager = $this->get('kitpages.cms.manager.file');
@@ -397,7 +321,7 @@ class BlockController extends Controller
 
                 $blockPublishList = $em->getRepository('KitpagesCmsBundle:BlockPublish')->findOneBy(array('slug' => $slug));
                 if($blockPublishList != null) {
-                    $responseHtml .= 'Block deleted but no published '.
+                    $responseHtml .= '<br />Block deleted but no published '.
                         '<a href="'.
                         $this->generateUrl(
                             "kitpages_cms_block_delete_published",

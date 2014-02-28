@@ -2,7 +2,7 @@
 <div class="kit-cms-zone">
     <div class="kit-cms-zone-toolbar">
         <ul class="kit-cms-menu">
-            <li>Zone<span class="kit-cms-advanced"> ({{kitCmsZoneSlug}})</span></li>
+            <li>{{ title|default('zone') }}<span class="kit-cms-advanced"> ({{kitCmsZoneSlug}})</span></li>
             {% for action in actionList %}
                 <li class="{{action.class|default()}}" >
                     {% if action.icon is defined %}

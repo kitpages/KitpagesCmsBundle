@@ -33,51 +33,27 @@ class ZoneController extends Controller
         $request = $this->get('request');
         $zone = new Zone();
         $zone->setSlug($request->query->get('kitpagesZoneSlugDefault', null));
-        // build basic form
-        $builder = $this->createFormBuilder($zone);
-        $builder->add('slug', 'text');
-        $builder->add(
-            'canonicalUrl',
-            'text',
-            array(
-                'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced'),
-            )
-        );
-        $builder->add(
-            'title',
-            'text',
-            array(
-                'required' => false,
-                'attr' => array('class'=>'kit-cms-advanced'),
-            )
-        );
-        // get form
-        $form = $builder->getForm();
 
+        $form = $this->createForm('kitpagesCmsCreateZone', $zone);
 
-        if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+        $formHandler = $this->container->get('kitpages_cms.formHandler.createZone');
 
-            if ($form->isValid()) {
-                $zone->setIsPublished(false);
-                $em = $this->get('doctrine')->getManager();
-                $em->persist($zone);
-                $em->flush();
-                $target = $request->query->get('kitpages_target', null);
-                if ($target) {
-                    return $this->redirect($target);
-                }
-                return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
+        $process = $formHandler->process($form, $zone);
+        if ($process['result'] === true) {
+            $target = $request->query->get('kitpages_target', null);
+            if ($target) {
+                return $this->redirect($target);
             }
+            return $this->render('KitpagesCmsBundle:Block:edit-success.html.twig');;
         }
+
         return $this->render('KitpagesCmsBundle:Zone:create.html.twig', array(
             'form' => $form->createView(),
             'kitpages_target' => $this->getRequest()->query->get('kitpages_target', null)
         ));
     }
 
-    public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null) {
+    public function toolbar(Zone $zone, $htmlBlock, $authorizedBlockTemplateList = null, $title = 'zone') {
         $actionList = array();
         $actionList[] = array(
             'id' => '',
@@ -111,7 +87,8 @@ class ZoneController extends Controller
             'kitCmsZoneSlug' => $zone->getSlug(),
             'isPublished' => $zone->getIsPublished(),
             'actionList' => $actionList,
-            'htmlBlock' => $htmlBlock
+            'htmlBlock' => $htmlBlock,
+            'title' => $title
         );
         $resultingHtml = $this->renderView(
             'KitpagesCmsBundle:Zone:toolbar.html.twig', $dataRenderer
@@ -203,7 +180,8 @@ class ZoneController extends Controller
         $blockDisplayCount = null,
         $paginator = null,
         $reverseOrder = false,
-        $authorizedBlockTemplateList = null
+        $authorizedBlockTemplateList = null,
+        $title='zone'
     )
     {
         $em = $this->getDoctrine()->getManager();
@@ -306,7 +284,7 @@ class ZoneController extends Controller
                 );
             }
             if ($displayToolbar && ($tmpDisplayToobar === false ) && ($context->getViewMode() == Context::VIEW_MODE_EDIT)) {
-                $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList);
+                $resultingHtml = $this->toolbar($zone, $resultingHtml, $authorizedBlockTemplateList, $title);
             }
 
         }
