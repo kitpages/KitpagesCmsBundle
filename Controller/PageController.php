@@ -51,7 +51,7 @@ class PageController extends Controller
         return new Response($resultingHtml);
     }
 
-    public function viewAction(Page $page, $lang, $urlTitle)
+    public function viewAction(Page $page, $_locale, $urlTitle)
     {
         $em = $this->getDoctrine()->getManager();
         $context = $this->get('kitpages.cms.controller.context');
@@ -99,7 +99,7 @@ class PageController extends Controller
             );
         }
 
-        if ( ($pageLanguage != $lang) || ($pageUrlTitle != $urlTitle) ) {
+        if ( ($pageLanguage != $_locale) || ($pageUrlTitle != $urlTitle) ) {
             return $this->redirect (
                 $this->generateUrl(
                     'kitpages_cms_page_view_lang',

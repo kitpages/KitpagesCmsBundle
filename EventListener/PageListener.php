@@ -115,7 +115,7 @@ class PageListener {
             'kitpages_cms_page_view_lang',
             array(
                 'id' => $pageId,
-                'lang' => $language,
+                '_locale' => $language,
                 'urlTitle' => $urlTitle
             )
         );
