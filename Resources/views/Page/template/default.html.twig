@@ -1,5 +1,5 @@
 {% extends '::base.html.twig' %}
-{% block body %}
+{% block kitpages_cms_body %}
                 {#{% render 'KitpagesCmsBundle:Nav:widgetBreadcrumb' with {#}
                     {#'slug': kitCmsPageData.language|default(cms.currentLanguage) ~ '-main',#}
                     {#'startDepth':0,#}
@@ -25,7 +25,7 @@
     {{ render(controller('KitpagesCmsBundle:Page:widgetZone', {'location_in_page': 'main', 'page':kitCmsPage} )) }}
 </div>
 <div style="clear:both;"></div>
-{% endblock body %}
+{% endblock kitpages_cms_body %}
 
 {% block siteNavigation %}
     {#{% render 'KitpagesCmsBundle:Nav:widget' with {#}
