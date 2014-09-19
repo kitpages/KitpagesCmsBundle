@@ -19,4 +19,9 @@ class BlockType extends AbstractType
             'data_class' => 'Kitpages\CmsBundle\Entity\Block',
         ));
     }
+
+    public function getName()
+    {
+        return 'kitpagesCmsBlockType';
+    }
 }
