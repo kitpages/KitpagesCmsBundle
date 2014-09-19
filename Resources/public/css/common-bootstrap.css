@@ -1,0 +1,8 @@
+@import url("common.css");
+.kit-cms-toolbar-top > ul > li > a {
+    height: 24px !important;
+}
+
+.kit-cms-toolbar-top > ul > li.kit-cms-selected > a {
+    height: 24px !important;
+}

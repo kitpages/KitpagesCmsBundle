@@ -212,6 +212,9 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('default_twig')
                             ->cannotBeEmpty()
                         ->end()
+                        ->scalarNode('bootstrap')
+                            ->defaultValue(false)
+                        ->end()
                     ->end()
                 ->end()
             ->end();

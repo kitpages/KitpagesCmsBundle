@@ -23,6 +23,7 @@ class CmsManager
     protected $session = null;
     protected $doctrine = null;
     protected $layout = null;
+    protected $cssBootstrap = null;
     protected $defaultLocale = null;
 
     public function __construct(
@@ -30,6 +31,7 @@ class CmsManager
         Registry $doctrine,
         $defaultLocale,
         $defaultLayout,
+        $cssBootstrap,
         LoggerInterface $logger
     )
     {
@@ -37,6 +39,7 @@ class CmsManager
         $this->layout = $defaultLayout;
         $this->doctrine = $doctrine;
         $this->logger = $logger;
+        $this->cssBootstrap = $cssBootstrap;
         $this->defaultLocale = $defaultLocale;
     }
     /**
@@ -97,4 +100,16 @@ class CmsManager
         return $this->session->get('_locale');
     }
 
+    public function getStringCssBootstrap()
+    {
+        if ($this->isCssBootstrap()) {
+            return "-bootstrap";
+        } else {
+            return '';
+        }
+    }
+    public function isCssBootstrap()
+    {
+        return $this->cssBootstrap;
+    }
 }
