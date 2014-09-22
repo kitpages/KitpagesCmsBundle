@@ -68,7 +68,7 @@ class ToolbarController extends Controller
                 if ($pagePublish != null) {
                     $page = $pagePublish->getPage();
                     if ($page != null) {
-                        $pageUrl = $router->generate('kitpages_cms_page_view_lang', array('id'=> $page->getId(), 'urlTitle' => $page->getUrlTitle(), 'lang' => $page->getLanguage()));
+                        $pageUrl = $router->generate('kitpages_cms_page_view_lang', array('id'=> $page->getId(), 'urlTitle' => $page->getUrlTitle(), '_locale' => $page->getLanguage()));
                         $msg = "You do not have published the latest changes.URL of the page has not been published.
                             <a href='".$pageUrl."' >To see your page edition click here</a>";
                     } else {

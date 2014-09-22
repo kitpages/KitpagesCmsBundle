@@ -422,7 +422,7 @@ class NavController extends Controller
                     'kitpages_cms_page_view_lang',
                     array(
                         'id' => $page->getId(),
-                        'lang' => $page->getLanguage(),
+                        '_locale' => $page->getLanguage(),
                         'urlTitle' => $page->getUrlTitle()
                     )
                 );
@@ -484,7 +484,7 @@ class NavController extends Controller
                     'kitpages_cms_page_view_lang',
                     array(
                         'id' => $page->getId(),
-                        'lang' => $page->getLanguage(),
+                        '_locale' => $page->getLanguage(),
                         'urlTitle' => $page->getUrlTitle()
                     )
                 );
@@ -516,7 +516,7 @@ class NavController extends Controller
                     'kitpages_cms_page_view_lang',
                     array(
                         'id' => $page->getId(),
-                        'lang' => $pagePublish->getLanguage(),
+                        '_locale' => $pagePublish->getLanguage(),
                         'urlTitle' => $pagePublish->getUrlTitle()
                     )
                 );

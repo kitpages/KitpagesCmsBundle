@@ -105,7 +105,7 @@ class PageController extends Controller
                     'kitpages_cms_page_view_lang',
                     array(
                         'id' => $pageId,
-                        'lang' => $pageLanguage,
+                        '_locale' => $pageLanguage,
                         'urlTitle' => $pageUrlTitle
                     )
                 ),
