@@ -299,9 +299,6 @@ class ZoneController extends Controller
                 if ($reverseOrder) {
                     $blockList = array_reverse($blockList);
                 }
-                if (!is_null($blockDisplayCount)) {
-                    $blockList = array_slice($blockList, 0, $blockDisplayCount);
-                }
 
                 // PAGER
                 if ($paginator instanceof Paginator ) {
@@ -312,6 +309,12 @@ class ZoneController extends Controller
                             'paginator' =>$paginator
                         )
                     );
+                }
+
+                if($paginator instanceof Paginator) {
+                    $blockList = array_slice($blockList, $paginator->getSqlLimitOffset(), $paginator->getItemCountPerPage());
+                } elseif (!is_null($blockDisplayCount)) {
+                    $blockList = array_slice($blockList, 0, $blockDisplayCount);
                 }
 
                 $blockCount = count($blockList);
