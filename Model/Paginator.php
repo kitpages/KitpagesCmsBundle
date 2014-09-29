@@ -53,6 +53,11 @@ class Paginator {
         return $this;
     }
 
+    public function getTotalItemCount()
+    {
+        return $this->totalItemCount;
+    }
+
     public function getItemCountPerPage()
     {
         return $this->itemCountPerPage;
