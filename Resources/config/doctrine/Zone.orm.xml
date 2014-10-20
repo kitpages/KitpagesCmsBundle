@@ -38,6 +38,12 @@
         </one-to-many>
 
         <one-to-many field="zoneBlockList" target-entity="Kitpages\CmsBundle\Entity\ZoneBlock" mapped-by="zone" >
+            <cascade>
+                <cascade-persist />
+            </cascade>
+            <order-by>
+                <order-by-field name="position" direction="ASC" />
+            </order-by>
         </one-to-many>
 
         <one-to-one field="zonePublish" target-entity="Kitpages\CmsBundle\Entity\ZonePublish" mapped-by="zone">

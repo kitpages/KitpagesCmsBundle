@@ -239,6 +239,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('view_mode_default')
                     ->defaultValue('VIEW_MODE_PROD')
                 ->end()
+                ->scalarNode('export_dir')
+                    ->defaultValue('%kernel.root_dir%/data/kitpagesCmsBundle/export')
+                ->end()
             ->end();
     }
 }

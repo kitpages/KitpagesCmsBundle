@@ -2,6 +2,8 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * Kitpages\CmsBundle\Entity\ZoneBlock
  */
@@ -10,22 +12,26 @@ class ZoneBlock
     /**
      * @var integer $id
      */
+    /** @JMS\Groups({"complet"}) */
     private $id;    
    
     /**
      * @var integer $position
      */
+    /** @JMS\Groups({"base"}) */
     private $position;
 
 
     /**
      * @var Kitpages\CmsBundle\Entity\Zone
      */
+    /** @JMS\Groups({"base"}) */
     private $zone;
 
     /**
      * @var Kitpages\CmsBundle\Entity\Block
      */
+    /** @JMS\Groups({"base"}) */
     private $block;
 
 
@@ -87,21 +93,6 @@ class ZoneBlock
     public function getBlock()
     {
         return $this->block;
-    }
-    /**
-     * @ORM\prePersist
-     */
-    public function prePersist()
-    {
-        // Add your code here
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        // Add your code here
     }
 
     /**

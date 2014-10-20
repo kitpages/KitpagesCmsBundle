@@ -3,6 +3,7 @@
 namespace Kitpages\CmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Kitpages\CmsBundle\Entity\ZoneBlock
@@ -12,11 +13,13 @@ class PageZone
     /**
      * @var integer $id
      */
+    /** @JMS\Groups({"complet"}) */
     private $id;    
    
     /**
      * @var string $locationInPage
      */
+    /** @JMS\Groups({"base"}) */
     private $locationInPage;
 
 
@@ -24,11 +27,13 @@ class PageZone
     /**
      * @var Kitpages\CmsBundle\Entity\Zone
      */
+    /** @JMS\Groups({"base"}) */
     private $zone;
 
     /**
      * @var Kitpages\CmsBundle\Entity\Page
      */
+    /** @JMS\Groups({"base"}) */
     private $page;
 
 

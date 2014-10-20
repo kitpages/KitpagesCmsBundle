@@ -1,6 +1,7 @@
 <?php
 namespace Kitpages\CmsBundle\Model;
 
+use JMS\Serializer\SerializationContext;
 use Kitpages\CmsBundle\Entity\Page;
 use Kitpages\CmsBundle\Entity\PageZone;
 use Kitpages\CmsBundle\Entity\PagePublish;
@@ -19,6 +20,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraint;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -40,6 +44,7 @@ class PageManager
         EventDispatcherInterface $dispatcher,
         ZoneManager $zoneManager,
         CmsFileManager $cmsFileManager,
+        $jmsSerializer,
         LoggerInterface $logger
     )
     {
@@ -47,6 +52,7 @@ class PageManager
         $this->doctrine = $doctrine;
         $this->zoneManager = $zoneManager;
         $this->cmsFileManager = $cmsFileManager;
+        $this->jmsSerializer = $jmsSerializer;
         $this->logger = $logger;
     }
 
@@ -87,8 +93,122 @@ class PageManager
     }
 
     ////
+    // repo
+    ////
+    /**
+     * @return Page $page
+     */
+
+    public function getChildrenPageBySlug($slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $children = $em->getRepository('KitpagesCmsBundle:Page')->children(
+            $this->getPageBySlug($slug),
+            true
+        );
+
+        return $children;
+    }
+
+    public function getChildrenPageJsonBySlug($slug, array $optionExport)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $children = $em->getRepository('KitpagesCmsBundle:Page')->children(
+            $this->getPageBySlug($slug),
+            true
+        );
+
+        $childrenJson = array();
+
+        foreach($children as $child) {
+            $childrenJson[] = $this->getPageJsonByPage($child, $optionExport);
+        }
+        return $childrenJson;
+    }
+
+    public function getPageBySlug($slug)
+    {
+        $page = $this->doctrine->getManager()->getRepository('Kitpages\CmsBundle\Entity\Page')->findOneBy(array('slug' => $slug));
+        return $page;
+    }
+    ////
     // actions
     ////
+
+    public function getObjectBySerializeFormat($content, $format, $entity)
+    {
+        $page = $this->jmsSerializer->deserialize(
+            $content,
+            $entity,
+            $format
+        );
+        return $page;
+    }
+
+    public function updatePageByOption(Page $page, $option)
+    {
+        if (isset($option['page_language'])) {
+            $page->setLanguage($option['page_language']);
+        }
+    }
+
+    public function getContentPageAndChildrenJsonBySlug($slug, array $optionExport)
+    {
+        $contentJsonRoot = $this->getContentPageJsonBySlug($slug, $optionExport);
+        $pageRootJson = $this->getObjectBySerializeFormat($contentJsonRoot, 'json', 'Kitpages\CmsBundle\Entity\Page');
+
+        $pageRootJson->setChildren($this->getChildrenPageJsonBySlug($slug, $optionExport));
+
+        return $this->getJson($pageRootJson, $optionExport);;
+    }
+
+    public function getPageJsonByPage(Page $page, $optionExport)
+    {
+        $contentJson = $this->getJson($page, $optionExport);
+
+        $pageJson = $this->getObjectBySerializeFormat($contentJson, 'json', 'Kitpages\CmsBundle\Entity\Page');
+        return $pageJson;
+    }
+
+    public function getContentPageJsonBySlug($slug, array $optionExport)
+    {
+        $page = $this->getPageBySlug($slug);
+
+        return $this->getJson($this->getPageJsonByPage($page, $optionExport), $optionExport);
+    }
+
+    public function getJson($page, array $optionExport)
+    {
+        $pageJson = $this->jmsSerializer->serialize(
+            $page,
+            'json',
+            SerializationContext::create()->setGroups($optionExport)
+        );
+        return $pageJson;
+    }
+
+//    public function createNewPageByXml($xml)
+//    {
+//        return $this->getObjectBySerializeFormat($xml, 'xml');
+//    }
+//
+//    public function getPageXmlBySlug($slug, array $optionExport)
+//    {
+//        $pageXml = $this->getPageXml($this->getPageBySlug($slug), $optionExport);
+//        return $pageXml;
+//    }
+//
+//    public function getPageXml(Page $page, array $optionExport)
+//    {
+//        $pageXml = $this->jmsSerializer->serialize(
+//            $page,
+//            'xml',
+//            SerializationContext::create()->setGroups($optionExport)
+//        );
+//        return $pageXml;
+//    }
 
     public function unpendingDelete(Page $page)
     {

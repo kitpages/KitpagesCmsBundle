@@ -2,6 +2,8 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * Kitpages\CmsBundle\Entity\Zone
  */
@@ -10,43 +12,51 @@ class Zone
     /**
      * @var string $slug
      */
+    /** @JMS\Groups({"complet"}) */
     private $slug;
 
 
     /**
      * @var integer $id
      */
+    /** @JMS\Groups({"complet"}) */
     private $id;
 
     /**
      * @var boolean $isPublished
      */
+    /** @JMS\Groups({"publish"}) */
     private $isPublished = false;
 
 
     /**
      * @var datetime $publishedAt
      */
+    /** @JMS\Groups({"publish"}) */
     private $publishedAt;
 
     /**
      * @var datetime $unpublishedAt
      */
+    /** @JMS\Groups({"publish"}) */
     private $unpublishedAt;
 
     /**
      * @var datetime $createdAt
      */
+    /** @JMS\Groups({"complet"}) */
     private $createdAt;
 
     /**
      * @var datetime $updatedAt
      */
+    /** @JMS\Groups({"complet"}) */
     private $updatedAt;
 
     /**
      * @var Kitpages\CmsBundle\Entity\ZoneBlock
      */
+    /** @JMS\Groups({"base"}) */
     private $zoneBlockList;
 
 
@@ -143,6 +153,7 @@ class Zone
     /**
      * @var Kitpages\CmsBundle\Entity\ZonePublish
      */
+    /** @JMS\Groups({"publish"}) */
     private $zonePublish;
 
 
@@ -234,12 +245,13 @@ class Zone
     /**
      * @var Kitpages\CmsBundle\Entity\PageZone
      */
+    /** @JMS\Groups({"base"}) */
     private $pageZoneList;
 
     public function __construct()
     {
         $this->pageZoneList = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->zoneBlockList = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -284,6 +296,7 @@ class Zone
     /**
      * @var string $canonicalUrl
      */
+    /** @JMS\Groups({"base"}) */
     private $canonicalUrl;
 
 
@@ -314,6 +327,7 @@ class Zone
     /**
      * @var string $title
      */
+    /** @JMS\Groups({"base"}) */
     private $title;
 
 

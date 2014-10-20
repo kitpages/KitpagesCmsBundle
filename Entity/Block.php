@@ -4,6 +4,8 @@
  */
 namespace Kitpages\CmsBundle\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * Kitpages\CmsBundle\Entity\Block
  */
@@ -15,56 +17,74 @@ class Block
     /**
      * @var string $slug
      */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("string")
+     */
     private $slug;
 
     /**
      * @var string $blockType
+     */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
      */
     private $blockType;
 
     /**
      * @var boolean $isPublished
      */
-    private $isPublished;
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("boolean")
+     */
+    private $isPublished = false;
 
     /**
      * @var array $data
+     */
+    /** @JMS\Groups({"base"})
      */
     private $data;
 
     /**
      * @var datetime $realUpdatedAt
      */
+    /** @JMS\Groups({"complet"}) */
     private $realUpdatedAt;
 
     /**
      * @var datetime $publishedAt
      */
+    /** @JMS\Groups({"publish"}) */
     private $publishedAt;
 
     /**
      * @var datetime $unpublishedAt
      */
+    /** @JMS\Groups({"publish"}) */
     private $unpublishedAt;
 
     /**
      * @var datetime $createdAt
      */
+    /** @JMS\Groups({"complet"}) */
     private $createdAt;
     /**
      * @var datetime $updatedAt
      */
+    /** @JMS\Groups({"complet"}) */
     private $updatedAt;
 
     /**
      * @var integer $id
      */
+    /** @JMS\Groups({"complet"}) */
     private $id;
 
 
     /**
      * @var string $template
      */
+    /** @JMS\Groups({"base"}) */
     private $template;
 
     /**
@@ -280,24 +300,17 @@ class Block
     public function defaultSlug(){
         $this->setSlug('block_'.$this->getId());
     }
-    /**
-     * @var Kitpages\CmsBundle\Entity\BlockPublish
-     */
-    private $listBlockPublish;
-
-    public function __construct()
-    {
-        $this->listBlockPublish = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * @var Kitpages\CmsBundle\Entity\BlockPublish
      */
+    /** @JMS\Groups({"publish"}) */
     private $blockPublishList;
 
     /**
      * @var Kitpages\CmsBundle\Entity\ZoneBlock
      */
+    /** @JMS\Groups({"base"}) */
     private $zoneBlockList;
 
 
@@ -344,6 +357,7 @@ class Block
     /**
      * @var array $dataMedia
      */
+    /** @JMS\Groups({"base"}) */
     private $dataMedia;
 
 
@@ -393,6 +407,7 @@ class Block
     /**
      * @var string $canonicalUrl
      */
+    /** @JMS\Groups({"base"}) */
     private $canonicalUrl;
 
 

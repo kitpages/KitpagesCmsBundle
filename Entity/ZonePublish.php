@@ -104,23 +104,6 @@ class ZonePublish
         return $this->id;
     }
 
-
-    /**
-     * @ORM\prePersist
-     */
-    public function prePersist()
-    {
-        // Add your code here
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        // Add your code here
-    }
-
     public function initByZone(Zone $zone){
         $this->setSlug($zone->getSlug());
         $this->setCanonicalUrl($zone->getCanonicalUrl());

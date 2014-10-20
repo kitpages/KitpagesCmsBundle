@@ -60,6 +60,9 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
+        <one-to-many field="children" target-entity="Kitpages\CmsBundle\Entity\Page" mapped-by="parent" >
+        </one-to-many>
+
         <gedmo:tree type="nested"/>
 
         <lifecycle-callbacks>

@@ -2,6 +2,8 @@
 
 namespace Kitpages\CmsBundle\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * Kitpages\CmsBundle\Entity\Page
  */
@@ -10,25 +12,39 @@ class Page
     /**
      * @var string $slug
      */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("string")
+     */
     private $slug;
 
     /**
      * @var string $pageType
+     */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
      */
     private $pageType;
 
     /**
      * @var string $layout
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
+     */
     private $layout;
 
     /**
      * @var boolean $isPublished
      */
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("boolean")
+     */
     private $isPublished = false;
 
     /**
      * @var array $data
+     */
+    /** @JMS\Groups({"base"})
      */
     private $data;
 
@@ -36,13 +52,11 @@ class Page
      /**
      * @var integer $id
      */
+    /** @JMS\Groups({"complet", "page_id"})
+     *  @JMS\Type("integer")
+     */
     private $id;
 
-
-    public function __construct()
-    {
-        $this->zoneList = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Set slug
@@ -145,106 +159,6 @@ class Page
     }
 
     /**
-     * Set realModificationDate
-     *
-     * @param datetime $realModificationDate
-     */
-    public function setRealModificationDate($realModificationDate)
-    {
-        $this->realModificationDate = $realModificationDate;
-    }
-
-    /**
-     * Get realModificationDate
-     *
-     * @return datetime $realModificationDate
-     */
-    public function getRealModificationDate()
-    {
-        return $this->realModificationDate;
-    }
-
-    /**
-     * Set publicationDate
-     *
-     * @param datetime $publicationDate
-     */
-    public function setPublicationDate($publicationDate)
-    {
-        $this->publicationDate = $publicationDate;
-    }
-
-    /**
-     * Get publicationDate
-     *
-     * @return datetime $publicationDate
-     */
-    public function getPublicationDate()
-    {
-        return $this->publicationDate;
-    }
-
-    /**
-     * Set unpublicationDate
-     *
-     * @param datetime $unpublicationDate
-     */
-    public function setUnpublicationDate($unpublicationDate)
-    {
-        $this->unpublicationDate = $unpublicationDate;
-    }
-
-    /**
-     * Get unpublicationDate
-     *
-     * @return datetime $unpublicationDate
-     */
-    public function getUnpublicationDate()
-    {
-        return $this->unpublicationDate;
-    }
-
-    /**
-     * Set creationDate
-     *
-     * @param datetime $creationDate
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
-    }
-
-    /**
-     * Get creationDate
-     *
-     * @return datetime $creationDate
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Set modificationDate
-     *
-     * @param datetime $modificationDate
-     */
-    public function setModificationDate($modificationDate)
-    {
-        $this->modificationDate = $modificationDate;
-    }
-
-    /**
-     * Get modificationDate
-     *
-     * @return datetime $modificationDate
-     */
-    public function getModificationDate()
-    {
-        return $this->modificationDate;
-    }
-
-    /**
      * Get id
      *
      * @return integer $id
@@ -257,25 +171,40 @@ class Page
     /**
      * @var datetime $realUpdatedAt
      */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("DateTime")
+     */
     private $realUpdatedAt;
 
     /**
      * @var datetime $publishedAt
+     */
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("DateTime")
      */
     private $publishedAt;
 
     /**
      * @var datetime $unpublishedAt
      */
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("DateTime")
+     */
     private $unpublishedAt;
 
     /**
      * @var datetime $createdAt
      */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("DateTime")
+     */
     private $createdAt;
 
     /**
      * @var datetime $updatedAt
+     */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("DateTime")
      */
     private $updatedAt;
 
@@ -382,6 +311,9 @@ class Page
     /**
      * @var string $language
      */
+    /** @JMS\Groups({"language"})
+     *  @JMS\Type("string")
+     */
     private $language;
 
 
@@ -409,6 +341,9 @@ class Page
     /**
      * @var Kitpages\CmsBundle\Entity\PageZone
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("ArrayCollection<Kitpages\CmsBundle\Entity\PageZone>")
+     */
     private $pageZoneList;
 
 
@@ -434,10 +369,16 @@ class Page
     /**
      * @var string $urlTitle
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
+     */
     private $urlTitle;
 
     /**
      * @var Kitpages\CmsBundle\Entity\PagePublish
+     */
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("Kitpages\CmsBundle\Entity\PagePublish")
      */
     private $pagePublish;
 
@@ -484,6 +425,9 @@ class Page
     /**
      * @var string $title
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
+     */
     private $title;
 
 
@@ -509,25 +453,40 @@ class Page
     /**
      * @var integer $left
      */
+    /** @JMS\Groups({"tree"})
+     *  @JMS\Type("integer")
+     */
     private $left;
 
     /**
      * @var integer $right
+     */
+    /** @JMS\Groups({"tree"})
+     *  @JMS\Type("integer")
      */
     private $right;
 
     /**
      * @var integer $root
      */
+    /** @JMS\Groups({"tree"})
+     *  @JMS\Type("integer")
+     */
     private $root;
 
     /**
      * @var integer $level
      */
+    /** @JMS\Groups({"tree"})
+     *  @JMS\Type("integer")
+     */
     private $level;
 
     /**
      * @var Kitpages\CmsBundle\Entity\Page
+     */
+    /** @JMS\Groups({"tree"})
+     *  @JMS\Type("Kitpages\CmsBundle\Entity\Page")
      */
     private $parent;
 
@@ -634,6 +593,9 @@ class Page
     /**
      * @var string $linkUrl
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
+     */
     private $linkUrl;
 
 
@@ -658,6 +620,9 @@ class Page
     }
     /**
      * @var Kitpages\CmsBundle\Entity\NavPublish
+     */
+    /** @JMS\Groups({"publish"})
+     *  @JMS\Type("Kitpages\CmsBundle\Entity\NavPublish")
      */
     private $navPublish;
 
@@ -684,6 +649,9 @@ class Page
     /**
      * @var string $menuTitle
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("string")
+     */
     private $menuTitle;
 
 
@@ -709,6 +677,9 @@ class Page
     /**
      * @var boolean $isPendingDelete
      */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("boolean")
+     */
     private $isPendingDelete = false;
 
 
@@ -733,6 +704,9 @@ class Page
     }
     /**
      * @var boolean $isInNavigation
+     */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("boolean")
      */
     private $isInNavigation = true;
 
@@ -763,6 +737,9 @@ class Page
 
     /**
      * @var string $forcedUrl
+     */
+    /** @JMS\Groups({"complet"})
+     *  @JMS\Type("string")
      */
     private $forcedUrl;
 
@@ -856,6 +833,9 @@ class Page
     /**
      * @var boolean $isLinkUrlFirstChild
      */
+    /** @JMS\Groups({"base"})
+     *  @JMS\Type("boolean")
+     */
     private $isLinkUrlFirstChild;
 
 
@@ -889,4 +869,32 @@ class Page
     {
         // Add your code here
     }
+
+    /** @JMS\Groups({"complet","children"})
+     *  @JMS\Type("array<Kitpages\CmsBundle\Entity\Page>")
+     */
+    private $children;
+
+
+    /**
+     * @return mixed
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param mixed $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    public function addChild(\Kitpages\CmsBundle\Entity\Page $page)
+    {
+        $this->children[] = $page;
+    }
+
 }
