@@ -61,6 +61,9 @@
         </many-to-one>
 
         <one-to-many field="children" target-entity="Kitpages\CmsBundle\Entity\Page" mapped-by="parent" >
+            <order-by>
+                <order-by-field name="left" direction="ASC" />
+            </order-by>
         </one-to-many>
 
         <gedmo:tree type="nested"/>
