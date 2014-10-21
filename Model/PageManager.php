@@ -111,22 +111,22 @@ class PageManager
         return $children;
     }
 
-    public function getChildrenPageJsonBySlug($slug, array $optionExport)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $children = $em->getRepository('KitpagesCmsBundle:Page')->children(
-            $this->getPageBySlug($slug),
-            true
-        );
-
-        $childrenJson = array();
-
-        foreach($children as $child) {
-            $childrenJson[] = $this->getPageJsonByPage($child, $optionExport);
-        }
-        return $childrenJson;
-    }
+//    public function getChildrenPageJsonBySlug($slug, array $optionExport)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $children = $em->getRepository('KitpagesCmsBundle:Page')->children(
+//            $this->getPageBySlug($slug),
+//            true
+//        );
+//
+//        $childrenJson = array();
+//
+//        foreach($children as $child) {
+//            $childrenJson[] = $this->getPageJsonByPage($child, $optionExport);
+//        }
+//        return $childrenJson;
+//    }
 
     public function getPageBySlug($slug)
     {
@@ -159,9 +159,9 @@ class PageManager
         $contentJsonRoot = $this->getContentPageJsonBySlug($slug, $optionExport);
         $pageRootJson = $this->getObjectBySerializeFormat($contentJsonRoot, 'json', 'Kitpages\CmsBundle\Entity\Page');
 
-        $pageRootJson->setChildren($this->getChildrenPageJsonBySlug($slug, $optionExport));
+//        $pageRootJson->setChildren($this->getChildrenPageJsonBySlug($slug, $optionExport));
 
-        return $this->getJson($pageRootJson, $optionExport);;
+        return $this->getJson($pageRootJson, $optionExport);
     }
 
     public function getPageJsonByPage(Page $page, $optionExport)

@@ -208,6 +208,10 @@ class Page
      */
     private $updatedAt;
 
+    public function __construct()
+    {
+        $this->pageZoneList = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Set realUpdatedAt
