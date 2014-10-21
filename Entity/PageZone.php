@@ -106,19 +106,4 @@ class PageZone
     {
         return $this->page;
     }
-    /**
-     * @ORM\prePersist
-     */
-    public function prePersist()
-    {
-        // Add your code here
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        // Add your code here
-    }
 }

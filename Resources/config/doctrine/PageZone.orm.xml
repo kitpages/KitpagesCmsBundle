@@ -11,12 +11,6 @@
         </id>      
         <field name="locationInPage" column="location_in_page" type="string">
         </field>
-        
-      
-        <lifecycle-callbacks>
-          <lifecycle-callback type="prePersist" method="prePersist"/>
-          <lifecycle-callback type="preUpdate" method="preUpdate"/>
-        </lifecycle-callbacks>
 
         <many-to-one field="zone" target-entity="Kitpages\CmsBundle\Entity\Zone" inversed-by="pageZoneList" >
             <join-column name="zone_id" referenced-column-name="id" on-delete="CASCADE" on-update="CASCADE" />
