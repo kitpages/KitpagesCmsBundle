@@ -55,7 +55,7 @@
             <gedmo:tree-level/>
         </field>
 
-        <many-to-one field="parent" target-entity="Page">
+        <many-to-one field="parent" target-entity="Page" inversed-by="children" >
             <join-column name="parent_id" referenced-column-name="id" on-delete="SET NULL"/>
             <gedmo:tree-parent/>
         </many-to-one>
