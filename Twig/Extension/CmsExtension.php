@@ -21,6 +21,11 @@ class CmsExtension extends \Twig_Extension
         $this->context = $context;
     }
 
+    public function kitCmsViewMode()
+    {
+        return $this->context->getViewMode();
+    }
+
     public function kitZoneIsEmpty($slug)
     {
         return $this->zoneService->isEmpty($slug, $this->context->getViewMode());
