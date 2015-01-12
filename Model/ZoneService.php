@@ -26,19 +26,18 @@ class ZoneService
     ////
     public function isEmpty($slug, $viewMode)
     {
-        $em = $this->getDoctrine()->getManager();
         $countBlock = 0;
         if ($viewMode == Context::VIEW_MODE_EDIT || $viewMode == Context::VIEW_MODE_PREVIEW) {
-            $zone = $em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
+            $zone = $this->em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
             if ($zone == null) {
                 return true;
             }
 
-            $countBlock = $em
+            $countBlock = $this->em
                 ->getRepository('KitpagesCmsBundle:Block')
                 ->getBlockCountByZone($zone);
         } elseif ($viewMode == Context::VIEW_MODE_PROD) {
-            $zonePublish = $em->getRepository('KitpagesCmsBundle:ZonePublish')->findOneBy(array('slug' => $slug));
+            $zonePublish = $this->em->getRepository('KitpagesCmsBundle:ZonePublish')->findOneBy(array('slug' => $slug));
             if ($zonePublish == null) {
                 return true;
             }
