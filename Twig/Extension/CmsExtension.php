@@ -3,7 +3,7 @@ namespace Kitpages\CmsBundle\Twig\Extension;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Kitpages\CmsBundle\Controller\Context;
-use Kitpages\CmsBundle\Model\ZoneManager;
+use Kitpages\CmsBundle\Model\ZoneService;
 
 class CmsExtension extends \Twig_Extension
 {
