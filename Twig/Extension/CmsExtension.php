@@ -31,6 +31,11 @@ class CmsExtension extends \Twig_Extension
         return $this->zoneService->isEmpty($slug, $this->context->getViewMode());
     }
 
+    public function kitZoneCountBlock($slug)
+    {
+        return $this->zoneService->countBlock($slug, $this->context->getViewMode());
+    }
+
     /**
      * Returns a list of filters to add to the existing list.
      *

@@ -26,28 +26,33 @@ class ZoneService
     ////
     public function isEmpty($slug, $viewMode)
     {
-        $countBlock = 0;
-        if ($viewMode == Context::VIEW_MODE_EDIT || $viewMode == Context::VIEW_MODE_PREVIEW) {
-            $zone = $this->em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
-            if ($zone == null) {
-                return true;
-            }
-
-            $countBlock = $this->em
-                ->getRepository('KitpagesCmsBundle:Block')
-                ->getBlockCountByZone($zone);
-        } elseif ($viewMode == Context::VIEW_MODE_PROD) {
-            $zonePublish = $this->em->getRepository('KitpagesCmsBundle:ZonePublish')->findOneBy(array('slug' => $slug));
-            if ($zonePublish == null) {
-                return true;
-            }
-            $data = $zonePublish->getData();
-
-            $countBlock = count($data['blockPublishList']);
-        }
+        $countBlock = $this->countBlock($slug, $viewMode);
         if($countBlock > 0) {
             return false;
+        } else {
+            return true;
         }
 
     }
+
+    public function countBlock($slug, $viewMode)
+    {
+        $countBlock = 0;
+        if ($viewMode == Context::VIEW_MODE_EDIT || $viewMode == Context::VIEW_MODE_PREVIEW) {
+            $zone = $this->em->getRepository('KitpagesCmsBundle:Zone')->findOneBy(array('slug' => $slug));
+            if ($zone != null) {
+                $countBlock = $this->em
+                    ->getRepository('KitpagesCmsBundle:Block')
+                    ->getBlockCountByZone($zone);
+            }
+        } elseif ($viewMode == Context::VIEW_MODE_PROD) {
+            $zonePublish = $this->em->getRepository('KitpagesCmsBundle:ZonePublish')->findOneBy(array('slug' => $slug));
+            if ($zonePublish != null) {
+                $data = $zonePublish->getData();
+                $countBlock = count($data['blockPublishList']);
+            }
+        }
+        return $countBlock;
+    }
+
 }
