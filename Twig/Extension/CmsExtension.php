@@ -45,6 +45,7 @@ class CmsExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('kit_cms_zone_is_empty', array($this, 'kitZoneIsEmpty')),
+            new \Twig_SimpleFunction('kit_cms_zone_count_block', array($this, 'kitZoneCountBlock')),
             new \Twig_SimpleFunction('kit_cms_view_mode', array($this, 'kitCmsViewMode')),
         );
     }
