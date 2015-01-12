@@ -11,6 +11,7 @@
         <parameter key="kitpages_cms.cms.navManager">Kitpages\CmsBundle\Model\NavManager</parameter>
         <parameter key="kitpages_cms.cms.pageManager">Kitpages\CmsBundle\Model\PageManager</parameter>
         <parameter key="kitpages_cms.cms.zoneManager">Kitpages\CmsBundle\Model\ZoneManager</parameter>
+        <parameter key="kitpages_cms.cms.zoneService">Kitpages\CmsBundle\Model\ZoneService</parameter>
         <parameter key="kitpages_cms.cms.blockManager">Kitpages\CmsBundle\Model\BlockManager</parameter>
         <parameter key="kitpages_cms.cms.cmsManager">Kitpages\CmsBundle\Model\CmsManager</parameter>
         <parameter key="kitpages_cms.cms.exportManager">Kitpages\CmsBundle\Model\ExportManager</parameter>
@@ -58,17 +59,10 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="templating"/>
-            <!--<argument type="service" id="kitpages.cms.twig"/>  -->
             <argument type="service" id="kitpages.cms.manager.file"/>
             <argument type="service" id="kitpages.util"/>
-            <!--<tag name="doctrine.event_listener" event="prePersist" />
-            <tag name="doctrine.event_listener" event="postPersist" />
-            <tag name="doctrine.event_listener" event="preUpdate" />-->
         </service>
         <service id="kitpages.cms.manager.zone" class="%kitpages_cms.cms.zoneManager%">
-            <!--
-            <tag name="kernel.event_listener" event="kitpages.cms.zone.blockmove" method="onBlockMove" />
-            <tag name="kernel.event_listener" event="kitpages.cms.zone.publish" method="onPublish" /> -->
             <tag name="kernel.event_listener" event="kitpages.cms.block.on.delete" method="onBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.delete" method="afterBlockDelete" />
             <tag name="kernel.event_listener" event="kitpages.cms.block.after.modify" method="afterBlockModify" />
@@ -77,6 +71,9 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="kitpages.cms.manager.block"/>
             <argument type="service" id="logger"/>
+        </service>
+        <service id="kitpages.cms.service.zone" class="%kitpages_cms.cms.zoneService%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
         <service id="kitpages.cms.manager.export" class="%kitpages_cms.cms.exportManager%">
             <argument type="service" id="kitpages.cms.manager.page"/>
@@ -134,6 +131,11 @@
             <tag name="doctrine.event_listener" event="preUpdate" />
         </service>
         <service id="kitpages_cms.twig.extension.date" class="Kitpages\CmsBundle\Twig\Extension\DateExtension">
+            <tag name="twig.extension" />
+        </service>
+        <service id="kitpages_cms.twig.extension.cms" class="Kitpages\CmsBundle\Twig\Extension\CmsExtension">
+            <argument type="service" id="kitpages.cms.service.zone"/>
+            <argument type="service" id="kitpages.cms.controller.context"/>
             <tag name="twig.extension" />
         </service>
 
