@@ -49,9 +49,9 @@ class ZoneService
             $zonePublish = $this->em->getRepository('KitpagesCmsBundle:ZonePublish')->findOneBy(array('slug' => $slug));
             if ($zonePublish != null) {
                 $data = $zonePublish->getData();
-                if (is_array($data) && $data != null ) {
+                if (isset($data['blockPublishList']) && is_array($data['blockPublishList']) && $data['blockPublishList'] != null ) {
                     // retrieve first template
-                    $blockList = array_shift($data);
+                    $blockList = array_shift($data['blockPublishList']);
                     if (is_array($blockList)) {
                         $countBlock = count($blockList);
                     }
