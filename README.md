@@ -1,3 +1,6 @@
+# :warning: This bundle is no longer maintained :warning:
+
+
 Kitpages Cms Bundle
 ===================
 
